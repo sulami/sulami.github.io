@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>sulami's blog - Concurrent I/O in Haskell</title>
+        <link rel="stylesheet" type="text/css" href="../tufte/tufte.css" />
+        <link rel="stylesheet" type="text/css" href="../css/solarized.css" />
+    </head>
+    <body>
+        <div id="header">
+            <div id="logo">
+                <a href="../">/dev/urandom >> blog</a>
+            </div>
+            <div id="navigation">
+                <a href="../">Home</a>
+                <a href="../pages/about.html">About</a>
+                <a href="../pages/frankenwm.html">FrankenWM</a>
+                <a href="../archive.html">Archive</a>
+            </div>
+        </div>
+
+        <div id="content">
+            <h1>Concurrent I/O in Haskell</h1>
+
+            <div class="info">
+    
+        Posted on September 11, 2015
+    
+    
+</div>
+
+<article>
+    <section>
+<p>Today just after waking up, I have been tweaking the last bits and bops of <a href="https://github.com/sulami/tinfoilsub">TinfoilSub</a>, a satiric fun/learning project of mine that scrapes YouTube channels to replicate a subscriptions page without requiring a Google account. The core of this little program is the <code>runServer</code> function that uses <a href="https://hackage.haskell.org/package/scotty">Scotty</a> to host a local page that displays the results, while the list of channels is read from a file. In the beginning, this function looked something like this:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">runServer ::</span> [<span class="dt">String</span>] <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
+runServer channels <span class="fu">=</span> scotty <span class="dv">3000</span> <span class="fu">$</span> <span class="kw">do</span>
+  get <span class="st">&quot;/&quot;</span> <span class="fu">$</span> <span class="kw">do</span>
+    videos <span class="ot">&lt;-</span> fmap (sort <span class="fu">.</span> concatMaybe) <span class="fu">.</span> liftIO <span class="fu">.</span> sequence <span class="fu">$</span>
+                map scrapeChannel channels
+    html <span class="fu">.</span> renderVideos <span class="fu">$</span> take <span class="dv">50</span> videos
+  <span class="co">-- ... and more routes</span></code></pre></div>
+<p>Now, imagine you have more than just a couple of channels in there. This works fine for 2-3 channels, but each channel adds about a second of runtime each time the page is refreshed and the channels are re-scraped, which quickly amounts to way to much. Naturally, I went on to profiling and trying to figure out how to improve the scaling capabilities, and one of the first things to come across is using several threads (duh). Pretty basic stuff, so lets add and import <code>Control.Parallel</code>, instruct the RTS to use a number of threads that suits the CPU in use and everything should be fine. Right?</p>
+<p>This is the new code:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">runServer ::</span> [<span class="dt">String</span>] <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
+runServer channels <span class="fu">=</span> scotty <span class="dv">3000</span> <span class="fu">$</span> <span class="kw">do</span>
+  get <span class="st">&quot;/&quot;</span> <span class="fu">$</span> <span class="kw">do</span>
+    videos <span class="ot">&lt;-</span> fmap (sort <span class="fu">.</span> concatMaybe) <span class="fu">.</span> liftIO <span class="fu">.</span> sequence <span class="fu">$</span>
+                parMap rpar scrapeChannel channels
+    html <span class="fu">.</span> renderVideos <span class="fu">$</span> take <span class="dv">50</span> videos
+  <span class="co">-- ... and more routes</span></code></pre></div>
+<p>This looks neat and one might think it does what we want it to do. But looking at the actual performance when using 15 channels, this code is only about 20% faster, even when using 8 or more threads on a CPU with more than enough cores. Time for some more in depth analysis. The first thing I decided to look at was good old top. YouTube is not too slow in terms of respond times, so with a couple of threads one could assume we get to start scraping the page fairly early on, which results in increased CPU usage. But looking at top while refreshing the page revealed that the CPU was idling for a good 10 seconds before starting to scrape at all. Scraping was then run concurrently for the collected pages, so all cores were used and the actual scraping only took a second.</p>
+<p>A look at Wireshark confirmed the problem. Wireshark recorded a new request to YouTube every second before scraping started. I looked around a bit in <a href="https://hackage.haskell.org/package/scalpel">Scalpel</a>, the scraping library I used and <a href="https://hackage.haskell.org/package/curl">the curl bindings</a> that were used for the actual requests, but nothing indicated any problems with making multiple requests at the same time.</p>
+<p>So, now for the big reveal. For those who do not know, Haskell’s <code>Parallel</code> only works for pure parts of code, so no I/O, which hinders you from creating things like race conditions, deadlocks and other really bad stuff. That is a good thing. So, if you want to do concurrent (or parallel) I/O, you need to use <code>Concurrent</code>, which brings internal threads, thread communication tools and this kind of stuff. Now, this is all pretty dangerous territory in that with these tools, we can create the bad things mentioned above, which we do not want to risk, at least not if there are better alternatives. And as it turns out, there are. Use <a href="https://hackage.haskell.org/package/async">async</a>. Async is essentially a wrapper around all the evil stuff that makes it harder to shoot yourself in the foot. For us, there is this neat function called <code>mapConcurrently</code>, which does exactly what we want. Do a <code>map</code>, do it concurrently, and do it with <code>IO</code>. So this is what we get:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">runServer ::</span> [<span class="dt">String</span>] <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
+runServer channels <span class="fu">=</span> scotty <span class="dv">3000</span> <span class="fu">$</span> <span class="kw">do</span>
+  get <span class="st">&quot;/&quot;</span> <span class="fu">$</span> <span class="kw">do</span>
+    videos <span class="ot">&lt;-</span> fmap (sort <span class="fu">.</span> concatMaybe) <span class="fu">.</span> liftIO <span class="fu">$</span>
+                mapConcurrently scrapeChannel channels
+    html <span class="fu">.</span> renderVideos <span class="fu">$</span> take <span class="dv">50</span> videos
+  <span class="co">-- ... and more routes</span></code></pre></div>
+<p>And it does exactly what we want, it starts scraping as soon as the first request has returned a page for use, which reduces the runtime by more than half.</p>
+    </section>
+
+
+        </div>
+        <div id="footer">
+            Site proudly generated by
+            <a href="http://jaspervdj.be/hakyll">Hakyll</a>
+        </div>
+    </body>
+</html>

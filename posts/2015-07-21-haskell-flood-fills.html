@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>sulami's blog - Haskell Flood Fills</title>
+        <link rel="stylesheet" type="text/css" href="../tufte/tufte.css" />
+        <link rel="stylesheet" type="text/css" href="../css/solarized.css" />
+    </head>
+    <body>
+        <div id="header">
+            <div id="logo">
+                <a href="../">/dev/urandom >> blog</a>
+            </div>
+            <div id="navigation">
+                <a href="../">Home</a>
+                <a href="../pages/about.html">About</a>
+                <a href="../pages/frankenwm.html">FrankenWM</a>
+                <a href="../archive.html">Archive</a>
+            </div>
+        </div>
+
+        <div id="content">
+            <h1>Haskell Flood Fills</h1>
+
+            <div class="info">
+    
+        Posted on July 21, 2015
+    
+    
+</div>
+
+<article>
+    <section>
+<p>Over the past two days, I played a bit with the <a href="https://hackthe.computer/">hackthe.computer contest</a>. It is a contest with a couple of problems/tasks where you have one week to write up the best solutions in terms of speed. Part of the difficulty comes from the fact, that you push git commits to their server and do not get to to see the output of their test runs, which you only know if you program produces the correct output within a reasonable time frame (one minute per test?) or not. It is quite fun, also because the problems are nicely chosen, with a lot of data interpretation, but also a need for efficient algorithms, and they all have nice back stories to explain why we are dealing with seemingly random input.</p>
+<p>The first problem is called <em>Bowie’s in a maze</em>, which, without spoiling too much, involves David Bowie and a maze. Bowie is actually the villain here. To save our little brother, we have to find him in his maze. To accomplish this, we get an ASCII-map of the maze with our position and the position of our brother. The specific task is to find the shortest route in the least amount of time possible.</p>
+<p>The naive first attempt was finding the shortest of all possible paths, but several of their test cases include really large mazes with few walls, if any at all (remember, I do not know). So this ran forever. From there, my mind obviously went to flood fills quite fast, because we save a lot of time, both by not building tons of overlapping paths, and, because a queue-based flood fill will return the shortest possible correct path before any longer solutions, using a lazy list of routes we can stop evaluating paths after the first one that reaches our brother.</p>
+<p>I have written flood fills before, but mostly in Python, where the approach is quite a bit different. And because I could not really find a nice example of how to do flood fills in Haskell, I will post a general example here, just for you, fellow coder. So, here we go:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="co">-- First, we define a couple of types, for better readability. The grid</span>
+<span class="co">-- will be a line-wise list of strings, with every char being a cell.</span>
+<span class="kw">type</span> <span class="dt">Grid</span> <span class="fu">=</span> [<span class="dt">String</span>]
+<span class="kw">type</span> <span class="dt">Coord</span> <span class="fu">=</span> (<span class="dt">Int</span>, <span class="dt">Int</span>)
+<span class="kw">type</span> <span class="dt">Path</span> <span class="fu">=</span> [<span class="dt">Coord</span>]
+
+<span class="co">-- So, we flood fill. This list can be lazily evaluated from the head and</span>
+<span class="co">-- returns branching paths in all directions that obey possibleWays and do</span>
+<span class="co">-- not overlap. flood is actually just a wrapper for fl.</span>
+<span class="ot">flood ::</span> <span class="dt">Grid</span> <span class="ot">-&gt;</span> <span class="dt">Coord</span> <span class="ot">-&gt;</span> [<span class="dt">Path</span>]
+flood grid pos <span class="fu">=</span> fl grid [[pos]]
+  <span class="kw">where</span>
+    <span class="co">-- This might be a bit difficult to grasp, but this returns all paths</span>
+    <span class="co">-- ever evaluated and appends a copy of every path already evaluated</span>
+    <span class="co">-- that could continue somewhere for a single step without overlapping</span>
+    <span class="co">-- with any other path.</span>
+<span class="ot">    fl ::</span> <span class="dt">Grid</span> <span class="ot">-&gt;</span> [<span class="dt">Path</span>] <span class="ot">-&gt;</span> [<span class="dt">Path</span>]
+    fl grid paths <span class="fu">=</span> paths <span class="fu">++</span> fl grid (concat (map (addRoutes grid paths) paths)
+
+    <span class="co">-- This handles the replacing of a path with all its possible branches.</span>
+    <span class="co">-- It also has the context of all the other paths to prevent</span>
+    <span class="co">-- overlapping.</span>
+<span class="ot">    addRoutes ::</span> <span class="dt">Grid</span> <span class="ot">-&gt;</span> [<span class="dt">Path</span>] <span class="ot">-&gt;</span> <span class="dt">Path</span> <span class="ot">-&gt;</span> [<span class="dt">Path</span>]
+    addRoutes grid ps path <span class="fu">=</span> [ path <span class="fu">++</span> [p] <span class="fu">|</span> p <span class="ot">&lt;-</span> possibleWays grid <span class="fu">$</span> last path,
+                                              not <span class="fu">$</span> p <span class="ot">`elem`</span> (concat ps) ]
+
+    <span class="co">-- All this does is, from a given point on the grid, look where we</span>
+    <span class="co">-- could go while obeying the rules of the game, like not leaving the</span>
+    <span class="co">-- grid (Index error!), only going one step (maybe diagonally?), etc.</span>
+    <span class="co">-- The actual code depends on what you want to do, but a list</span>
+    <span class="co">-- comprehension works well here, using the surrounding coordinates as</span>
+    <span class="co">-- inputs and filtering out the invalid ones.</span>
+<span class="ot">    possibleWays ::</span> <span class="dt">Grid</span> <span class="ot">-&gt;</span> <span class="dt">Coord</span> <span class="ot">-&gt;</span> <span class="dt">Path</span>
+    possibleWays g (x,y) <span class="fu">=</span> [ (x1,y1) <span class="fu">|</span> <span class="fu">..</span> ]
+
+<span class="co">-- This is a simple little helper that checks if the last cell of a path is</span>
+<span class="co">-- the target, so we can filter out incomplete paths.</span>
+<span class="ot">reachesTarget ::</span> <span class="dt">Grid</span> <span class="ot">-&gt;</span> <span class="dt">Path</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span>
+reachesTarget g p <span class="fu">=</span> <span class="kw">let</span> (x,y) <span class="fu">=</span> last p <span class="kw">in</span> g <span class="fu">!!</span> y <span class="fu">!!</span> x <span class="fu">==</span> <span class="ch">'F'</span>
+
+<span class="co">-- This a a really basic example use of the functions above.</span>
+main <span class="fu">=</span> <span class="kw">do</span> grid <span class="ot">&lt;-</span> fmap lines getContents          <span class="co">-- Read a map from stdin.</span>
+          <span class="kw">let</span> start <span class="fu">=</span> (<span class="dv">0</span>,<span class="dv">0</span>)      <span class="co">-- Start filling from the top-left corner.</span>
+          <span class="co">-- My example involves finding the length of shortest possible</span>
+          <span class="co">-- route, so we start flood filling lazily, and take the first</span>
+          <span class="co">-- complete path. Then we just print out its length, because</span>
+          <span class="co">-- paths themselves do not print nicely without a pretty printer.</span>
+          <span class="kw">let</span> path <span class="fu">=</span> head <span class="fu">$</span> filter (reachesTarget grid) <span class="fu">$</span> flood grid start
+          print <span class="fu">$</span> length path</code></pre></div>
+<p>You can use this code pretty much like this (I hereby license it under ISC), by just filling in <code>possibleWays</code>. Note that this can get a bit slow when the grid is large and contains few or no walls, because the list of paths to iterate over grows rather large. You can probably gain some additional performance by introducing parallelism via <code>par</code> and <code>pseq</code> if that becomes a problem.</p>
+<p><strong>PS</strong> If you are taking part in the competition, flood fills will not bring you far, the solution is a different one.</p>
+    </section>
+
+
+        </div>
+        <div id="footer">
+            Site proudly generated by
+            <a href="http://jaspervdj.be/hakyll">Hakyll</a>
+        </div>
+    </body>
+</html>

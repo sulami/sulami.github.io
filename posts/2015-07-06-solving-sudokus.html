@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>sulami's blog - Solving Sudokus</title>
+        <link rel="stylesheet" type="text/css" href="../tufte/tufte.css" />
+        <link rel="stylesheet" type="text/css" href="../css/solarized.css" />
+    </head>
+    <body>
+        <div id="header">
+            <div id="logo">
+                <a href="../">/dev/urandom >> blog</a>
+            </div>
+            <div id="navigation">
+                <a href="../">Home</a>
+                <a href="../pages/about.html">About</a>
+                <a href="../pages/frankenwm.html">FrankenWM</a>
+                <a href="../archive.html">Archive</a>
+            </div>
+        </div>
+
+        <div id="content">
+            <h1>Solving Sudokus</h1>
+
+            <div class="info">
+    
+        Posted on July  6, 2015
+    
+    
+</div>
+
+<article>
+    <section>
+<p>So, here is more Haskell from me, because I really like it. This time around, I wrote a small and simple sudoku solver. Sudokus are really nice little puzzles that involve a partially filled 9x9 grid containing numbers from one to nine. The objective is to fill it following these rules:</p>
+<ul>
+<li>Each number must only appear once per row</li>
+<li>Each number must only appear once per column</li>
+<li>Each number must only appear once per 3x3 ‘box’, of which there are nine</li>
+</ul>
+<p>A common strategy is checking empty cells for available numbers to fill in, so the ones that are not already present in the corresponding row, column or box. This is also the approach my solver takes, by checking each of the empty cells for options and, if there is only one possible option, filling it in. Repeat this until there are no empty cells anymore and you have a guaranteed correct solution. There is a great deal of mathematics behind sudoku puzzles, and if you are interested in that, <a href="https://en.wikipedia.org/wiki/Mathematics_of_Sudoku">the Wikipedia article</a> is a great read.</p>
+<p>Because I wrote my solver before conducting any research, it emulates my approach, which is brute forcing. Still, it solves 9x9 sudokus in &lt;0.01 seconds. We will now have an in-depth look at it. If you want context, the whole code including an example is on <a href="https://github.com/sulami/spielwiese/blob/master/hSudoku/">Github</a>.</p>
+<p>I implemented the solver in form of a Haskell library that exports three functions:</p>
+<ul>
+<li><code>build</code> builds the internal representation of the puzzle from a list of integers</li>
+<li><code>prettyPrint</code> prints a puzzle</li>
+<li><code>solve</code> solves a puzzle</li>
+</ul>
+<p><code>build</code> is really simple, because it looks like this:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">build ::</span> [<span class="dt">Value</span>] <span class="ot">-&gt;</span> <span class="dt">Grid</span>
+build vs <span class="fu">=</span> zip [<span class="dv">0</span><span class="fu">..</span>] vs</code></pre></div>
+<p>This already exposes the internal structure of a puzzle, which is this:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">type</span> <span class="dt">Value</span> <span class="fu">=</span> <span class="dt">Int</span>
+<span class="kw">type</span> <span class="dt">Coord</span> <span class="fu">=</span> <span class="dt">Int</span>
+<span class="kw">type</span> <span class="dt">Cell</span>  <span class="fu">=</span> (<span class="dt">Coord</span>, <span class="dt">Value</span>)
+<span class="kw">type</span> <span class="dt">Grid</span>  <span class="fu">=</span> [<span class="dt">Cell</span>]</code></pre></div>
+<p>I chose to use a single associative list over a nested list because it makes the code a whole lot easier to read when accessing various cells of a grid, at the expense of having to do some maths.</p>
+<p><code>prettyPrint</code> is not really worth explaining or even showing, all it does is dividing a grid into nine chunks, the lines, converting the integers to chars, replacing zeros with underscores, insert some spaces for readability and prints the whole thing out. I just added it so I could check the results easily.</p>
+<p><code>solve</code> is the really interesting part here. Solve loops until a puzzle is solved, which looks like this:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">solved ::</span> <span class="dt">Grid</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span>
+solved <span class="fu">=</span> foldr (\(_, v) r <span class="ot">-&gt;</span> <span class="kw">if</span> v <span class="fu">==</span> <span class="dv">0</span> <span class="kw">then</span> <span class="dt">False</span> <span class="kw">else</span> r) <span class="dt">True</span>
+
+<span class="ot">solve ::</span> <span class="dt">Grid</span> <span class="ot">-&gt;</span> <span class="dt">Grid</span>
+solve g <span class="fu">|</span> solved g  <span class="fu">=</span> g
+        <span class="fu">|</span> otherwise <span class="fu">=</span> solve <span class="fu">$</span> fill g (<span class="dv">0</span>, get g <span class="dv">0</span>)</code></pre></div>
+<p>What <code>fill</code> does is it iterates once through all the cells, and each time it encounters an empty cell (<code>(_, 0)</code>), it checks which numbers could be placed in it. If there is only one possibility, it changes the grid accordingly and continues. After a complete iteration, it returns the changed grid.</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">fill ::</span> <span class="dt">Grid</span> <span class="ot">-&gt;</span> <span class="dt">Cell</span> <span class="ot">-&gt;</span> <span class="dt">Grid</span>
+fill g c<span class="fu">@</span>(n, v) <span class="fu">|</span> n <span class="fu">&gt;=</span> <span class="dv">81</span>          <span class="fu">=</span> g
+                <span class="fu">|</span> v <span class="fu">/=</span> <span class="dv">0</span>           <span class="fu">=</span> fill g next
+                <span class="fu">|</span> length opts <span class="fu">==</span> <span class="dv">1</span> <span class="fu">=</span> fill (change g (n, (head opts))) next
+                <span class="fu">|</span> otherwise        <span class="fu">=</span> fill g next
+  <span class="kw">where</span>
+    next <span class="fu">=</span> (n <span class="fu">+</span> <span class="dv">1</span>, get g (n <span class="fu">+</span> <span class="dv">1</span>))
+    opts <span class="fu">=</span> options g c</code></pre></div>
+<p><code>change</code> goes through the grid, looking for the cell we want to change, replaces the value and returns the changed grid, so we can use it for the remainder of the iteration. It is very easily implemented using a single <code>map</code>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">change ::</span> <span class="dt">Grid</span> <span class="ot">-&gt;</span> <span class="dt">Cell</span> <span class="ot">-&gt;</span> <span class="dt">Grid</span>
+change g (n, v) <span class="fu">=</span> map (\(gn, gv) <span class="ot">-&gt;</span> <span class="kw">if</span> gn <span class="fu">==</span> n <span class="kw">then</span> (n, v) <span class="kw">else</span> (gn, gv)) g</code></pre></div>
+<p><code>get</code> gets the value of the cell at a coordinate in a grid, pretty simple:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">get ::</span> <span class="dt">Grid</span> <span class="ot">-&gt;</span> <span class="dt">Coord</span> <span class="ot">-&gt;</span> <span class="dt">Value</span>
+get g n <span class="fu">=</span> snd <span class="fu">$</span> g <span class="fu">!!</span> n</code></pre></div>
+<p><code>options</code> on the other hand is a little bit more complicated. It has to check the row, the column and the box a given cell is in, and check for a number between one and nine that is not already present in any of them. And because I chose to use a single list to represent the whole grid, having the list indices stored inside a cell comes in very handy, because we can use it to calculate the indices of the other cells in the same row, column and box. But first, this is <code>options</code>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">options ::</span> <span class="dt">Grid</span> <span class="ot">-&gt;</span> <span class="dt">Cell</span> <span class="ot">-&gt;</span> [<span class="dt">Value</span>]
+options g (n, _) <span class="fu">=</span> <span class="kw">let</span> r <span class="fu">=</span> (rowWise n) <span class="fu">++</span> (colWise n) <span class="fu">++</span> (boxWise n) <span class="kw">in</span>
+                    filter (<span class="ot">`notElem`</span> (map (get g) r)) [<span class="dv">1</span><span class="fu">..</span><span class="dv">9</span>]</code></pre></div>
+<p>It looks a bit overloaded, but is actually quite easy. <code>r</code> is a composite list that includes all the coordinates (/indices) of the cells that affect the possible content of this cell. We <code>map</code> it to get to transform it to a list of numbers that are not possible here, and then simply return all numbers between one and nine that are not in that list. If you go back to <code>fill</code> above, you can see that if the length of this list is one, this solution is filled in.</p>
+<p>To finish this off, here are the three remaining functions that calculate the coordinates of the affecting cells. I planned these out when I could not sleep yesterday.</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">rowWise ::</span> <span class="dt">Coord</span> <span class="ot">-&gt;</span> [<span class="dt">Coord</span>]
+rowWise n <span class="fu">=</span> <span class="kw">let</span> r <span class="fu">=</span> n <span class="ot">`div`</span> <span class="dv">9</span> <span class="fu">*</span> <span class="dv">9</span> <span class="kw">in</span> [r<span class="fu">..</span>(r<span class="fu">+</span><span class="dv">8</span>)]
+
+<span class="ot">colWise ::</span> <span class="dt">Coord</span> <span class="ot">-&gt;</span> [<span class="dt">Coord</span>]
+colWise n <span class="fu">=</span> <span class="kw">let</span> os <span class="fu">=</span> n<span class="ot">`mod`</span> <span class="dv">9</span> <span class="kw">in</span> [os,(os<span class="fu">+</span><span class="dv">9</span>)<span class="fu">..</span><span class="dv">80</span>]
+
+<span class="ot">boxWise ::</span> <span class="dt">Coord</span> <span class="ot">-&gt;</span> [<span class="dt">Coord</span>]
+boxWise n <span class="fu">=</span> <span class="kw">let</span> c <span class="fu">=</span> n <span class="ot">`mod`</span> <span class="dv">9</span> <span class="ot">`div`</span> <span class="dv">3</span>
+                r <span class="fu">=</span> n <span class="ot">`div`</span> <span class="dv">27</span> <span class="fu">*</span> <span class="dv">3</span>
+                s <span class="fu">=</span> r <span class="fu">*</span> <span class="dv">9</span> <span class="fu">+</span> c <span class="fu">*</span> <span class="dv">3</span>
+              <span class="kw">in</span> [s<span class="fu">..</span>(s<span class="fu">+</span><span class="dv">2</span>)] <span class="fu">++</span> [(s<span class="fu">+</span><span class="dv">9</span>)<span class="fu">..</span>(s<span class="fu">+</span><span class="dv">11</span>)] <span class="fu">++</span> [(s<span class="fu">+</span><span class="dv">18</span>)<span class="fu">..</span>(s<span class="fu">+</span><span class="dv">20</span>)]</code></pre></div>
+<p><code>rowWise</code> and <code>colWise</code> should be pretty easy to understand if you imagine a grid and try out some example cells. <code>boxWise</code> is a bit more contrived, what it generally does it figures out in which of the nine boxes the cell is by comparing the offset from the left and the offset from the top separately, and then using the top-left cell of this box as a starting point to get the other eight coordinates, which are always in the same relative position.</p>
+<p>So this is the complete code to solve a sudoku puzzle. If you exclude the printing stuff, it is about 50 lines long, and there is a lot to optimize here, but I will leave it as it is, because I am only interested in the PoC.</p>
+    </section>
+
+
+        </div>
+        <div id="footer">
+            Site proudly generated by
+            <a href="http://jaspervdj.be/hakyll">Hakyll</a>
+        </div>
+    </body>
+</html>
