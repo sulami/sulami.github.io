@@ -9,31 +9,31 @@
     </head>
     <body>
         <div id="header">
-            <div id="logo">
-                <a href="../">/dev/urandom >> blog</a>
-            </div>
-            <div id="navigation">
+            <div id="navigation" style="margin-top: 2em">
                 <a href="../">Home</a>
-                <a href="../pages/about.html">About</a>
-                <a href="../pages/uses-this.html">Uses This</a>
-                <a href="../pages/frankenwm.html">FrankenWM</a>
+                ·
                 <a href="../archive.html">Archive</a>
+                ·
+                <a href="../pages/about.html">About</a>
+                ·
+                <a href="../pages/uses-this.html">Uses This</a>
+                ·
+                <a href="../pages/frankenwm.html">FrankenWM</a>
             </div>
         </div>
 
         <div id="content">
-            <h1>Test-Driven Development in Vim</h1>
+            <article>
+                <h1>Test-Driven Development in Vim</h1>
+                <div class="info">
+                    
+                        Posted on May  5, 2014
+                    
+                    
+                </div>
 
-            <div class="info">
-    
-        Posted on May  5, 2014
-    
-    
-</div>
-
-<article>
-    <section>
-<p><a href="https://en.wikipedia.org/wiki/Test-driven_development">Test-driven development (TDD)</a> is a way of developing software by using tests over and over again. When I first was introduced to this concept, I thought, automated tests are a nice idea, why not? Then I read a book about TDD, which proceeded to explain how you start your project by writing a test that (obviously) fails, then start your actual project, and test again. At this point in time, we have a something that returns a default webpage, or zero. Not even printing “Hello World” or “Success!”. The next step is to write another test, which checks for some actual content or functionality. After this test fails (which by the way is important, as it shows that the test will hopefully not produce false positives), we write the piece of content or functionality.</p>
+                <section>
+            <p><a href="https://en.wikipedia.org/wiki/Test-driven_development">Test-driven development (TDD)</a> is a way of developing software by using tests over and over again. When I first was introduced to this concept, I thought, automated tests are a nice idea, why not? Then I read a book about TDD, which proceeded to explain how you start your project by writing a test that (obviously) fails, then start your actual project, and test again. At this point in time, we have a something that returns a default webpage, or zero. Not even printing “Hello World” or “Success!”. The next step is to write another test, which checks for some actual content or functionality. After this test fails (which by the way is important, as it shows that the test will hopefully not produce false positives), we write the piece of content or functionality.</p>
 <p>In the beginning, this way of writing code seems (and is) incredibly slow, and I find myself skipping the first five tests until I have something that actually produces useful output. This is sort of okay, I do not think it will hurt my code in any major way. But after those initial skipped tests, say 10 minutes into the project, I start to religiously write tests for everything that happens, which is way easier than implementing proper tests for all the different stages and levels when you wrote code for several hours and start wasting time by manually testing changes. I think, everything that takes more than 30 minutes to code benefits from TDD.</p>
 <p>But let’s have a look at some actual TDD using vim and C. C is not often written using TDD, but giving usually rather poor debugging output compared to interpreted languages, TDD is even more useful, as you will instantaneously see when a change breaks any functionality. To make testing easier, we will define a keyboard mapping to start our tests from within vim.</p>
 <div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">map <span class="fu">&lt;</span><span class="dt">Leader</span><span class="fu">&gt;</span>t <span class="fu">:!</span>make <span class="fu">-</span><span class="dt">B</span> tests <span class="fu">&amp;&amp;</span> <span class="fu">./</span>tests<span class="fu">&lt;</span><span class="dt">CR</span><span class="fu">&gt;</span></code></pre></div>
@@ -59,9 +59,7 @@
     <span class="cf">return</span>(<span class="dv">0</span>);
 }</code></pre></div>
 <p>We include <em>stdio</em> for printing and <em>assert</em> for the actual testing. The way assert works is if the statement assert gets passed is false, which means it can also be a function call, assert stops the whole program and prints out the line which produced the error. If everything works as intended, it prints all the tests it ran, prompts for enter and returns us to vim. An important part is to only delete old tests, when the condition they test for is no longer wanted, so you always test for basic functionality as well as the final results.</p>
-    </section>
-
-
+                </section>
         </div>
         <div id="footer">
             Site proudly generated by

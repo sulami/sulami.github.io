@@ -9,31 +9,31 @@
     </head>
     <body>
         <div id="header">
-            <div id="logo">
-                <a href="../">/dev/urandom >> blog</a>
-            </div>
-            <div id="navigation">
+            <div id="navigation" style="margin-top: 2em">
                 <a href="../">Home</a>
-                <a href="../pages/about.html">About</a>
-                <a href="../pages/uses-this.html">Uses This</a>
-                <a href="../pages/frankenwm.html">FrankenWM</a>
+                ·
                 <a href="../archive.html">Archive</a>
+                ·
+                <a href="../pages/about.html">About</a>
+                ·
+                <a href="../pages/uses-this.html">Uses This</a>
+                ·
+                <a href="../pages/frankenwm.html">FrankenWM</a>
             </div>
         </div>
 
         <div id="content">
-            <h1>My Thoughts About D</h1>
+            <article>
+                <h1>My Thoughts About D</h1>
+                <div class="info">
+                    
+                        Posted on September  3, 2014
+                    
+                    
+                </div>
 
-            <div class="info">
-    
-        Posted on September  3, 2014
-    
-    
-</div>
-
-<article>
-    <section>
-<p>Roughly two weeks ago, a blogpost about the <a href="http://dlang.org">D language</a> popped up on both hackernews and reddit. I took the time to read it, and it inspired me to try D out for myself. Here are some of my thoughts, about two weeks into the language, with prior experience in C but no real experience in C++ or Objective-C. Scroll down for a TL;DR.</p>
+                <section>
+            <p>Roughly two weeks ago, a blogpost about the <a href="http://dlang.org">D language</a> popped up on both hackernews and reddit. I took the time to read it, and it inspired me to try D out for myself. Here are some of my thoughts, about two weeks into the language, with prior experience in C but no real experience in C++ or Objective-C. Scroll down for a TL;DR.</p>
 <p>I am assuming that you, the reader, are at least somewhat familiar with C, and have some general knowledge about C++ and why it became one of the worst languages there are, right next to PHP (actually for the same reasons). D aims to be what C++ (and appearantly Objective-C) failed to be, a modern-times C with proper classes, reasonable support for unittesting, garbage collection, exceptions, faster compilation and much more.</p>
 <p>The recommended way to use D is by using <a href="http://code.dlang.org/about">dub</a>, a combined package manager and build system, which reads the requirements of a programm from a json, if needed downloads and compiles some modules, and then builds your program. This is a great system, as long as there packages to use. Which is the major downside of dub-based building. There are few packages in the dub databases (321 at the time of writing), so chances are the libraries you need are not available this way. But you can still use C libraries, because D is <em>almost</em> a superset of C, which makes binding D to C really easy, almost scriptable (actually a lot of the dub packages are just C-library bindings). This is what rescues D in my eyes. Python is still one of the best userspace language out there because of its versatility, and D can benefit from C’s versatility.</p>
 <p>But let me give you a real first impression of D:</p>
@@ -50,9 +50,7 @@
 <p>D has been modeled after C, which makes it both an application and a system level language, but unlike most C-based languages, it also has a proper web framework, <a href="http://vibed.org/">vibe.d</a>. Vibe is comparable to Flask, as in it provides a low amount of predefined structures, and echo-webservers are just a couple of lines long (as can be seen on the vibe website). But it can be used for large scale projects, if properly maintained. Aside from native code made from D, which makes it easily faster than most interpreted solutions, it uses the <a href="http://vibed.org/templates/diet">Diet</a> template language, which is an extended Jade (used by node.js). I would personally describe it as “the markdown of html templates”, because it almost looks like markdown, but with a lot more control over html attributes and the ability to embed D code in the template. I am currently working on proper syntax highlighting for diet in vim (<a href="https://github.com/sulami/diet.vim">here</a>).</p>
 <p>If you now think “Wow, that sounds great”, you are pretty much on my side, I already fell in love with D. The only major downside I can see is the adoption. D has been around for almost a decade now and the only case of someone actually using it I have heard of (aside from myself and the D community) is Facebook. I believe D could be the next big language, if it gets adopted.</p>
 <p><strong>TL;DR</strong> D is great for a lot of applications, especially ones with high performance requirements, has a great standard library and relatively simple interaction with C code, as well as a nice package manager/build system combo. It lacks in terms of adoption, resulting in few ports to D, few frameworks, few third-party documentation. If D gets adopted, it will be a major success.</p>
-    </section>
-
-
+                </section>
         </div>
         <div id="footer">
             Site proudly generated by

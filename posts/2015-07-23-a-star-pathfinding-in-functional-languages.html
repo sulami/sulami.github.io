@@ -9,31 +9,31 @@
     </head>
     <body>
         <div id="header">
-            <div id="logo">
-                <a href="../">/dev/urandom >> blog</a>
-            </div>
-            <div id="navigation">
+            <div id="navigation" style="margin-top: 2em">
                 <a href="../">Home</a>
-                <a href="../pages/about.html">About</a>
-                <a href="../pages/uses-this.html">Uses This</a>
-                <a href="../pages/frankenwm.html">FrankenWM</a>
+                ·
                 <a href="../archive.html">Archive</a>
+                ·
+                <a href="../pages/about.html">About</a>
+                ·
+                <a href="../pages/uses-this.html">Uses This</a>
+                ·
+                <a href="../pages/frankenwm.html">FrankenWM</a>
             </div>
         </div>
 
         <div id="content">
-            <h1>A* Pathfinding in Functional Languages</h1>
+            <article>
+                <h1>A* Pathfinding in Functional Languages</h1>
+                <div class="info">
+                    
+                        Posted on July 23, 2015
+                    
+                    
+                </div>
 
-            <div class="info">
-    
-        Posted on July 23, 2015
-    
-    
-</div>
-
-<article>
-    <section>
-<p>… like, you guessed it, Haskell. But this should translate to Lisp quite well. <a href="https://en.wikipedia.org/wiki/A*_search_algorithm">A* (A star)</a> is a graph traversal algorithm that is commonly used for pathfinding in video games, and probably also things like navigational software. It is an extension to <a href="https://en.wikipedia.org/wiki/Dtra%27s_algorithm">Dijkstra’s algorithm</a>. If you do not know how they work, there is a really nice interactive explanation over on <a href="http://www.redblobgames.com/pathfinding/a-star/introduction.html">Red Blob Games</a>. There are a lot of examples around how to implement it in imperative languages, including the pseudo code on Wikipedia, but it is actually difficult to find an example for functional programming languages, where the approach differs a bit. As you will see, the general structure will be very close to the one used for <a href="https://github.com/sulami/spielwiese/blob/master/hUtil/BTree.hs#L69">breadth-first traversal</a>, the reason for this being that both algorithms essentially are breadth-first traversal with a weighting function that decides where to traverse deeper. With all paths having equal weights, they will behave exactly like breadth-first.</p>
+                <section>
+            <p>… like, you guessed it, Haskell. But this should translate to Lisp quite well. <a href="https://en.wikipedia.org/wiki/A*_search_algorithm">A* (A star)</a> is a graph traversal algorithm that is commonly used for pathfinding in video games, and probably also things like navigational software. It is an extension to <a href="https://en.wikipedia.org/wiki/Dtra%27s_algorithm">Dijkstra’s algorithm</a>. If you do not know how they work, there is a really nice interactive explanation over on <a href="http://www.redblobgames.com/pathfinding/a-star/introduction.html">Red Blob Games</a>. There are a lot of examples around how to implement it in imperative languages, including the pseudo code on Wikipedia, but it is actually difficult to find an example for functional programming languages, where the approach differs a bit. As you will see, the general structure will be very close to the one used for <a href="https://github.com/sulami/spielwiese/blob/master/hUtil/BTree.hs#L69">breadth-first traversal</a>, the reason for this being that both algorithms essentially are breadth-first traversal with a weighting function that decides where to traverse deeper. With all paths having equal weights, they will behave exactly like breadth-first.</p>
 <p>So I wrote up <a href="https://github.com/sulami/spielwiese/tree/master/astar">a small something</a> that uses this algorithm in Haskell. It operates on ASCII mazes and draws the shortest possible path through them in (sort of) reasonable time. It also features experimental multi-threading support, although I am not quite sure yet just how big the performance boost is by using several cores. The results look like this, the asterisks (or stars…) show the path:</p>
 <div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX<span class="op">**</span> X
 X   X  <span class="op">*************</span>X<span class="op">***********</span>    X           X  <span class="op">*********</span>        X<span class="op">*</span>  X
@@ -93,9 +93,7 @@ addRoutes grid ps path pwf <span class="fu">=</span> <span class="kw">let</span>
 <div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">flood ::</span> <span class="dt">Grid</span> <span class="ot">-&gt;</span> <span class="dt">Coord</span> <span class="ot">-&gt;</span> <span class="dt">Coord</span> <span class="ot">-&gt;</span> <span class="dt">PossibleWaysFun</span> <span class="ot">-&gt;</span> <span class="dt">CostFun</span> <span class="ot">-&gt;</span> <span class="dt">Path</span>
 flood grid fin pos pwf cf <span class="fu">=</span> head <span class="fu">$</span> fl grid fin pwf cf [[pos]]</code></pre></div>
 <p>And we get a single function that takes all the relevant data and returns one path. Note how the initial set of paths consists of the starting position, which is in itself a path of length 0. Also note how this will fail horribly if there is no possible path. You could transform this quite easily using <code>Maybe</code> to accommodate for that. And that is already pretty much it.</p>
-    </section>
-
-
+                </section>
         </div>
         <div id="footer">
             Site proudly generated by
