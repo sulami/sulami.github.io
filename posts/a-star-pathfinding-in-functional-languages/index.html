@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>sulami's blog - A* Pathfinding in Functional Languages</title>
+        <link rel="stylesheet" type="text/css" href="../../stylesheet.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        <div id="header">
+            <div id="navigation" style="margin-top: 2em">
+                <a href="../../">Home</a>
+                ·
+                <a href="../../archive/">Archive</a>
+                ·
+                <a href="../../atom.xml">Feed</a>
+                ·
+                <a href="../../pages/about/">About</a>
+                ·
+                <a href="../../pages/uses-this/">Uses This</a>
+                ·
+                <a href="../../pages/frankenwm/">FrankenWM</a>
+            </div>
+        </div>
+
+        <div id="content">
+            <article>
+                <h1>A* Pathfinding in Functional Languages</h1>
+                <div class="info">
+                    
+                        Posted on July 23, 2015
+                    
+                    
+                </div>
+
+                <section>
+            <p>… like, you guessed it, Haskell. But this should translate to Lisp quite well. <a href="https://en.wikipedia.org/wiki/A*_search_algorithm">A* (A star)</a> is a graph traversal algorithm that is commonly used for pathfinding in video games, and probably also things like navigational software. It is an extension to <a href="https://en.wikipedia.org/wiki/Dtra%27s_algorithm">Dijkstra’s algorithm</a>. If you do not know how they work, there is a really nice interactive explanation over on <a href="http://www.redblobgames.com/pathfinding/a-star/introduction.html">Red Blob Games</a>. There are a lot of examples around how to implement it in imperative languages, including the pseudo code on Wikipedia, but it is actually difficult to find an example for functional programming languages, where the approach differs a bit. As you will see, the general structure will be very close to the one used for <a href="https://github.com/sulami/spielwiese/blob/master/hUtil/BTree.hs#L69">breadth-first traversal</a>, the reason for this being that both algorithms essentially are breadth-first traversal with a weighting function that decides where to traverse deeper. With all paths having equal weights, they will behave exactly like breadth-first.</p>
+<p>So I wrote up <a href="https://github.com/sulami/spielwiese/tree/master/astar">a small something</a> that uses this algorithm in Haskell. It operates on ASCII mazes and draws the shortest possible path through them in (sort of) reasonable time. It also features experimental multi-threading support, although I am not quite sure yet just how big the performance boost is by using several cores. The results look like this, the asterisks (or stars…) show the path:</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX<span class="op">**</span> X
+X   X  <span class="op">*************</span>X<span class="op">***********</span>    X           X  <span class="op">*********</span>        X<span class="op">*</span>  X
+X   X  <span class="op">*</span>XXXXXXXXX  <span class="op">*</span>X<span class="op">*</span>  XXXXX  <span class="op">*</span>XXXXXXXXX   XXXXX  <span class="op">*</span>XXXXX  <span class="op">*</span>XXXXX   X<span class="op">*</span>  X
+X      <span class="op">*********</span>X  <span class="op">***</span>  X   X  <span class="op">*******</span>  X          <span class="op">*</span>X   X  <span class="op">*</span>X       X<span class="op">*</span>  X
+XXXXXXXXX   X  <span class="op">*</span>XXXXXXXXX   XXXXXXXXX<span class="op">*</span>  XXXXX   X  <span class="op">*</span>X   X  <span class="op">*</span>XXXXXXXXX<span class="op">*</span>  X
+X  <span class="op">*****</span>X   X  <span class="op">*************</span>X  <span class="op">*******</span>  X   X   X  <span class="op">*</span>X   X  <span class="op">*******</span>  X<span class="op">*</span>  X
+X  <span class="op">*</span>X  <span class="op">*</span>XXXXXXXXXXXXX   X  <span class="op">*</span>X  <span class="op">*</span>XXXXXXXXX   XXXXX  <span class="op">*</span>X   XXXXXXXXX<span class="op">*</span>  X<span class="op">*</span>  X
+X  <span class="op">*</span>X  <span class="op">*************</span>X   X  <span class="op">*</span>X  <span class="op">*****</span>X           X  <span class="op">*********</span>X  <span class="op">***</span>  X<span class="op">*</span>  X
+X  <span class="op">*</span>XXXXXXXXXXXXX  <span class="op">*</span>XXXXX  <span class="op">*</span>XXXXX  <span class="op">*</span>X   XXXXX   XXXXXXXXX  <span class="op">*</span>X  <span class="op">*</span>XXXXX<span class="op">*</span>  X
+X  <span class="op">*********</span>X      <span class="op">*</span>X   X  <span class="op">***</span>  X  <span class="op">*</span>X       X<span class="op">***********</span>X  <span class="op">*</span>X  <span class="op">*******</span>  X
+X   XXXXX  <span class="op">*</span>XXXXX  <span class="op">*</span>X   XXXXX<span class="op">*</span>  X  <span class="op">*</span>XXXXXXXXX<span class="op">*</span>  X   X  <span class="op">*</span>X  <span class="op">*</span>XXXXXXXXXXXXX
+X       X  <span class="op">*****</span>X  <span class="op">*</span>X   X<span class="op">*****</span>  X  <span class="op">*****</span>X  <span class="op">***</span>  X   X  <span class="op">*</span>X  <span class="op">*****</span>X       X
+XXXXXXXXXXXXX  <span class="op">*</span>X  <span class="op">*</span>X   X<span class="op">*</span>  XXXXXXXXX  <span class="op">*</span>X  <span class="op">*</span>XXXXX   X  <span class="op">*</span>XXXXX  <span class="op">*</span>XXXXX   X
+X <span class="op">********</span>  X  <span class="op">*</span>X  <span class="op">*******</span>  X       X  <span class="op">*</span>X  <span class="op">*****</span>X   X  <span class="op">*</span>    X  <span class="op">*******</span>  X
+X <span class="op">*</span> XXXXX<span class="op">*</span>  X  <span class="op">*</span>XXXXXXXXX   XXXXX   X  <span class="op">*</span>XXXXX  <span class="op">*</span>XXXXX  <span class="op">*</span>XXXXXXXXXXXXX<span class="op">*</span>  X
+X <span class="op">*</span> X  <span class="op">***</span>  X  <span class="op">*******</span>  X           X  <span class="op">***</span>  X  <span class="op">*</span>X   X  <span class="op">*************</span>X<span class="op">*</span>  X
+X <span class="op">*</span> X  <span class="op">*</span>XXXXXXXXX   X<span class="op">*</span>  XXXXX   XXXXXXXXX<span class="op">*</span>  X  <span class="op">*</span>X   XXXXXXXXXXXXX  <span class="op">*</span>X<span class="op">*</span>  X
+X <span class="op">*</span> X  <span class="op">*********</span>X   X<span class="op">*</span>  X   X   X  <span class="op">*******</span>  X  <span class="op">*************</span>X   X  <span class="op">***</span>  X
+X <span class="op">*</span> XXXXXXXXX  <span class="op">*</span>X   X<span class="op">*</span>  X   XXXXX  <span class="op">*</span>XXXXXXXXX   XXXXXXXXX  <span class="op">*</span>X   XXXXXXXXX
+X <span class="op">*</span> X       X  <span class="op">*</span>X   X<span class="op">*</span>          X  <span class="op">*********</span>X   X<span class="op">*******</span>X  <span class="op">*******</span>      X
+X <span class="op">*</span> X   XXXXX  <span class="op">*</span>XXXXX<span class="op">*</span>  XXXXX   XXXXXXXXX  <span class="op">*</span>XXXXX<span class="op">*</span>  X  <span class="op">*</span>XXXXXXXXX<span class="op">*</span>  X   X
+X <span class="op">*</span> X          <span class="op">*******</span>  X           X      <span class="op">*******</span>  X  <span class="op">***********</span>  X   X
+X <span class="op">*</span> XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</code></pre></div>
+<p>A maze of this size can be solved in about a quarter of a second on my 2008 laptop. So let us find out, how one would implement this sort of path finding using a purely functional language like Haskell.</p>
+<p>The core of this algorithm is essentially a <a href="https://en.wikipedia.org/wiki/Flood_fill">flood fill</a>. But where a flood fill expands in all directions equally (if it is a queue-based one), A Star reorders the cells to fill after every filled cell using a cost function, and always fills the cheapest cell available. As such, our function needs to take a couple of arguments to work, the grid on which it works, the start and finish positions on the grid (we will need the target to determine costs), a function that can determine the valid cells a path could advance on, and a cost function that can determine the cost of a path.</p>
+<p>The grid, start and finish positions are quite easy, in our case we have a two-dimensional grid that consists of <code>Char</code>s, and positions on it look like <code>(x,y)</code>. The cost function has to follow a couple of basic rules. If you have a look at the Wikipedia page I linked at the very top, there is a part that explains that the cost of a path consists of the sum of its length, and an estimate of the distance between its end and the target. It should also not overestimate the minimal distance to the target. In our case, this is very simple. I define the rules of motion to be that we can only move in four directions, and not into or through walls (duh). This means our example cost function looks like this:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">cost ::</span> <span class="dt">Coord</span> <span class="ot">-&gt;</span> <span class="dt">Path</span> <span class="ot">-&gt;</span> <span class="dt">Int</span>
+cost fin path <span class="fu">=</span> <span class="kw">let</span> l <span class="fu">=</span> last path <span class="kw">in</span> (length path <span class="fu">-</span> <span class="dv">1</span>) <span class="fu">+</span> (dist l fin)
+  <span class="kw">where</span>
+<span class="ot">    dist ::</span> <span class="dt">Coord</span> <span class="ot">-&gt;</span> <span class="dt">Coord</span> <span class="ot">-&gt;</span> <span class="dt">Int</span>
+    dist (x0,y0) (x1,y1) <span class="fu">=</span> abs (x0<span class="fu">-</span>x1) <span class="fu">+</span> abs (y0<span class="fu">-</span>y1)</code></pre></div>
+<p>This is one of the functions we will be passing to the actual path finding function. The other one will be the one that determines which cells are valid options. This follows a couple of basic rules that I annotated here:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">possibleWays ::</span> <span class="dt">Grid</span> <span class="ot">-&gt;</span> <span class="dt">Coord</span> <span class="ot">-&gt;</span> <span class="dt">Path</span>
+possibleWays g (x,y) <span class="fu">=</span> [ (x1,y1) <span class="fu">|</span> y1 <span class="ot">&lt;-</span> [(y<span class="fu">-</span><span class="dv">1</span>)<span class="fu">..</span>(y<span class="fu">+</span><span class="dv">1</span>)],    <span class="co">-- Build a set of y</span>
+                                    y1 <span class="fu">&gt;=</span> <span class="dv">0</span>,                <span class="co">-- and x coordinates</span>
+                                    y1 <span class="fu">&lt;</span> length g,          <span class="co">-- within the grid and</span>
+                                    x1 <span class="ot">&lt;-</span> [(x<span class="fu">-</span><span class="dv">1</span>)<span class="fu">..</span>(x<span class="fu">+</span><span class="dv">1</span>)],   <span class="co">-- a maximum distance</span>
+                                    x1 <span class="fu">&gt;=</span> <span class="dv">0</span>,                <span class="co">-- of one cell in any</span>
+                                    x1 <span class="fu">&lt;</span> length (g <span class="fu">!!</span> y1),  <span class="co">-- direction.</span>
+                                    x<span class="fu">-</span>x1 <span class="fu">==</span> <span class="dv">0</span> <span class="fu">||</span> y<span class="fu">-</span>y1 <span class="fu">==</span> <span class="dv">0</span>, <span class="co">-- Only one step in one direction.</span>
+                                    g <span class="fu">!!</span> y1 <span class="fu">!!</span> x1 <span class="fu">/=</span> <span class="ch">'X'</span> ]  <span class="co">-- Not into a wall.</span></code></pre></div>
+<p>As you can notice, the function takes the grid and a position, and determines which cell can be entered on the grid from withing the position provided. This function has to supplied, because, just like the cost function, its specifics depend on the rules of the game. If you, for example, want to be able to move diagonally, you can adjust this function and the cost function without touching the path finding algorithm itself.</p>
+<p>The only thing left is the path finding itself. I will split this one into parts so it is easier to understand. A complete source with example including an ASCII parser and printer is on <a href="https://github.com/sulami/spielwiese/tree/master/astar">GitHub</a>. While it might look intimidating, the core algorithm is actually quite simple. It sorts all paths in a list by cost, and replaces the cheapest path by all paths that could extend this path while obeying the rules of <code>possibleWays</code> and not adding a cell that is already part of another path. The comparison is done using a simple zip:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">fl ::</span> <span class="dt">Grid</span> <span class="ot">-&gt;</span> <span class="dt">Coord</span> <span class="ot">-&gt;</span> <span class="dt">PossibleWaysFun</span> <span class="ot">-&gt;</span> <span class="dt">CostFun</span> <span class="ot">-&gt;</span> [<span class="dt">Path</span>] <span class="ot">-&gt;</span> [<span class="dt">Path</span>]
+fl grid fin pwf cf paths
+  <span class="fu">|</span> any (\p <span class="ot">-&gt;</span> last p <span class="fu">==</span> fin) paths <span class="fu">=</span> filter (\p <span class="ot">-&gt;</span> last p <span class="fu">==</span> fin) paths
+  <span class="fu">|</span> otherwise <span class="fu">=</span> <span class="kw">let</span> best <span class="fu">=</span> snd <span class="fu">$</span> minimum <span class="fu">$</span> zip (map (cf fin) paths) paths
+                    pb <span class="fu">=</span> addRoutes grid paths best pwf
+                <span class="kw">in</span> fl grid fin pwf cf <span class="fu">$</span> filter (<span class="fu">/=</span> best) paths <span class="fu">++</span> pb</code></pre></div>
+<p>A path is replaced by all <em>new</em>, valid paths using</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">addRoutes ::</span> <span class="dt">Grid</span> <span class="ot">-&gt;</span> [<span class="dt">Path</span>] <span class="ot">-&gt;</span> <span class="dt">Path</span> <span class="ot">-&gt;</span> <span class="dt">PossibleWaysFun</span> <span class="ot">-&gt;</span> [<span class="dt">Path</span>]
+addRoutes grid ps path pwf <span class="fu">=</span> <span class="kw">let</span> cps <span class="fu">=</span> concat ps <span class="kw">in</span>
+  [ path <span class="fu">++</span> [p] <span class="fu">|</span> p <span class="ot">&lt;-</span> filter (<span class="ot">`notElem`</span> cps) <span class="fu">$</span> pwf grid <span class="fu">$</span> last path ]</code></pre></div>
+<p>Do not worry about the funny types, they are just for clarification and declarations can be found in the complete source. The list comprehension ensures we source the possible replacements and filter out the ones that would cross existing paths. If a path cannot go anywhere new, it therefore gets removed altogether, and a new cheapest path will be chosen the next iteration.</p>
+<p>To finish this off, we just package this into a nice clean wrapper like this:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">flood ::</span> <span class="dt">Grid</span> <span class="ot">-&gt;</span> <span class="dt">Coord</span> <span class="ot">-&gt;</span> <span class="dt">Coord</span> <span class="ot">-&gt;</span> <span class="dt">PossibleWaysFun</span> <span class="ot">-&gt;</span> <span class="dt">CostFun</span> <span class="ot">-&gt;</span> <span class="dt">Path</span>
+flood grid fin pos pwf cf <span class="fu">=</span> head <span class="fu">$</span> fl grid fin pwf cf [[pos]]</code></pre></div>
+<p>And we get a single function that takes all the relevant data and returns one path. Note how the initial set of paths consists of the starting position, which is in itself a path of length 0. Also note how this will fail horribly if there is no possible path. You could transform this quite easily using <code>Maybe</code> to accommodate for that. And that is already pretty much it.</p>
+                </section>
+        </div>
+        <div id="footer">
+            Site proudly generated by
+            <a href="http://jaspervdj.be/hakyll">Hakyll</a>
+        </div>
+    </body>
+</html>

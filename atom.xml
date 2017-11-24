@@ -11,8 +11,8 @@
     <updated>2017-11-11T00:00:00Z</updated>
     <entry>
     <title>Hello, World! Again!</title>
-    <link href="https://sulami.github.io/posts/2017-11-11-hello-world-again.html" />
-    <id>https://sulami.github.io/posts/2017-11-11-hello-world-again.html</id>
+    <link href="https://sulami.github.io/posts/hello-world-again/index.html" />
+    <id>https://sulami.github.io/posts/hello-world-again/index.html</id>
     <published>2017-11-11T00:00:00Z</published>
     <updated>2017-11-11T00:00:00Z</updated>
     <summary type="html"><![CDATA[<p>First of all, I know it has been quite silent on here for a while. Since the last time I posted here, I switched jobs, and moved countries, so it would be fair to say that I have been quite busy in the meanwhile. But I’d still like to apologise, and I promise I will try to post more frequently from now on.</p>
@@ -28,8 +28,8 @@
 </entry>
 <entry>
     <title>A Fuzzy Finder in Haskell</title>
-    <link href="https://sulami.github.io/posts/2016-06-24-a-fuzzy-finder-in-haskell.html" />
-    <id>https://sulami.github.io/posts/2016-06-24-a-fuzzy-finder-in-haskell.html</id>
+    <link href="https://sulami.github.io/posts/a-fuzzy-finder-in-haskell/index.html" />
+    <id>https://sulami.github.io/posts/a-fuzzy-finder-in-haskell/index.html</id>
     <published>2016-06-24T00:00:00Z</published>
     <updated>2016-06-24T00:00:00Z</updated>
     <summary type="html"><![CDATA[<p>This is a response to <em><a href="http://blog.amjith.com/fuzzyfinder-in-10-lines-of-python">FuzzyFinder - in 10 lines of Python</a></em>, which was posted to reddit yesterday.</p>
@@ -80,8 +80,8 @@ main <span class="fu">=</span> <span class="kw">do</span> args <span class="ot">
 </entry>
 <entry>
     <title>Staying Healthy as a Programmer</title>
-    <link href="https://sulami.github.io/posts/2016-06-22-staying-healthy-as-a-programmer.html" />
-    <id>https://sulami.github.io/posts/2016-06-22-staying-healthy-as-a-programmer.html</id>
+    <link href="https://sulami.github.io/posts/staying-healthy-as-a-programmer/index.html" />
+    <id>https://sulami.github.io/posts/staying-healthy-as-a-programmer/index.html</id>
     <published>2016-06-22T00:00:00Z</published>
     <updated>2016-06-22T00:00:00Z</updated>
     <summary type="html"><![CDATA[<p><em>Disclaimer</em> In this post I link to some specific products. These links serve as examples and are by no means direct reccomendations. Some of these are just the result of a quick web search. If you decide to buy stuff, do your research, figure out what exactly you need and choose a product based on that.</p>
@@ -102,8 +102,8 @@ main <span class="fu">=</span> <span class="kw">do</span> args <span class="ot">
 </entry>
 <entry>
     <title>Emacs From a Vim Addict's Perspective</title>
-    <link href="https://sulami.github.io/posts/2016-03-03-emacs-from-a-vim-addicts-perspective.html" />
-    <id>https://sulami.github.io/posts/2016-03-03-emacs-from-a-vim-addicts-perspective.html</id>
+    <link href="https://sulami.github.io/posts/emacs-from-a-vim-addicts-perspective/index.html" />
+    <id>https://sulami.github.io/posts/emacs-from-a-vim-addicts-perspective/index.html</id>
     <published>2016-03-03T00:00:00Z</published>
     <updated>2016-03-03T00:00:00Z</updated>
     <summary type="html"><![CDATA[<p>I have been playing around in Emacs lately. Vim has been the core of my workflow for half a decade now, and I just cannot imagine going back to non-modal editing anymore. I will now explain, why I might just switch to emacs in the long-term.</p>
@@ -116,8 +116,8 @@ main <span class="fu">=</span> <span class="kw">do</span> args <span class="ot">
 </entry>
 <entry>
     <title>Why You Need Fuzz Testing</title>
-    <link href="https://sulami.github.io/posts/2016-02-23-why-you-need-fuzz-testing.html" />
-    <id>https://sulami.github.io/posts/2016-02-23-why-you-need-fuzz-testing.html</id>
+    <link href="https://sulami.github.io/posts/why-you-need-fuzz-testing/index.html" />
+    <id>https://sulami.github.io/posts/why-you-need-fuzz-testing/index.html</id>
     <published>2016-02-23T00:00:00Z</published>
     <updated>2016-02-23T00:00:00Z</updated>
     <summary type="html"><![CDATA[<p>Unittesting is an important part of building reliable software, although by far not the only one. But many programmers misunderstand the purpose of unittests. Classic unittests have two purposes: They force you to develop a spec and enforce it, and they can protect you against regression when refactoring or otherwise changing your code. Contrary to what some believe, they do not ensure correctness of your code.</p>
@@ -136,8 +136,8 @@ main <span class="fu">=</span> <span class="kw">do</span> args <span class="ot">
 </entry>
 <entry>
     <title>Why I Use Pomodoro</title>
-    <link href="https://sulami.github.io/posts/2016-01-11-why-i-use-pomodoro.html" />
-    <id>https://sulami.github.io/posts/2016-01-11-why-i-use-pomodoro.html</id>
+    <link href="https://sulami.github.io/posts/why-i-use-pomodoro/index.html" />
+    <id>https://sulami.github.io/posts/why-i-use-pomodoro/index.html</id>
     <published>2016-01-11T00:00:00Z</published>
     <updated>2016-01-11T00:00:00Z</updated>
     <summary type="html"><![CDATA[<p>Almost every programmer knows what it means to get in the zone. That weird feeling you get at two in the morning while working on a side-project, when the the time flies by and suddenly all important features are done. Mastering the zone is a crucial element of maximizing your productivity, but it can also be quite difficult.</p>
@@ -148,8 +148,8 @@ main <span class="fu">=</span> <span class="kw">do</span> args <span class="ot">
 </entry>
 <entry>
     <title>Data-Pipelines in Haskell</title>
-    <link href="https://sulami.github.io/posts/2015-12-07-data-pipelines-in-haskell.html" />
-    <id>https://sulami.github.io/posts/2015-12-07-data-pipelines-in-haskell.html</id>
+    <link href="https://sulami.github.io/posts/data-pipelines-in-haskell/index.html" />
+    <id>https://sulami.github.io/posts/data-pipelines-in-haskell/index.html</id>
     <published>2015-12-07T00:00:00Z</published>
     <updated>2015-12-07T00:00:00Z</updated>
     <summary type="html"><![CDATA[<p>Today I was writing some code in Golang and thought about why Haskell feels so much more powerful and expressive. Then I had a revelation. Haskell follows the UNIX philosophy, focussing on small functions that do exactly one thing (at least good Haskell code does so). It also makes these functions easily combinable without leading to syntastic noise like parenthesis-mountains. So I thought I might just write a post highlighting that, which is what you are currently reading.</p>
@@ -171,8 +171,8 @@ x <span class="fu">&amp;</span> f <span class="fu">=</span> f x</code></pre></di
 </entry>
 <entry>
     <title>Using Hoogle for Your Project</title>
-    <link href="https://sulami.github.io/posts/2015-11-26-using-hoogle-for-your-project.html" />
-    <id>https://sulami.github.io/posts/2015-11-26-using-hoogle-for-your-project.html</id>
+    <link href="https://sulami.github.io/posts/using-hoogle-for-your-project/index.html" />
+    <id>https://sulami.github.io/posts/using-hoogle-for-your-project/index.html</id>
     <published>2015-11-26T00:00:00Z</published>
     <updated>2015-11-26T00:00:00Z</updated>
     <summary type="html"><![CDATA[<p><a href="https://github.com/ndmitchell/hoogle">Hoogle</a> is a fantastic tool that uses Haskell’s type system to build a searchable index of types, functions and constants, connecting with <a href="https://www.haskell.org/haddock/">Haddock</a> to provide documentation. It can be used to host browsable websites, like the <a href="https://www.haskell.org/hoogle/">Hackage instance</a> or the <a href="http://www.stackage.org/lts-3.15/hoogle">Stackage instance</a>, or used for editor integration, like in <a href="https://github.com/Twinside/vim-hoogle">vim</a> or <a href="https://github.com/haskell/haskell-mode">emacs</a>. Overall pretty great stuff.</p>
@@ -181,8 +181,8 @@ x <span class="fu">&amp;</span> f <span class="fu">=</span> f x</code></pre></di
 </entry>
 <entry>
     <title>Concurrent I/O in Haskell</title>
-    <link href="https://sulami.github.io/posts/2015-09-11-concurrent-io-in-haskell.html" />
-    <id>https://sulami.github.io/posts/2015-09-11-concurrent-io-in-haskell.html</id>
+    <link href="https://sulami.github.io/posts/concurrent-io-in-haskell/index.html" />
+    <id>https://sulami.github.io/posts/concurrent-io-in-haskell/index.html</id>
     <published>2015-09-11T00:00:00Z</published>
     <updated>2015-09-11T00:00:00Z</updated>
     <summary type="html"><![CDATA[<p>Today just after waking up, I have been tweaking the last bits and bops of <a href="https://github.com/sulami/tinfoilsub">TinfoilSub</a>, a satiric fun/learning project of mine that scrapes YouTube channels to replicate a subscriptions page without requiring a Google account. The core of this little program is the <code>runServer</code> function that uses <a href="https://hackage.haskell.org/package/scotty">Scotty</a> to host a local page that displays the results, while the list of channels is read from a file. In the beginning, this function looked something like this:</p>
@@ -216,8 +216,8 @@ runServer channels <span class="fu">=</span> scotty <span class="dv">3000</span>
 </entry>
 <entry>
     <title>Windows 10 - Post-Launch Thoughts</title>
-    <link href="https://sulami.github.io/posts/2015-08-13-windows-10-post-launch-thoughts.html" />
-    <id>https://sulami.github.io/posts/2015-08-13-windows-10-post-launch-thoughts.html</id>
+    <link href="https://sulami.github.io/posts/windows-10-post-launch-thoughts/index.html" />
+    <id>https://sulami.github.io/posts/windows-10-post-launch-thoughts/index.html</id>
     <published>2015-08-13T00:00:00Z</published>
     <updated>2015-08-13T00:00:00Z</updated>
     <summary type="html"><![CDATA[<p>So it has been two weeks since the official Windows 10 launch, and there have been a lot of discussions about it. I am going to summarize some of my own thoughts, now that I had the chance to test it myself.</p>
