@@ -8,13 +8,13 @@
         <name>Robin Schroer</name>
         <email>sulami@peerwire.org</email>
     </author>
-    <updated>2018-06-15T00:00:00Z</updated>
+    <updated>React Native &amp; ClojureScript - An obscure stack</updated>
     <entry>
-    <title>React Native & ClojureScript - An obscure stack</title>
-    <link href="https://sulami.github.io/posts/react-native-and-clojurescript/index.html" />
-    <id>https://sulami.github.io/posts/react-native-and-clojurescript/index.html</id>
+    <title>React Native &amp; ClojureScript - An obscure stack</title>
+    <link href="React Native &amp; ClojureScript - An obscure stackReact Native &amp; ClojureScript - An obscure stack" />
+    <id>React Native &amp; ClojureScript - An obscure stackReact Native &amp; ClojureScript - An obscure stack</id>
     <published>2018-06-15T00:00:00Z</published>
-    <updated>2018-06-15T00:00:00Z</updated>
+    <updated>React Native &amp; ClojureScript - An obscure stack</updated>
     <summary type="html"><![CDATA[<p>I have been working on a new side project for about two months now, a task manager app which is primarily aimed at iOS. This is a typical “scratching my own itch” side project. There are plenty of task manager apps on the App Store, but none of them seems to do exactly what I would like mine to do.<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote">Of course I cannot disclose the exact of features at this point, both because I’m really slow at development and also because a lot is still work in progress. I can say that none of the big ones (top 200 productivity) does everything I want.<br />
 <br />
 </span></span></p>
@@ -31,10 +31,10 @@
 </entry>
 <entry>
     <title>Distractions, Productivity, and Working from Home</title>
-    <link href="https://sulami.github.io/posts/distractions/index.html" />
-    <id>https://sulami.github.io/posts/distractions/index.html</id>
+    <link href="Distractions, Productivity, and Working from HomeDistractions, Productivity, and Working from Home" />
+    <id>Distractions, Productivity, and Working from HomeDistractions, Productivity, and Working from Home</id>
     <published>2017-12-20T00:00:00Z</published>
-    <updated>2017-12-20T00:00:00Z</updated>
+    <updated>Distractions, Productivity, and Working from Home</updated>
     <summary type="html"><![CDATA[<p>I have been working from home more than usual recently, thanks to my employer, who understands that five days a week in an open office aren’t the ideal environment for everyone. After mentioning that I noticed a perceived increase in productivity, I was asked to find out what it is that makes me so much more productive at home. The obvious answer is that there are fewer distracting factors at home than at the office<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote">This can be coworkers directly, but also just things like background chatter, the coffee machine, or even just visual distractions in the form of people walking in your field of vision all the time.<br />
 <br />
 </span></span>, which of course is true, but it is not necessarily the truth.</p>
@@ -54,10 +54,10 @@
 </entry>
 <entry>
     <title>Hello, World! Again!</title>
-    <link href="https://sulami.github.io/posts/hello-world-again/index.html" />
-    <id>https://sulami.github.io/posts/hello-world-again/index.html</id>
+    <link href="Hello, World! Again!Hello, World! Again!" />
+    <id>Hello, World! Again!Hello, World! Again!</id>
     <published>2017-11-11T00:00:00Z</published>
-    <updated>2017-11-11T00:00:00Z</updated>
+    <updated>Hello, World! Again!</updated>
     <summary type="html"><![CDATA[<p>First of all, I know it has been quite silent on here for a while. Since the last time I posted here, I switched jobs, and moved countries, so it would be fair to say that I have been quite busy in the meanwhile. But I’d still like to apologise, and I promise I will try to post more frequently from now on.</p>
 <p>If you have been here before, you might have noticed that things have changed a fair bit. This is the new blog, reborn from the ashes, so to say. Though only because I felt like it was necessary to burn the old one. It’s now built using <a href="https://jaspervdj.be/hakyll/">Hakyll</a> instead of <a href="https://blog.getpelican.com">Pelican</a><span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote">Why switch, you ask? Shiny toys, that’s why.<br />
 <br />
@@ -71,10 +71,10 @@
 </entry>
 <entry>
     <title>A Fuzzy Finder in Haskell</title>
-    <link href="https://sulami.github.io/posts/a-fuzzy-finder-in-haskell/index.html" />
-    <id>https://sulami.github.io/posts/a-fuzzy-finder-in-haskell/index.html</id>
+    <link href="A Fuzzy Finder in HaskellA Fuzzy Finder in Haskell" />
+    <id>A Fuzzy Finder in HaskellA Fuzzy Finder in Haskell</id>
     <published>2016-06-24T00:00:00Z</published>
-    <updated>2016-06-24T00:00:00Z</updated>
+    <updated>A Fuzzy Finder in Haskell</updated>
     <summary type="html"><![CDATA[<p>This is a response to <em><a href="http://blog.amjith.com/fuzzyfinder-in-10-lines-of-python">FuzzyFinder - in 10 lines of Python</a></em>, which was posted to reddit yesterday.</p>
 <p>Following the blogpost linked above, I decided to write my own fuzzy finder in Haskell, because that is the language I am currently learning, and think has great potential. It is also a more interesting <a href="https://github.com/sulami/spielwiese/tree/master/hEuler">exercise</a> than <a href="https://projecteuler.net/">Project Euler</a>.</p>
 <p>Just in case you have not read the original post and do not know what a fuzzy finder is, it is a mechanism to filter and sort a list of strings by searching for substrings. It is often used in text editors like vim or Sublime Text, where you can just type in <em>“accmanba”</em> and they will open up <code>account_management_backend.py</code> for you. As you can see, it makes switching between more than two files in a project much easier and faster.</p>
@@ -123,10 +123,10 @@ main <span class="fu">=</span> <span class="kw">do</span> args <span class="ot">
 </entry>
 <entry>
     <title>Staying Healthy as a Programmer</title>
-    <link href="https://sulami.github.io/posts/staying-healthy-as-a-programmer/index.html" />
-    <id>https://sulami.github.io/posts/staying-healthy-as-a-programmer/index.html</id>
+    <link href="Staying Healthy as a ProgrammerStaying Healthy as a Programmer" />
+    <id>Staying Healthy as a ProgrammerStaying Healthy as a Programmer</id>
     <published>2016-06-22T00:00:00Z</published>
-    <updated>2016-06-22T00:00:00Z</updated>
+    <updated>Staying Healthy as a Programmer</updated>
     <summary type="html"><![CDATA[<p><em>Disclaimer</em> In this post I link to some specific products. These links serve as examples and are by no means direct reccomendations. Some of these are just the result of a quick web search. If you decide to buy stuff, do your research, figure out what exactly you need and choose a product based on that.</p>
 <p>One of the most important things in your life is your health. As programmers, and other professionals who mainly work at a desk, staying healthy can be surprisingly difficult, even though sitting all day seems not particularly demanding. Some of this risks can be avoided by consciously changing habits, but often the right equipment can also play a big role. You really should not skimp when it comes to maintaining your health. I will discuss some free, and also some non-free ways that can help you with that.</p>
 <h2 id="repetitive-strain-injury">Repetitive Strain Injury</h2>
@@ -144,11 +144,11 @@ main <span class="fu">=</span> <span class="kw">do</span> args <span class="ot">
 <p>There is one more point, and it is perhaps the most important one I have to make: whatever you do, as an office worker on a desk, it is extremely important to take regular breaks, get up (or sit down), stretch a bit, go for a short walk. I would reccomend intervals of at most once per hour, better twice. This is important for your cardiovascular system (i.e. your heart), and can also help you think. Regular exercise of any kind is also something everyone should do. Go to the gym, running or ride a bicyle. Do something that makes you sweat two or three times a week, and your overall quality of life will skyrocket.</p>]]></summary>
 </entry>
 <entry>
-    <title>Emacs From a Vim Addict's Perspective</title>
-    <link href="https://sulami.github.io/posts/emacs-from-a-vim-addicts-perspective/index.html" />
-    <id>https://sulami.github.io/posts/emacs-from-a-vim-addicts-perspective/index.html</id>
+    <title>Emacs From a Vim Addict&#39;s Perspective</title>
+    <link href="Emacs From a Vim Addict&#39;s PerspectiveEmacs From a Vim Addict&#39;s Perspective" />
+    <id>Emacs From a Vim Addict&#39;s PerspectiveEmacs From a Vim Addict&#39;s Perspective</id>
     <published>2016-03-03T00:00:00Z</published>
-    <updated>2016-03-03T00:00:00Z</updated>
+    <updated>Emacs From a Vim Addict&#39;s Perspective</updated>
     <summary type="html"><![CDATA[<p>I have been playing around in Emacs lately. Vim has been the core of my workflow for half a decade now, and I just cannot imagine going back to non-modal editing anymore. I will now explain, why I might just switch to emacs in the long-term.</p>
 <p>If you compare Emacs and vim, you will see that vim’s modal philosophy is the clearly superiour one, but you will also find that vim is somewhat limited. It works quite well out of the box, and my current <code>.vimrc</code> is about 300 lines in size, most of that just setting options, defining shortcuts and loading plugins.</p>
 <p>VimL tends to work for these things, but as soon as you start to change default behaviour and writing your own functions, it all falls apart. Vim does not know anything about its own state, there is no proper programmatical way to query it, and VimL as a language is extremely clunky and difficult to debug once you surpass simpe <code>set</code> statements. This shows for example in the built-in help, that consists of plain text files that display the default configuration.</p>
@@ -159,10 +159,10 @@ main <span class="fu">=</span> <span class="kw">do</span> args <span class="ot">
 </entry>
 <entry>
     <title>Why You Need Fuzz Testing</title>
-    <link href="https://sulami.github.io/posts/why-you-need-fuzz-testing/index.html" />
-    <id>https://sulami.github.io/posts/why-you-need-fuzz-testing/index.html</id>
+    <link href="Why You Need Fuzz TestingWhy You Need Fuzz Testing" />
+    <id>Why You Need Fuzz TestingWhy You Need Fuzz Testing</id>
     <published>2016-02-23T00:00:00Z</published>
-    <updated>2016-02-23T00:00:00Z</updated>
+    <updated>Why You Need Fuzz Testing</updated>
     <summary type="html"><![CDATA[<p>Unittesting is an important part of building reliable software, although by far not the only one. But many programmers misunderstand the purpose of unittests. Classic unittests have two purposes: They force you to develop a spec and enforce it, and they can protect you against regression when refactoring or otherwise changing your code. Contrary to what some believe, they do not ensure correctness of your code.</p>
 <p>Static unittests have one major flaw: The programmer has to write them. Any function working on a list is usually tested using some small examples and an empty list to make sure nothing breaks. This usually means you have to write 3-5 test cases per function to cover basic functionality. Not only is this a lot of work, it is also error-prone, because some cases are easily forgotten, especially because the programmer writing the tests for his code has a set of preconceived notions about how his code might be used.</p>
 <p>But when writing any meaningful software, you usually have to deal with all kinds of data from outside, and a lot of that data is to be mistrusted. There might be changes in APIs, software errors somewhere else, or even a malicious attacker trying to breach your system, and all that data could look anything but the way you expect it to. This is why unittests should be used to employ a contract that the tested code has to follow, and fuzz testing can help you do just that.</p>
@@ -179,10 +179,10 @@ main <span class="fu">=</span> <span class="kw">do</span> args <span class="ot">
 </entry>
 <entry>
     <title>Why I Use Pomodoro</title>
-    <link href="https://sulami.github.io/posts/why-i-use-pomodoro/index.html" />
-    <id>https://sulami.github.io/posts/why-i-use-pomodoro/index.html</id>
+    <link href="Why I Use PomodoroWhy I Use Pomodoro" />
+    <id>Why I Use PomodoroWhy I Use Pomodoro</id>
     <published>2016-01-11T00:00:00Z</published>
-    <updated>2016-01-11T00:00:00Z</updated>
+    <updated>Why I Use Pomodoro</updated>
     <summary type="html"><![CDATA[<p>Almost every programmer knows what it means to get in the zone. That weird feeling you get at two in the morning while working on a side-project, when the the time flies by and suddenly all important features are done. Mastering the zone is a crucial element of maximizing your productivity, but it can also be quite difficult.</p>
 <p>Because the being in the zone is a very fragile state, it is important to reduce the risk of falling out of it. That means both preventing interruptions by outside sources like coworkers (within reason) and playing your own <a href="http://mindingourway.com/not-yet-gods/">monkey brain</a> to stay focused by reducing the possible distractions, like closing all non-related windows/tabs.</p>
 <p>These simple methods can work sometimes, but to <em>master</em> the zone and be able to reliably enter it almost at will, a more sophisticated solution is needed, a system. There are a great number of systems, and most of them are designed to dictate a structure for planning work, so they can help take the last bit of excess cognitive load off your mind, leaving you with just the next problem to solve to think about.</p>
@@ -191,10 +191,10 @@ main <span class="fu">=</span> <span class="kw">do</span> args <span class="ot">
 </entry>
 <entry>
     <title>Data-Pipelines in Haskell</title>
-    <link href="https://sulami.github.io/posts/data-pipelines-in-haskell/index.html" />
-    <id>https://sulami.github.io/posts/data-pipelines-in-haskell/index.html</id>
+    <link href="Data-Pipelines in HaskellData-Pipelines in Haskell" />
+    <id>Data-Pipelines in HaskellData-Pipelines in Haskell</id>
     <published>2015-12-07T00:00:00Z</published>
-    <updated>2015-12-07T00:00:00Z</updated>
+    <updated>Data-Pipelines in Haskell</updated>
     <summary type="html"><![CDATA[<p>Today I was writing some code in Golang and thought about why Haskell feels so much more powerful and expressive. Then I had a revelation. Haskell follows the UNIX philosophy, focussing on small functions that do exactly one thing (at least good Haskell code does so). It also makes these functions easily combinable without leading to syntastic noise like parenthesis-mountains. So I thought I might just write a post highlighting that, which is what you are currently reading.</p>
 <p>We are going to start at the very basics, assuming you have little to no prior knowledge about Haskell. Haskell uses the <a href="https://en.wikipedia.org/wiki/Lambda_calculus#Lambda_calculus_and_programming_languages">lambda calculus</a> and just whitespace to declare function arguments. So a function call looks like this:</p>
 <div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">add <span class="dv">2</span> <span class="dv">3</span> <span class="co">-- 2 + 3 = 5</span></code></pre></div>
@@ -214,10 +214,10 @@ x <span class="fu">&amp;</span> f <span class="fu">=</span> f x</code></pre></di
 </entry>
 <entry>
     <title>Using Hoogle for Your Project</title>
-    <link href="https://sulami.github.io/posts/using-hoogle-for-your-project/index.html" />
-    <id>https://sulami.github.io/posts/using-hoogle-for-your-project/index.html</id>
+    <link href="Using Hoogle for Your ProjectUsing Hoogle for Your Project" />
+    <id>Using Hoogle for Your ProjectUsing Hoogle for Your Project</id>
     <published>2015-11-26T00:00:00Z</published>
-    <updated>2015-11-26T00:00:00Z</updated>
+    <updated>Using Hoogle for Your Project</updated>
     <summary type="html"><![CDATA[<p><a href="https://github.com/ndmitchell/hoogle">Hoogle</a> is a fantastic tool that uses Haskell’s type system to build a searchable index of types, functions and constants, connecting with <a href="https://www.haskell.org/haddock/">Haddock</a> to provide documentation. It can be used to host browsable websites, like the <a href="https://www.haskell.org/hoogle/">Hackage instance</a> or the <a href="http://www.stackage.org/lts-3.15/hoogle">Stackage instance</a>, or used for editor integration, like in <a href="https://github.com/Twinside/vim-hoogle">vim</a> or <a href="https://github.com/haskell/haskell-mode">emacs</a>. Overall pretty great stuff.</p>
 <p>But if working on your own project that is not online anywhere yet, setting up a local Hoogle instance is a bit tricky. But not anymore. I wrote a relatively simple shell script that sets up a local instance combining your project and the Stackage snapshot your project is using. It currently is quite naive, and assumes you are using Linux, and generally is a work in progress. But it works on my machine™, so I am <a href="https://github.com/sulami/dotfiles/blob/master/scripts/hoogle.sh">releasing it to the general public</a> (the link is to the master branch of my dotfiles, so it gets updated automatically).</p>
 <p>Beware: There is no error checking whatsoever, so make sure you have GHC, Stack, Haddock and Hoogle installed and in your <code>$PATH</code> (also curl and awk). It might also eat all of your data. If you change your stack resolver, you need to delete the Stackage Hoogle database yourself to trigger a download of the right one, there is no version checking. Also local documentation paths do not work when using <code>hoogle server</code>. Some of this might get fixed in the future.</p>]]></summary>
