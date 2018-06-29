@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>sulami's blog - Does popularity matter when choosing a stack?</title>
+        <link rel="stylesheet" type="text/css" href="../../stylesheet.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="apple-touch-icon" sizes="180x180" href="../../images/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="../../images/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="../../images/favicon-16x16.png">
+        <link rel="manifest" href="../../images/site.webmanifest">
+        <link rel="mask-icon" href="../../images/safari-pinned-tab.svg" color="#5bbad5">
+        <link rel="shortcut icon" href="../../images/favicon.ico">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="msapplication-config" content="/images/browserconfig.xml">
+        <meta name="theme-color" content="#ffffff">
+    </head>
+    <body>
+        <div id="header">
+            <div id="navigation" style="margin-top: 2em">
+                <a href="../../">Home</a>
+                ·
+                <a href="../../archive/">Archive</a>
+                ·
+                <a href="../../atom.xml">Feed</a>
+                ·
+                <a href="../../pages/about/">About</a>
+                ·
+                <a href="../../pages/uses-this/">Uses This</a>
+                ·
+                <a href="../../pages/frankenwm/">FrankenWM</a>
+            </div>
+        </div>
+
+        <div id="content">
+            <article>
+                <h1>Does popularity matter when choosing a stack?</h1>
+                <div class="info">
+                    
+                        Posted on June 29, 2018
+                    
+                    
+                </div>
+
+                <section>
+            <p>Recently there has been a lot of turmoil around <a href="vue">Vue.js</a> reaching the same number of stars on GitHub as <a href="react">React</a>. While stars on GitHub are far from a reliable indicator of actual popularity and size of user base, it does raise the question whether these should actually matter when choosing a stack for a new piece of software.</p>
+<p>The easy answer is that it should not really matter. Especially if you are working in a somewhat specialised environment or are under a lot of constraints, like low-power hardware or strict performance requirements, you will probably end up using a very domain-specific set of tools. A language like Kotlin is the recommended way forward if you are developing an android application, but looking at the <a href="https://www.tiobe.com/tiobe-index/">TIOBE index</a><span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle" /><span class="sidenote">I have to mention that I believe the TIOBE index to be a bit biased though, not that I was perfectly objective. The overall “winner” of 2013 is Transact-SQL, a language many programmers will not even have heard of.<br />
+<br />
+</span></span>, and still it only comes in at position 49 at the time of writing, so obviously popularity cannot matter more than platform constraints.</p>
+<p>Another quite important factor is the already present repertoire of tools. Many tools, especially languages and large frameworks, like Vue.js and React, require rather large upfront learning efforts before they can be used efficiently. If you already know React inside out, why would you learn Vue, assuming it fundamentally does not enable you to do anything React does not? I am currently paying for my food by writing code in a primarily Python/Django environment, and sometimes I look over at the neat lawn the Ruby on Rails crowd seems to have, but it would not be wise of me to invest a sizeable amount of time to switch ecosystems without actually gaining much.<span><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle" /><span class="sidenote">Apart from that Python is also larger and growing in comparison to Ruby. Ruby is probably not dying anytime soon, but it is definitely declining since the days when everything was Rails, much to my dismay.<br />
+<br />
+</span></span></p>
+<p>I can already hear you type your furious <a href="https://twitter.com/_sulami_">tweets at me</a>, claiming how popularity of course makes a difference. And you are not wrong, there are very valid arguments to be made.</p>
+<p>Popularity does indeed matter when you chose a technology to use, for example if you need to add support for a new data format and shop around for libraries. Especially in the open-source world a larger user base means more eyes scanning the code for bugs, more potential contributors keeping the software updated and supplying it with new features, and better chances it will stay maintained overall. If you use a common set of softwares, chances are they can interact easily in some way, saving you time for integrating them. All of these are important factors which should be considered when making a voice of tooling.</p>
+<p>In the end there is no single deciding factor to look at, like for example popularity, but instead a lot of different ones. It is crucial to recognise all of them and think about how to weight them in importance. Newer (and shiny) tools might offer significant gains, but come at the price of a smaller community, so less support and a higher risk of abandonment.</p>
+                </section>
+        </div>
+        <div id="footer">
+            Site proudly generated by
+            <a href="http://jaspervdj.be/hakyll">Hakyll</a>
+        </div>
+    </body>
+</html>

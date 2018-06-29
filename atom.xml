@@ -8,8 +8,25 @@
         <name>Robin Schroer</name>
         <email>sulami@peerwire.org</email>
     </author>
-    <updated>React Native &amp; ClojureScript - An obscure stack</updated>
+    <updated>Does popularity matter when choosing a stack?</updated>
     <entry>
+    <title>Does popularity matter when choosing a stack?</title>
+    <link href="Does popularity matter when choosing a stack?Does popularity matter when choosing a stack?" />
+    <id>Does popularity matter when choosing a stack?Does popularity matter when choosing a stack?</id>
+    <published>2018-06-29T00:00:00Z</published>
+    <updated>Does popularity matter when choosing a stack?</updated>
+    <summary type="html"><![CDATA[<p>Recently there has been a lot of turmoil around <a href="vue">Vue.js</a> reaching the same number of stars on GitHub as <a href="react">React</a>. While stars on GitHub are far from a reliable indicator of actual popularity and size of user base, it does raise the question whether these should actually matter when choosing a stack for a new piece of software.</p>
+<p>The easy answer is that it should not really matter. Especially if you are working in a somewhat specialised environment or are under a lot of constraints, like low-power hardware or strict performance requirements, you will probably end up using a very domain-specific set of tools. A language like Kotlin is the recommended way forward if you are developing an android application, but looking at the <a href="https://www.tiobe.com/tiobe-index/">TIOBE index</a><span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote">I have to mention that I believe the TIOBE index to be a bit biased though, not that I was perfectly objective. The overall “winner” of 2013 is Transact-SQL, a language many programmers will not even have heard of.<br />
+<br />
+</span></span>, and still it only comes in at position 49 at the time of writing, so obviously popularity cannot matter more than platform constraints.</p>
+<p>Another quite important factor is the already present repertoire of tools. Many tools, especially languages and large frameworks, like Vue.js and React, require rather large upfront learning efforts before they can be used efficiently. If you already know React inside out, why would you learn Vue, assuming it fundamentally does not enable you to do anything React does not? I am currently paying for my food by writing code in a primarily Python/Django environment, and sometimes I look over at the neat lawn the Ruby on Rails crowd seems to have, but it would not be wise of me to invest a sizeable amount of time to switch ecosystems without actually gaining much.<span><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle"/><span class="sidenote">Apart from that Python is also larger and growing in comparison to Ruby. Ruby is probably not dying anytime soon, but it is definitely declining since the days when everything was Rails, much to my dismay.<br />
+<br />
+</span></span></p>
+<p>I can already hear you type your furious <a href="https://twitter.com/_sulami_">tweets at me</a>, claiming how popularity of course makes a difference. And you are not wrong, there are very valid arguments to be made.</p>
+<p>Popularity does indeed matter when you chose a technology to use, for example if you need to add support for a new data format and shop around for libraries. Especially in the open-source world a larger user base means more eyes scanning the code for bugs, more potential contributors keeping the software updated and supplying it with new features, and better chances it will stay maintained overall. If you use a common set of softwares, chances are they can interact easily in some way, saving you time for integrating them. All of these are important factors which should be considered when making a voice of tooling.</p>
+<p>In the end there is no single deciding factor to look at, like for example popularity, but instead a lot of different ones. It is crucial to recognise all of them and think about how to weight them in importance. Newer (and shiny) tools might offer significant gains, but come at the price of a smaller community, so less support and a higher risk of abandonment.</p>]]></summary>
+</entry>
+<entry>
     <title>React Native &amp; ClojureScript - An obscure stack</title>
     <link href="React Native &amp; ClojureScript - An obscure stackReact Native &amp; ClojureScript - An obscure stack" />
     <id>React Native &amp; ClojureScript - An obscure stackReact Native &amp; ClojureScript - An obscure stack</id>
@@ -211,16 +228,6 @@ x <span class="fu">&amp;</span> f <span class="fu">=</span> f x</code></pre></di
 <div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">add <span class="dv">1</span> <span class="dv">3</span> <span class="fu">&amp;</span> times <span class="dv">2</span> <span class="fu">&amp;</span> subtract <span class="dv">3</span> <span class="fu">&amp;</span> add <span class="dv">5</span> <span class="co">-- (((1 + 3) * 2) - 3) + 5 = 10</span></code></pre></div>
 <p>Now the explanation looks just like the code, and data flows from left to right, just like in the shell. These data pipelines make it easy to let small functions like <code>words</code>, <code>lines</code> or <code>map</code> work on data and pass the results to the next function, without having to worry about memory management, buffer overflows or even types, which makes this more robust than a shell-oneliner while being just as expressive and simple. Haskell’s laziness even allows for simple parallelism like the shell does when piping data, where functions/programs start working as soon as the first data reaches them.</p>
 <p>This concept is so great, there is even a huge library to do this while doing I/O like when accessing files or communicating over a network, <a href="https://www.fpcomplete.com/user/snoyberg/library-documentation/conduit-overview">Conduit</a>.</p>]]></summary>
-</entry>
-<entry>
-    <title>Using Hoogle for Your Project</title>
-    <link href="Using Hoogle for Your ProjectUsing Hoogle for Your Project" />
-    <id>Using Hoogle for Your ProjectUsing Hoogle for Your Project</id>
-    <published>2015-11-26T00:00:00Z</published>
-    <updated>Using Hoogle for Your Project</updated>
-    <summary type="html"><![CDATA[<p><a href="https://github.com/ndmitchell/hoogle">Hoogle</a> is a fantastic tool that uses Haskell’s type system to build a searchable index of types, functions and constants, connecting with <a href="https://www.haskell.org/haddock/">Haddock</a> to provide documentation. It can be used to host browsable websites, like the <a href="https://www.haskell.org/hoogle/">Hackage instance</a> or the <a href="http://www.stackage.org/lts-3.15/hoogle">Stackage instance</a>, or used for editor integration, like in <a href="https://github.com/Twinside/vim-hoogle">vim</a> or <a href="https://github.com/haskell/haskell-mode">emacs</a>. Overall pretty great stuff.</p>
-<p>But if working on your own project that is not online anywhere yet, setting up a local Hoogle instance is a bit tricky. But not anymore. I wrote a relatively simple shell script that sets up a local instance combining your project and the Stackage snapshot your project is using. It currently is quite naive, and assumes you are using Linux, and generally is a work in progress. But it works on my machine™, so I am <a href="https://github.com/sulami/dotfiles/blob/master/scripts/hoogle.sh">releasing it to the general public</a> (the link is to the master branch of my dotfiles, so it gets updated automatically).</p>
-<p>Beware: There is no error checking whatsoever, so make sure you have GHC, Stack, Haddock and Hoogle installed and in your <code>$PATH</code> (also curl and awk). It might also eat all of your data. If you change your stack resolver, you need to delete the Stackage Hoogle database yourself to trigger a download of the right one, there is no version checking. Also local documentation paths do not work when using <code>hoogle server</code>. Some of this might get fixed in the future.</p>]]></summary>
 </entry>
 
 </feed>
