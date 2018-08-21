@@ -8,8 +8,67 @@
         <name>Robin Schroer</name>
         <email>sulami@peerwire.org</email>
     </author>
-    <updated>How this blog is made</updated>
+    <updated>Pipes in Python</updated>
     <entry>
+    <title>Pipes in Python</title>
+    <link href="Pipes in PythonPipes in Python" />
+    <id>Pipes in PythonPipes in Python</id>
+    <published>2018-08-21T00:00:00Z</published>
+    <updated>Pipes in Python</updated>
+    <summary type="html"><![CDATA[<p>I just found <a href="https://hackernoon.com/adding-a-pipe-operator-to-python-19a3aa295642">an article about pipes in Python</a> on lobste.rs and was reminded that I was toying with the exact same thing recently. Using a lot of functional languages (mainly Haskell, Clojure, Elixir)<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote">… but being paid to write (mostly highly object-oriented) Python four out of five days a week. We do use some Elixir at my place, but we are still a Python shop first.<br />
+<br />
+</span></span> and also a fair bit of bash, I am very used to streaming data through chains of functions using pipe-like constructs. Python does make this quite difficult and encourages a more imperative approach with intermediate variables.</p>
+<p>The author of the article above uses AST rewriting, which I have to admit is very clever, though hard to introspect and extend unless you are already familiar with AST manipulation in Python.</p>
+<p>My approach is slightly different, and yields a less pretty syntax, but is arguably more flexible and extensible, by using a plain function. The definition currently looks like this:</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="kw">def</span> pype(x, <span class="op">*</span>fs):
+    <span class="co">&quot;&quot;&quot;</span>
+<span class="co">    Pipe function. Takes an initial value and any number of functions/methods.</span>
+<span class="co">    Methods as strings. Additional args are supported for functions &amp; methods</span>
+<span class="co">    by suppling a step as a tuple/list with function/method as the first</span>
+<span class="co">    element and the args as the rest. The pipe input is used as the last</span>
+<span class="co">    argument in this case. Currently no kwargs.</span>
+<span class="co">    &quot;&quot;&quot;</span>
+    <span class="cf">while</span> fs:
+        f <span class="op">=</span> fs[<span class="dv">0</span>]
+        args <span class="op">=</span> []
+        <span class="cf">if</span> <span class="bu">isinstance</span>(f, (<span class="bu">list</span>, <span class="bu">tuple</span>)):
+            args <span class="op">=</span> <span class="bu">list</span>(f[<span class="dv">1</span>:])
+            f <span class="op">=</span> f[<span class="dv">0</span>]
+        <span class="cf">if</span> <span class="bu">isinstance</span>(f, <span class="bu">str</span>):
+            <span class="cf">if</span> f.startswith(<span class="st">&#39;.&#39;</span>):
+                x <span class="op">=</span> <span class="bu">getattr</span>(x, f[<span class="dv">1</span>:])(<span class="op">*</span>args)
+            <span class="cf">else</span>:
+                x <span class="op">=</span> x[f]
+        <span class="cf">elif</span> <span class="bu">isinstance</span>(f, <span class="bu">int</span>):
+            x <span class="op">=</span> x[f]
+        <span class="cf">else</span>:
+            x <span class="op">=</span> f(<span class="op">*</span>args <span class="op">+</span> [x])
+        fs <span class="op">=</span> fs[<span class="dv">1</span>:]
+    <span class="cf">return</span> x</code></pre></div>
+<p>The docstring is a bit abstract, so I think an example is much more explanatory:</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">from</span> pype <span class="im">import</span> pype
+
+<span class="kw">def</span> add_suffix(number, s):
+    <span class="cf">return</span> <span class="st">&#39;</span><span class="sc">{}</span><span class="st"> is </span><span class="sc">{}</span><span class="st"> cool!&#39;</span>.<span class="bu">format</span>(
+        s,
+        <span class="st">&#39; &#39;</span>.join(<span class="st">&#39;very&#39;</span> <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(number))
+    )
+
+pype(
+    <span class="st">&#39;   abc: </span><span class="sc">{}</span><span class="st">   &#39;</span>,
+    <span class="st">&#39;.strip&#39;</span>,
+    (<span class="st">&#39;.format&#39;</span>, <span class="dv">3</span>),
+    (add_suffix, <span class="dv">2</span>),
+    <span class="st">&#39;.upper&#39;</span>,
+)
+
+<span class="co"># &#39;ABC: 3 IS VERY VERY COOL!&#39;</span></code></pre></div>
+<p>I am aware this is a very constructed example, but you get the idea. It currently does not handle keyword arguments, and you cannot specify in which place you would like the input argument to go, it always takes the last slot, which isn’t always convenient, but this way you can avoid using <code>lambda</code>s everywhere, which are quite long in Python<span><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle"/><span class="sidenote">I quite enjoy Elixir’s solution: <code>&amp;func(1, &amp;1, 3)</code>, <code>&amp;1</code> being the placeholder.<br />
+<br />
+</span></span>.</p>
+<p>I might extend this further in the future and maybe introduce it into some code bases of mine, if it turns out to be useful.</p>]]></summary>
+</entry>
+<entry>
     <title>How this blog is made</title>
     <link href="How this blog is madeHow this blog is made" />
     <id>How this blog is madeHow this blog is made</id>
@@ -216,18 +275,6 @@ main <span class="fu">=</span> <span class="kw">do</span> args <span class="ot">
 <p>But that would not only result in a considerable increase in code, easily quadrupling the code above, it would also not cover all possibilities. Haskell’s type system ensures that the finder only gets used with strings and lists of strings, but strings can have many forms. Because all of the input is coming from the user, there might be punctuation in there, spaces, maybe escaped, maybe Unicode symbols, who knows. That is why I instruct the test suite to just generate random strings and lists of strings to use (see the <code>forAll nonNull</code>) and verify the property independently. This runs a default of 100 different sets of input, many of which are complicated messes of whitespace, backslashes and other special characters. If any of these break the test, the suite tells me which one, so I can find out what is the problem with a set of input and whether the contract I employed is incorrect, or the function tested does not follow the contract.</p>
 <p>The current actual fuzzy finder uses six different property contracts that it needs to satisfy, each four to six lines in size. Testing all of these manually would lead to a gigantic test suite, and modifying the parameters of the input would be a huge hassle. With fuzz testing, I can just tweak the <code>nonNull</code> generator to use different rules to generate input, like limiting it to a certain character range or string length.</p>
 <p>The bottom line here is, if your unittests are handwritten, you most likely cannot be sure your code is behaving in production. There is almost no way you can think of all the possible ways your code is going to be used, and even if you could, the amount of testing code would not be feasible.</p>]]></summary>
-</entry>
-<entry>
-    <title>Why I Use Pomodoro</title>
-    <link href="Why I Use PomodoroWhy I Use Pomodoro" />
-    <id>Why I Use PomodoroWhy I Use Pomodoro</id>
-    <published>2016-01-11T00:00:00Z</published>
-    <updated>Why I Use Pomodoro</updated>
-    <summary type="html"><![CDATA[<p>Almost every programmer knows what it means to get in the zone. That weird feeling you get at two in the morning while working on a side-project, when the the time flies by and suddenly all important features are done. Mastering the zone is a crucial element of maximizing your productivity, but it can also be quite difficult.</p>
-<p>Because the being in the zone is a very fragile state, it is important to reduce the risk of falling out of it. That means both preventing interruptions by outside sources like coworkers (within reason) and playing your own <a href="http://mindingourway.com/not-yet-gods/">monkey brain</a> to stay focused by reducing the possible distractions, like closing all non-related windows/tabs.</p>
-<p>These simple methods can work sometimes, but to <em>master</em> the zone and be able to reliably enter it almost at will, a more sophisticated solution is needed, a system. There are a great number of systems, and most of them are designed to dictate a structure for planning work, so they can help take the last bit of excess cognitive load off your mind, leaving you with just the next problem to solve to think about.</p>
-<p>One of the more simple systems is <a href="http://pomodorotechnique.com/">Pomodoro</a>. Pomodoro in a nutshell is dividing work into relatively small tasks, spend 25 minute intervals working on these tasks and taking breaks in between. This approach forces you to focus on the task at hand, making it easier to get in the flow. It is also a rather simple system, you can read its Wikipedia page in two minutes and then start using it, and the overhead is very small, which is why I like using it for most of my coding.</p>
-<p>If you have never used such a productivity system, I urge you to give Pomodoro a try, there is not really anything to lose, and possibly a lot to gain. You can also combine it relatively easily with larger-scale systems, like <a href="http://martinfowler.com/articles/newMethodology.html">Agile</a> or <a href="http://scrummethodology.com/">Scrum</a>.</p>]]></summary>
 </entry>
 
 </feed>
