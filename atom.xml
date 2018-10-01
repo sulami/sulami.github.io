@@ -8,8 +8,67 @@
         <name>Robin Schroer</name>
         <email>sulami@peerwire.org</email>
     </author>
-    <updated>Working Remotely (Part 1)</updated>
+    <updated>Running Clojurescript Tests on the JVM</updated>
     <entry>
+    <title>Running Clojurescript Tests on the JVM</title>
+    <link href="Running Clojurescript Tests on the JVMRunning Clojurescript Tests on the JVM" />
+    <id>Running Clojurescript Tests on the JVMRunning Clojurescript Tests on the JVM</id>
+    <published>2018-10-01T00:00:00Z</published>
+    <updated>Running Clojurescript Tests on the JVM</updated>
+    <summary type="html"><![CDATA[<p>Recently I have been writing a lot of Clojure and Clojurescript for my side projects. This is my first post on the language &amp; ecosystem, so I what follows below might be very wrong in places. Nontheless I want to share something I worked out myself and might be useful to someone else. The topic we’re going to be looking at is running (unit) tests for a <a href="https://github.com/Day8/re-frame">re-frame</a>-based Clojurescript application, though it actually applies to almost any CLJS application.</p>
+<p>Last week I was finally adding tests to one of my side projects<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote">Way too late as well, I should have <a href="https://www.obeythetestinggoat.com">obeyed the testing goat</a>. I had quite some trouble untangling my wild-west design to be able to even write proper unit tests.<br />
+<br />
+</span></span> and I was wondering how to run them easily. Clojure comes with a great bulid tool, <a href="https://leiningen.org">leiningen</a>, which allows you to run tests quite easily, at least for Clojure code.</p>
+<h2 id="ways-to-run-tests">Ways to Run Tests</h2>
+<p>Now the way I run my code is by compiling my code to Javascript, launching a browser session through Leiningen, and running my code in the browser’s runtime. This works very well for actually running the code using <a href="https://github.com/bhauman/lein-figwheel">figwheel</a>, but less well for running tests.</p>
+<p>The first reason this is a bit impractical is because it requires a lot of setup to actually make it work, you need to update your <code>project.clj</code> to have a testing build, which needs proper cleaning up as well, and then somehow manage the browser runtime as well. Depending on how you do this, this also incurs heavy startup time penalties.<span><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle"/><span class="sidenote">Full test compiles from CLJS to JS for a small test suite (~20 test cases) already takes about 5-10 seconds.<br />
+<br />
+</span></span></p>
+<p>To avoid the browser, which is just unnecessarily heavyweight if all you need is just a JS runtime, the go-to solution used to be <a href="http://phantomjs.org">PhantomJS</a>, a headless browser that can be used for various tasks that do not require an actual human seeing rendered output. Sadly, PhantomJS suspended development earlier this year due to lack of active contributors, so I am not very confident in building on top of it, especially considering the speed at which the web and standards are currently changing.</p>
+<p>While PhantomJS comes with a whole DOM emulation, what we are actually looking for is only a JS runtime, for reasons that will become apparent later. This leads us to <a href="https://nodejs.org/en/">Node.js</a>, which is exactly that, a stand-alone JS runtime. Running tests inside Node is quite a viable option, as it does not impose any meaningful startup time penalty by itself, meaning we can just start it up fresh for every test run and not <a href="https://twitter.com/garybernhardt/status/1007699556832817152">have to deal with persistence and state</a>.</p>
+<p>We could stop there, write a custom test build target and a custom test command that just runs that file for Leiningen and be done with it. But we still have the compilation time to JS which is just too long if you want to have a very tight TDD loop. Then I realised that we do not actually need to compile to JS at all, in the end we just want to test Clojure code, which can run on a variety of different platforms.</p>
+<p>One of the fastest platforms available to us is the original platform Clojure targeted, the JVM. Because I am using Emacs with <a href="https://github.com/clojure-emacs/cider">CIDER</a>, I already have a long-running JVM<span><label for="sn-3" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-3" class="margin-toggle"/><span class="sidenote">I know we are back to long-running processes, which is a bit unfair, but CIDER allows me to basically instantaneously reload the whole project, which so far worked without any hiccups.<br />
+<br />
+</span></span>, I do not even have to consider the ~1s startup time the JVM incurs. This setup allows us to run tests in well under one second, but leads me to the next section.</p>
+<h2 id="the-theory-decoupling-logic-from-presentation">The Theory: Decoupling Logic from Presentation</h2>
+<p>If we want to run our Clojure code, which does not specify a target platform, on the JVM, we cannot depend on any platform-specific features. This means, our Clojurescript application needs to be split into platform-independent Clojure code and Clojurescript glue code. Incidentally, this is also the structure TDD favours and I think that leads to the code easiest to reason about.</p>
+<p>re-frame does come with an <a href="https://github.com/Day8/re-frame/blob/master/docs/Testing.md#exposing-event-handlers-for-test">example of how to expose event handlers for tests</a>, which are the part of our application that should contain the bulk of the application logic. The basic gist is this: any kind of state should be mutated by passing it into a pure function, which just returns the new, modified state. Every variable is state.<span><label for="sn-4" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-4" class="margin-toggle"/><span class="sidenote">Ideally abandon the idea of a variable as well, default to immutable values everywhere.<br />
+<br />
+</span></span> Then use the most basic glue code you can come up with to glue this together.<span><label for="sn-5" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-5" class="margin-toggle"/><span class="sidenote">This is really just functional programming, which has been around for over half a century.<br />
+<br />
+</span></span></p>
+<p>This allows us to then test the application logic in isolation, by just passing a piece of state into a function and checking properties on the returned value. If it makes sense, we can also use properties to randomly generate a huge amount inputs according to some rules and make sure that we do not forget any edge cases we did not think of writing tests for. Because none of this code actually depends on anything related to the presentation, it does not matter whether it runs in a browser or on the JVM.</p>
+<h2 id="the-practice-the-implementation-of-re-frame-tests">The Practice: The Implementation of re-frame Tests</h2>
+<p>In order to be able to run Clojure code on the JVM, it cannot be Clojurescript code, meaning it cannot reside in <code>.cljs</code> files and cannot use CLJS-specific libraries, but some of your code will invariably be specific to Clojurescript, like for example</p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="kw">ns</span> foo.bar
+  (<span class="at">:require</span> [cljs.spec.alpha <span class="at">:as</span> s]))</code></pre></div>
+<p>needs to be</p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="kw">ns</span> foo.bar
+  (<span class="at">:require</span> [clojure.spec.alpha <span class="at">:as</span> s]))</code></pre></div>
+<p>to work on the JVM. This can be solved quite easily by using <a href="https://clojure.org/guides/reader_conditionals">reader conditionals</a>. The basic idea is to save your application logic in Common Clojure (<code>.cljc</code>) files, write the wrapper around your application in Clojurescript (<code>.cljs</code>) and your test suite in Clojure (<code>.clj</code>). Within Common Clojure you have access to reader conditionals which are a feature in Clojure &gt;= 1.7 which allow modifying code at “compile-time”<span><label for="sn-6" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-6" class="margin-toggle"/><span class="sidenote">I do not actually know in depth how this works behind the scenes yet, but I believe this is a fair approximation even if potentially inaccurate.<br />
+<br />
+</span></span> depending on the compilation target. This is what it looks like in action:</p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="kw">ns</span> foo.bar
+  (<span class="at">:require</span> #?(<span class="at">:clj</span>  [clojure.spec.alpha <span class="at">:as</span> s]
+               <span class="at">:cljs</span> [cljs.spec.alpha <span class="at">:as</span> s])))</code></pre></div>
+<p>Once we are at this point, writing the actual tests is quite easy. I am going to borrow an example from the <a href="https://github.com/Day8/re-frame/blob/master/docs/Testing.md">re-frame docs</a> here:</p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="kw">let</span> [
+      <span class="co">;; setup - cummulatively build up db</span>
+      db (<span class="kw">-&gt;</span> {}    <span class="co">;; empty db</span>
+             (initialise-db [<span class="at">:initialise-db</span>])   <span class="co">;; each event handler expects db and event</span>
+             (clear-panel   [<span class="at">:clear-panel</span>])
+             (draw-triangle [<span class="at">:draw-triangle</span> <span class="dv">1</span> <span class="dv">2</span> <span class="dv">3</span>]))
+
+      event  [<span class="at">:select-triange</span> <span class="at">:other</span> <span class="at">:stuff</span>]
+
+      <span class="co">;; now execute the event handler under test</span>
+      db&#39;    (select-triange db event)]
+
+      <span class="co">;; validate that db&#39; is correct</span>
+      (<span class="kw">is</span> ...)</code></pre></div>
+<p>In this example, <code>db</code> is the global state map, which gets passed into a chain of pure event handler functions, after which the returned new state can be validated. All we need to do to run these is set a <code>:test-paths</code> setting in <code>project.clj</code> and <code>lein test</code> will pick up the tests.</p>]]></summary>
+</entry>
+<entry>
     <title>Working Remotely (Part 1)</title>
     <link href="Working Remotely (Part 1)Working Remotely (Part 1)" />
     <id>Working Remotely (Part 1)Working Remotely (Part 1)</id>
@@ -261,20 +320,6 @@ main <span class="fu">=</span> <span class="kw">do</span> args <span class="ot">
 <p>Another big part of your setup is your chair. Many office chairs are bad for your posture and do not support your lower back properly, encouraging you to lounge instead of sitting upright. Good chairs can be very expensive, the <a href="http://www.kabseating.com/office/product.asp?product=204">KAB Executive</a> retails for way above $1000, but I’d go as far and say it is worth that. I do not believe in saving money when it comes to my health. Also it is going to last a decade or more without problems. But you might not have this kind of money to spend on a chair, which I also fully understand. All I want is to make you think about how you sit in your chair, especially for long periods of intense concentration.</p>
 <p>Another option can be a standing desk. There are many different ways of doing things, <a href="https://www.amazon.com/Adjustable-Height-Stand-Up-Desk-Monitor/dp/B00LNEB9KW/">fixed height standing desks</a>, <a href="https://www.amazon.com/LUXOR-Standup-CF48-DW-Stand-Crank-Adjustable/dp/B00PU6H5MA/">manually variable desks</a> and of course also <a href="https://www.amazon.com/Electric-Stand-Up-Desk-Charcoal/dp/B00XLRJSAW/">electrically operated ones</a>. In addition to that, there are also <a href="https://www.amazon.com/32-Wide-Standing-Desktop-Desk/dp/B015RXUV3U/">mini add-on desks</a> that you place on an existing desk. Standing makes it easier to keep a proper posture (and also burns some additional calories), but standing all day long is also bad for your back, so the proper mix between sitting and standing is important.</p>
 <p>There is one more point, and it is perhaps the most important one I have to make: whatever you do, as an office worker on a desk, it is extremely important to take regular breaks, get up (or sit down), stretch a bit, go for a short walk. I would reccomend intervals of at most once per hour, better twice. This is important for your cardiovascular system (i.e. your heart), and can also help you think. Regular exercise of any kind is also something everyone should do. Go to the gym, running or ride a bicyle. Do something that makes you sweat two or three times a week, and your overall quality of life will skyrocket.</p>]]></summary>
-</entry>
-<entry>
-    <title>Emacs From a Vim Addict&#39;s Perspective</title>
-    <link href="Emacs From a Vim Addict&#39;s PerspectiveEmacs From a Vim Addict&#39;s Perspective" />
-    <id>Emacs From a Vim Addict&#39;s PerspectiveEmacs From a Vim Addict&#39;s Perspective</id>
-    <published>2016-03-03T00:00:00Z</published>
-    <updated>Emacs From a Vim Addict&#39;s Perspective</updated>
-    <summary type="html"><![CDATA[<p>I have been playing around in Emacs lately. Vim has been the core of my workflow for half a decade now, and I just cannot imagine going back to non-modal editing anymore. I will now explain, why I might just switch to emacs in the long-term.</p>
-<p>If you compare Emacs and vim, you will see that vim’s modal philosophy is the clearly superiour one, but you will also find that vim is somewhat limited. It works quite well out of the box, and my current <code>.vimrc</code> is about 300 lines in size, most of that just setting options, defining shortcuts and loading plugins.</p>
-<p>VimL tends to work for these things, but as soon as you start to change default behaviour and writing your own functions, it all falls apart. Vim does not know anything about its own state, there is no proper programmatical way to query it, and VimL as a language is extremely clunky and difficult to debug once you surpass simpe <code>set</code> statements. This shows for example in the built-in help, that consists of plain text files that display the default configuration.</p>
-<p>Emacs on the other hand is pretty much just a Lisp interpreter with a simple text editor written in said Lisp running on top of it. Because the configuration is done on the same level that the editor itself is written on, in the same language, you can essentially completely replace all default behaviour, and emacs has a great framework to get the current state and configuration of the editor, because everything is just saved into variables. There is this funny quote about Emacs being a great operating system lacking a decent editor, and I find that it is pretty accurate.</p>
-<p>Enter <a href="http://spacemacs.org/">Spacemacs</a>. Spacemacs is an Emacs distribution, meaning it is a prepackaged set of packages and configs that are supposed to more or less implement vim’s behaviour on the emacs platform and integrate well without having to write several thousand lines of Elisp yourself, which is what you might actually need, depending on how much of vim you want in Emacs.</p>
-<p>Spacemacs got reccomended to me first by <a href="https://kritzcreek.github.io/">Kritzcreek</a> some time ago, and ever since I have been keeping an eye on it. I generally like to build my own configs and only stealing small parts from other people, but with default emacs being so different from the modal vim-like experience I want, it would take months to even come close to my vim setup. Spacemacs on the other hand comes with mostly sane defaults, and my overall custom config on top of its defaults is currently less that 100 lines of Elisp. I also want to mention <a href="http://blog.aaronbieber.com/">Aaron Bieber</a>’s <a href="https://www.youtube.com/watch?v=JWD1Fpdd4Pc">talk about evil-mode</a> for finally pushing me over the line and investing a weekend into learning enough emacs to be productive.</p>
-<p>I am currently still in the progress of building my own emacs config from scratch, recreating the parts of Spacemacs I actually use, but I am not sure if I will ever get it to a point where it is even remotely as polished. Another factor of course is that I do not really want to waste too much time on this, and at least right now, Spacemacs does what I need it to do. In the end, you always have to think about if that extra bit of more custom behaviour is worth the time-investment to get it to work.</p>]]></summary>
 </entry>
 
 </feed>

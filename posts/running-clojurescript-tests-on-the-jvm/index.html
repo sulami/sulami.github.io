@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>sulami's blog - Running Clojurescript Tests on the JVM</title>
+        <link rel="stylesheet" type="text/css" href="../../stylesheet.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="apple-touch-icon" sizes="180x180" href="../../images/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="../../images/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="../../images/favicon-16x16.png">
+        <link rel="manifest" href="../../images/site.webmanifest">
+        <link rel="mask-icon" href="../../images/safari-pinned-tab.svg" color="#5bbad5">
+        <link rel="shortcut icon" href="../../images/favicon.ico">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="msapplication-config" content="/images/browserconfig.xml">
+        <meta name="theme-color" content="#5bbad5">
+        <link href="../../atom.xml" type="application/atom+xml" rel="alternate" title="sulami's blog feed" />
+    </head>
+    <body>
+        <div id="header">
+            <div id="navigation" style="margin-top: 2em">
+                <a href="../../">Home</a>
+                ·
+                <a href="../../archive/">Archive</a>
+                ·
+                <a href="../../atom.xml">Feed</a>
+                ·
+                <a href="../../pages/about/">About</a>
+                ·
+                <a href="../../pages/cv/">CV</a> <a href="../../pages/cv.pdf">(PDF)</a>
+                ·
+                <a href="../../pages/uses-this/">Uses This</a>
+                ·
+                <a href="../../pages/frankenwm/">FrankenWM</a>
+            </div>
+        </div>
+
+        <div id="content">
+            <article>
+                <h1>Running Clojurescript Tests on the JVM</h1>
+                <div class="info">
+                    
+                        Posted on October  1, 2018
+                    
+                    
+                </div>
+
+                <section>
+            <p>Recently I have been writing a lot of Clojure and Clojurescript for my side projects. This is my first post on the language &amp; ecosystem, so I what follows below might be very wrong in places. Nontheless I want to share something I worked out myself and might be useful to someone else. The topic we’re going to be looking at is running (unit) tests for a <a href="https://github.com/Day8/re-frame">re-frame</a>-based Clojurescript application, though it actually applies to almost any CLJS application.</p>
+<p>Last week I was finally adding tests to one of my side projects<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle" /><span class="sidenote">Way too late as well, I should have <a href="https://www.obeythetestinggoat.com">obeyed the testing goat</a>. I had quite some trouble untangling my wild-west design to be able to even write proper unit tests.<br />
+<br />
+</span></span> and I was wondering how to run them easily. Clojure comes with a great bulid tool, <a href="https://leiningen.org">leiningen</a>, which allows you to run tests quite easily, at least for Clojure code.</p>
+<h2 id="ways-to-run-tests">Ways to Run Tests</h2>
+<p>Now the way I run my code is by compiling my code to Javascript, launching a browser session through Leiningen, and running my code in the browser’s runtime. This works very well for actually running the code using <a href="https://github.com/bhauman/lein-figwheel">figwheel</a>, but less well for running tests.</p>
+<p>The first reason this is a bit impractical is because it requires a lot of setup to actually make it work, you need to update your <code>project.clj</code> to have a testing build, which needs proper cleaning up as well, and then somehow manage the browser runtime as well. Depending on how you do this, this also incurs heavy startup time penalties.<span><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle" /><span class="sidenote">Full test compiles from CLJS to JS for a small test suite (~20 test cases) already takes about 5-10 seconds.<br />
+<br />
+</span></span></p>
+<p>To avoid the browser, which is just unnecessarily heavyweight if all you need is just a JS runtime, the go-to solution used to be <a href="http://phantomjs.org">PhantomJS</a>, a headless browser that can be used for various tasks that do not require an actual human seeing rendered output. Sadly, PhantomJS suspended development earlier this year due to lack of active contributors, so I am not very confident in building on top of it, especially considering the speed at which the web and standards are currently changing.</p>
+<p>While PhantomJS comes with a whole DOM emulation, what we are actually looking for is only a JS runtime, for reasons that will become apparent later. This leads us to <a href="https://nodejs.org/en/">Node.js</a>, which is exactly that, a stand-alone JS runtime. Running tests inside Node is quite a viable option, as it does not impose any meaningful startup time penalty by itself, meaning we can just start it up fresh for every test run and not <a href="https://twitter.com/garybernhardt/status/1007699556832817152">have to deal with persistence and state</a>.</p>
+<p>We could stop there, write a custom test build target and a custom test command that just runs that file for Leiningen and be done with it. But we still have the compilation time to JS which is just too long if you want to have a very tight TDD loop. Then I realised that we do not actually need to compile to JS at all, in the end we just want to test Clojure code, which can run on a variety of different platforms.</p>
+<p>One of the fastest platforms available to us is the original platform Clojure targeted, the JVM. Because I am using Emacs with <a href="https://github.com/clojure-emacs/cider">CIDER</a>, I already have a long-running JVM<span><label for="sn-3" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-3" class="margin-toggle" /><span class="sidenote">I know we are back to long-running processes, which is a bit unfair, but CIDER allows me to basically instantaneously reload the whole project, which so far worked without any hiccups.<br />
+<br />
+</span></span>, I do not even have to consider the ~1s startup time the JVM incurs. This setup allows us to run tests in well under one second, but leads me to the next section.</p>
+<h2 id="the-theory-decoupling-logic-from-presentation">The Theory: Decoupling Logic from Presentation</h2>
+<p>If we want to run our Clojure code, which does not specify a target platform, on the JVM, we cannot depend on any platform-specific features. This means, our Clojurescript application needs to be split into platform-independent Clojure code and Clojurescript glue code. Incidentally, this is also the structure TDD favours and I think that leads to the code easiest to reason about.</p>
+<p>re-frame does come with an <a href="https://github.com/Day8/re-frame/blob/master/docs/Testing.md#exposing-event-handlers-for-test">example of how to expose event handlers for tests</a>, which are the part of our application that should contain the bulk of the application logic. The basic gist is this: any kind of state should be mutated by passing it into a pure function, which just returns the new, modified state. Every variable is state.<span><label for="sn-4" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-4" class="margin-toggle" /><span class="sidenote">Ideally abandon the idea of a variable as well, default to immutable values everywhere.<br />
+<br />
+</span></span> Then use the most basic glue code you can come up with to glue this together.<span><label for="sn-5" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-5" class="margin-toggle" /><span class="sidenote">This is really just functional programming, which has been around for over half a century.<br />
+<br />
+</span></span></p>
+<p>This allows us to then test the application logic in isolation, by just passing a piece of state into a function and checking properties on the returned value. If it makes sense, we can also use properties to randomly generate a huge amount inputs according to some rules and make sure that we do not forget any edge cases we did not think of writing tests for. Because none of this code actually depends on anything related to the presentation, it does not matter whether it runs in a browser or on the JVM.</p>
+<h2 id="the-practice-the-implementation-of-re-frame-tests">The Practice: The Implementation of re-frame Tests</h2>
+<p>In order to be able to run Clojure code on the JVM, it cannot be Clojurescript code, meaning it cannot reside in <code>.cljs</code> files and cannot use CLJS-specific libraries, but some of your code will invariably be specific to Clojurescript, like for example</p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="kw">ns</span> foo.bar
+  (<span class="at">:require</span> [cljs.spec.alpha <span class="at">:as</span> s]))</code></pre></div>
+<p>needs to be</p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="kw">ns</span> foo.bar
+  (<span class="at">:require</span> [clojure.spec.alpha <span class="at">:as</span> s]))</code></pre></div>
+<p>to work on the JVM. This can be solved quite easily by using <a href="https://clojure.org/guides/reader_conditionals">reader conditionals</a>. The basic idea is to save your application logic in Common Clojure (<code>.cljc</code>) files, write the wrapper around your application in Clojurescript (<code>.cljs</code>) and your test suite in Clojure (<code>.clj</code>). Within Common Clojure you have access to reader conditionals which are a feature in Clojure &gt;= 1.7 which allow modifying code at “compile-time”<span><label for="sn-6" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-6" class="margin-toggle" /><span class="sidenote">I do not actually know in depth how this works behind the scenes yet, but I believe this is a fair approximation even if potentially inaccurate.<br />
+<br />
+</span></span> depending on the compilation target. This is what it looks like in action:</p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="kw">ns</span> foo.bar
+  (<span class="at">:require</span> #?(<span class="at">:clj</span>  [clojure.spec.alpha <span class="at">:as</span> s]
+               <span class="at">:cljs</span> [cljs.spec.alpha <span class="at">:as</span> s])))</code></pre></div>
+<p>Once we are at this point, writing the actual tests is quite easy. I am going to borrow an example from the <a href="https://github.com/Day8/re-frame/blob/master/docs/Testing.md">re-frame docs</a> here:</p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="kw">let</span> [
+      <span class="co">;; setup - cummulatively build up db</span>
+      db (<span class="kw">-&gt;</span> {}    <span class="co">;; empty db</span>
+             (initialise-db [<span class="at">:initialise-db</span>])   <span class="co">;; each event handler expects db and event</span>
+             (clear-panel   [<span class="at">:clear-panel</span>])
+             (draw-triangle [<span class="at">:draw-triangle</span> <span class="dv">1</span> <span class="dv">2</span> <span class="dv">3</span>]))
+
+      event  [<span class="at">:select-triange</span> <span class="at">:other</span> <span class="at">:stuff</span>]
+
+      <span class="co">;; now execute the event handler under test</span>
+      db'    (select-triange db event)]
+
+      <span class="co">;; validate that db' is correct</span>
+      (<span class="kw">is</span> ...)</code></pre></div>
+<p>In this example, <code>db</code> is the global state map, which gets passed into a chain of pure event handler functions, after which the returned new state can be validated. All we need to do to run these is set a <code>:test-paths</code> setting in <code>project.clj</code> and <code>lein test</code> will pick up the tests.</p>
+                </section>
+        </div>
+        <div id="footer">
+            Site proudly generated by
+            <a href="http://jaspervdj.be/hakyll">Hakyll</a>
+        </div>
+    </body>
+</html>
