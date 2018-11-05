@@ -8,8 +8,28 @@
         <name>Robin Schroer</name>
         <email>sulami@peerwire.org</email>
     </author>
-    <updated>Running Clojurescript Tests on the JVM</updated>
+    <updated>Working remotely (Part 2)</updated>
     <entry>
+    <title>Working remotely (Part 2)</title>
+    <link href="Working remotely (Part 2)Working remotely (Part 2)" />
+    <id>Working remotely (Part 2)Working remotely (Part 2)</id>
+    <published>2018-11-05T00:00:00Z</published>
+    <updated>Working remotely (Part 2)</updated>
+    <summary type="html"><![CDATA[<p>It has now been 48 days since the first part of this post, and 42 days since I moved into my current flat in Amsterdam. Time for me to write the promised follow-up and explain what has happened so far and how things have been going.</p>
+<h2 id="the-good">The Good</h2>
+<p>First of all, I am a lot happier in my personal life, moving was definitely the right decision for me in general, all work things aside. Having made the step into a remote agreement frees me up to move when- and wherever I want, as my employer does not care about from where I actually work at this point, apart from timezone-related concerns.</p>
+<p>I also think that full control over my workspace can drastically improve my productivity, the main benefit being the lack of distractions.</p>
+<p>Last time I mentioned that I would go back to London once a month. So far I am keeping to this schedule, and my first visit has been quite pleasant, even if a little stressful. But being able see my team members in person, catching up and meeting new hires allows us to stay more in touch. My only minor complaint is that travel is quite a hassle, especially at this rate, so I might try to turn down the frequency a bit.</p>
+<h2 id="the-bad">The Bad</h2>
+<p>After the moving process, which included being legally homeless for a weekend in France, I was quite happy to be able to stay home for a bit, so I ended up working from my living room for a couple of weeks. In addition to that, coworking spaces are (to me) surprisingly expensive for what they are.<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote">200€/mo. for something they call “a desk” but in reality is just a slot at a table, electricity, wifi and access to a kitchen with free coffee is quite a lot in my opinion. If I wanted an actual desk and office chair, ideally with a set of walls around it, I can expect to pay at least twice that.<br />
+<br />
+</span></span> But after a while I started suffering from both cabin fever and loneliness, so I bit the bullet and subscribed to one. This also ended up being the right decision, because just the way I wrote the last time, I have a physical location I can go to to work, but it is purely optional.</p>
+<p>In addition to potential extra costs and stress due to more traveling, some employers also seem to think that remote workers should by default earn less than the ones coming into the office. It is true that remote work in and of itself can be seen as a perk, but I also believe that correctly executed remote work is beneficial to everyone involved.</p>
+<h2 id="closing-notes">Closing Notes</h2>
+<p>If you want to go remote I recommend you do what I (we) did and get a remote working agreement that is signed by you and your employer. It should capture the terms of the remote work, such as work hours, visits, who pays for transport and how long much in advance a warning needs to be given for you to be called into the office.</p>
+<p>The last point is quite important especially if you are expected to pay for transport (and possibly lodging) which can be much more expensive if booked spontaneously.</p>]]></summary>
+</entry>
+<entry>
     <title>Running Clojurescript Tests on the JVM</title>
     <link href="Running Clojurescript Tests on the JVMRunning Clojurescript Tests on the JVM" />
     <id>Running Clojurescript Tests on the JVMRunning Clojurescript Tests on the JVM</id>
@@ -298,28 +318,6 @@ main <span class="fu">=</span> <span class="kw">do</span> args <span class="ot">
 ./interactive roro ../hEuler/022.input  0.08s user 0.00s system 96% cpu 0.079 total</code></pre>
 <p>The execution time goes up to 0.09 seconds when printing out really many names, but that is caused by the fact that we have to print out 100 lines or more to the console, which also takes time. But in my opinion, this is more than fast enough for auto-completion, which is the main use for fuzzy finders.</p>
 <p>So overall, I am really happy with how this turned out. I was able to write this on one morning despite still learning the language. It is reasonably concise despite the fact that I did not use regular expressions but searched the strings manually and also quite fast.</p>]]></summary>
-</entry>
-<entry>
-    <title>Staying Healthy as a Programmer</title>
-    <link href="Staying Healthy as a ProgrammerStaying Healthy as a Programmer" />
-    <id>Staying Healthy as a ProgrammerStaying Healthy as a Programmer</id>
-    <published>2016-06-22T00:00:00Z</published>
-    <updated>Staying Healthy as a Programmer</updated>
-    <summary type="html"><![CDATA[<p><em>Disclaimer</em> In this post I link to some specific products. These links serve as examples and are by no means direct reccomendations. Some of these are just the result of a quick web search. If you decide to buy stuff, do your research, figure out what exactly you need and choose a product based on that.</p>
-<p>One of the most important things in your life is your health. As programmers, and other professionals who mainly work at a desk, staying healthy can be surprisingly difficult, even though sitting all day seems not particularly demanding. Some of this risks can be avoided by consciously changing habits, but often the right equipment can also play a big role. You really should not skimp when it comes to maintaining your health. I will discuss some free, and also some non-free ways that can help you with that.</p>
-<h2 id="repetitive-strain-injury">Repetitive Strain Injury</h2>
-<p>There are several big health risks that programmers are affected by. The first one is <a href="https://en.wikipedia.org/wiki/Repetitive_strain_injury">repetitive strain injury</a>, which can happen to anyone and can completely stop you from coding if it gets too bad. The easiest way of preventing RSI is the right setup. You want your desk to be at the right height, so your elbows are at a right angle. Depending on the keyboard, a wrist rest can also be helpful. As a rule of thumb, if your hands or arms start hurting after several minutes of continuous typing, there’s something wrong.</p>
-<p>No matter what you do, doing things as unnatural as typing for long periods of time is harmful to your body, like almost anything. So make sure to take regular breaks, and also do some <a href="https://www.youtube.com/watch?v=nmwqBMLVsjE">stretches</a> for your hands and arms.</p>
-<p>You can also try using alternative keyboard layouts, although this is quite a big step. I switched to using <a href="https://colemak.com/">colemak</a>, which is still relatively close to QWERTY, on all my machines early this year, and it has helped me tremendously, but it also took me about 10 weeks using it full-time to get back to my own typing speed, and regain muscle memory for vim. Another popular alternative is <a href="https://en.wikipedia.org/wiki/Dvorak_Simplified_Keyboard">dvorak</a>, which is more widely supported (read: on Windows without extra software), but radically differs from QWERTY.</p>
-<p>If you want to go all out, there are also <a href="https://www.amazon.com/Microsoft-Natural-Ergonomic-Keyboard-4000/dp/B000A6PPOK/">various</a> <a href="https://ultimatehackingkeyboard.com/">kinds</a> <a href="https://www.kinesis-ergo.com/shop/freestyle2-for-pc-us/">of</a> <a href="https://ergodox-ez.com/collections/keyboards/products/ergodox-ez-keyboard">ergonomical</a> <a href="http://matias.ca/ergopro/pc/">keyboards</a>, which some people swear by. I haven’t had any personal experience with these, but I feel like being able to e.g. have your hands wider apart can make a big difference in your wrists, especially if you are typing for 6-8 hours a day.</p>
-<h2 id="back-problems">Back problems</h2>
-<p>Another problem many office workers have are posture and back problems, which can lead to chronic pain. Make sure your whole working environment is set up in a way that does not slowly kill you.<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote"><img src="http://www.metrophysicaltherapy.com/files/2014/02/workstation_426x418.jpg" title="fig:" alt="Proper posture illustration" /><br />
-<br />
-</span></span></p>
-<p>A relativaly cheap solution I value very much are <a href="https://www.amazon.com/AmazonBasics-Single-Monitor-Display-Mounting/dp/B00MIBN16O/">monitor arms</a>, which are key to get both your monitor high enough to not to have look down at it and also your desk low enough to not strain your elbows and wrists while typing. An added bonus is the free space under the monitor. I personally prefer the desk mounted ones for flexibility reasons, and they also allow you to run the cables behind them, but wall mounting is also an option that can come in handy.</p>
-<p>Another big part of your setup is your chair. Many office chairs are bad for your posture and do not support your lower back properly, encouraging you to lounge instead of sitting upright. Good chairs can be very expensive, the <a href="http://www.kabseating.com/office/product.asp?product=204">KAB Executive</a> retails for way above $1000, but I’d go as far and say it is worth that. I do not believe in saving money when it comes to my health. Also it is going to last a decade or more without problems. But you might not have this kind of money to spend on a chair, which I also fully understand. All I want is to make you think about how you sit in your chair, especially for long periods of intense concentration.</p>
-<p>Another option can be a standing desk. There are many different ways of doing things, <a href="https://www.amazon.com/Adjustable-Height-Stand-Up-Desk-Monitor/dp/B00LNEB9KW/">fixed height standing desks</a>, <a href="https://www.amazon.com/LUXOR-Standup-CF48-DW-Stand-Crank-Adjustable/dp/B00PU6H5MA/">manually variable desks</a> and of course also <a href="https://www.amazon.com/Electric-Stand-Up-Desk-Charcoal/dp/B00XLRJSAW/">electrically operated ones</a>. In addition to that, there are also <a href="https://www.amazon.com/32-Wide-Standing-Desktop-Desk/dp/B015RXUV3U/">mini add-on desks</a> that you place on an existing desk. Standing makes it easier to keep a proper posture (and also burns some additional calories), but standing all day long is also bad for your back, so the proper mix between sitting and standing is important.</p>
-<p>There is one more point, and it is perhaps the most important one I have to make: whatever you do, as an office worker on a desk, it is extremely important to take regular breaks, get up (or sit down), stretch a bit, go for a short walk. I would reccomend intervals of at most once per hour, better twice. This is important for your cardiovascular system (i.e. your heart), and can also help you think. Regular exercise of any kind is also something everyone should do. Go to the gym, running or ride a bicyle. Do something that makes you sweat two or three times a week, and your overall quality of life will skyrocket.</p>]]></summary>
 </entry>
 
 </feed>
