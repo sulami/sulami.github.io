@@ -8,8 +8,83 @@
         <name>Robin Schroer</name>
         <email>sulami@peerwire.org</email>
     </author>
-    <updated>Working remotely (Part 2)</updated>
+    <updated>Genetic Programming in Clojure</updated>
     <entry>
+    <title>Genetic Programming in Clojure</title>
+    <link href="Genetic Programming in ClojureGenetic Programming in Clojure" />
+    <id>Genetic Programming in ClojureGenetic Programming in Clojure</id>
+    <published>2018-11-17T00:00:00Z</published>
+    <updated>Genetic Programming in Clojure</updated>
+    <summary type="html"><![CDATA[<h2 id="the-theory">The Theory</h2>
+<p>Like most programmers I have always had a vague interest in AI, and one of its branches that requires less complicated maths than recurrent neural networks which are the most well known one, is genetic programming. The idea of genetic programming is quite simple<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote">If you are into more visual examples, this I believe is a very good practical example: <a href="http://rednuht.org/genetic_cars_2/" class="uri">http://rednuht.org/genetic_cars_2/</a><br />
+<br />
+</span></span>:</p>
+<ol style="list-style-type: decimal">
+<li>You build something that is parameterised in key places</li>
+<li>You build a scoring function to assess the performance of your something with a set of parameters</li>
+<li>You randomly adjust (mutate) your parameters in some way a couple of times and compare the score of each set</li>
+<li>You take the best one or ones as a base to start a new round of mutations and scoring</li>
+<li>Basically just repeat steps 3 &amp; 4 for a while and your parameters will tend towards a maximum score</li>
+</ol>
+<p>Depending on a variety of meta-parameters that control for example the size of each generation or the nature of the mutations you might just find a local maximum, but often times this can yield pretty good results for a variety of problems.</p>
+<h2 id="the-practice">The Practice</h2>
+<p>I have toyed around with this over the last couple of days and built an very simple abstract implementation in Clojure, which I am going to share here (and eventually will be somewhere on Github as well). Let us explore it from the inside out.</p>
+<p>First of all we need to be able to generate some mutations of our specimen. Because we do not assume anything about the specimen, this ends up being quite simple because a lot of the heavy lifting is done outside of this implementation as it is specific to the problem in question.</p>
+<p>This returns a potentially infinite list containing first the specimen passed in, and then as many mutations of it as we want.</p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="bu">defn</span><span class="fu"> mutate</span>
+  <span class="st">&quot;Generator that mutates a base, the first element being the base.&quot;</span>
+  [base mutator]
+  (<span class="kw">concat</span> [base]
+          (<span class="kw">repeatedly</span> #(mutator base))))</code></pre></div>
+<p>Next we also need to be able to score it. In this case we would like to attach the scores to the specimens so that we can use them to sort and select specimens without losing the specimens themselves.</p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="bu">defn</span><span class="fu"> attach-score</span>
+  <span class="st">&quot;Attaches the score to a specimen.&quot;</span>
+  [score-fn specimen]
+  [specimen (score-fn specimen)])</code></pre></div>
+<p>Now let us begin to tie these together. A single generation should take a base specimen, mutate it a couple of times, score each of them, and then select the “fittest” based on the scores<span><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle"/><span class="sidenote">This also only keeps the best specimen in every generation, which makes the code much simpler. For actual real world usage it might be beneficial to keep the best <code>n</code> specimens in every generation to avoid running into local maxima. This would make the mutation slightly more complex though because there would be several base specimens which need to be mutated, so I decided to leave out this feature for the purposes of explanation.<br />
+<br />
+</span></span>. Note that in this implementation a lower score is better. To change this just reverse the sorting.</p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="bu">defn</span><span class="fu"> generation</span>
+  <span class="st">&quot;Picks out the best one from a generation.&quot;</span>
+  [base mutator score-fn gen-size]
+  (<span class="kw">-&gt;&gt;</span> (mutate base mutator)
+       (<span class="kw">take</span> gen-size)
+       (<span class="kw">map</span> (<span class="kw">partial</span> attach-score score-fn))
+       (<span class="kw">sort-by</span> <span class="kw">second</span>)
+       <span class="kw">first</span>
+       <span class="kw">first</span>))</code></pre></div>
+<p>And to finish off, we just need to run a number of generations, each based on the previous one’s winner.</p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="bu">defn</span><span class="fu"> evolution</span>
+  <span class="st">&quot;Generator for generations.&quot;</span>
+  [base mutator score-fn gen-size]
+  (<span class="kw">iterate</span> #(generation % mutator score-fn gen-size) base))</code></pre></div>
+<p>The lazy nature of this implementation is allows us to inspect intermediate results easily, as we can see the path evolution has taken in the form of each generation’s winner.</p>
+<h2 id="the-actual-practice">The Actual Practice</h2>
+<p>Now this above is actually not that much code, and it is very abstract in its nature, so let us have a look at what it looks like when we actually use it. A simple example would be approximating a single number that is hard to approximate, like √2.</p>
+<p>Our specimen is just a float, and any will do as the initial seed. It is itself the only parameter.</p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="bu">def</span><span class="fu"> base </span><span class="fl">0.0</span>)</code></pre></div>
+<p>To mutate it, we just adjust it by a random amount within <code>0.5</code> in either direction.</p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="bu">defn</span><span class="fu"> mutator </span>[base]
+  (<span class="kw">-&gt;</span> (<span class="kw">rand</span>)
+      (<span class="kw">-</span> <span class="fl">0.5</span>)
+      (<span class="kw">+</span> base)))</code></pre></div>
+<p>Our scoring function is cheating a little, because we already know the target, we can just compare against it and use the distance as the score.</p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="bu">defn</span><span class="fu"> score-fn </span>[x]
+  (<span class="kw">-&gt;</span> x
+      (<span class="kw">-</span> (Math/sqrt <span class="dv">2</span>))
+      Math/abs))</code></pre></div>
+<p>Now when we run this, we can see how it approximates the target value over time (<code>√2 ≈ 1.4142</code>).</p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="kw">take</span> <span class="dv">6</span> (evolution base mutator score-fn <span class="dv">25</span>))
+<span class="co">;; =&gt; (0.0</span>
+<span class="co">;;     0.33079046010191426</span>
+<span class="co">;;     0.7509224756253191</span>
+<span class="co">;;     1.2164225056336746</span>
+<span class="co">;;     1.3768753691848903</span>
+<span class="co">;;     1.4125030676422798)</span></code></pre></div>
+<p>Because <code>evolution</code> returns an infinite sequence, we can just use <code>nth</code> on it to get the winner after a certain number of generations.</p>
+<p>While this is a very simple example, I am currently working on a way of using this to build and mutate a Clojure <a href="https://en.wikipedia.org/wiki/S-expression">S-expression</a> and score it by running a series of unit tests against the generated code. If this works out I might write about it here soon.</p>]]></summary>
+</entry>
+<entry>
     <title>Working remotely (Part 2)</title>
     <link href="Working remotely (Part 2)Working remotely (Part 2)" />
     <id>Working remotely (Part 2)Working remotely (Part 2)</id>
@@ -266,58 +341,6 @@ pype(
 <p>I have to admit, I was tempted to just switch to Medium during this whole process. But now that I have figured out how to build this whole thing<span><label for="sn-3" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-3" class="margin-toggle"/><span class="sidenote">Read: get it to compile<br />
 <br />
 </span></span>, I am quite happy with the results. Because Hakyll, just like Pelican, uses Markdown as source to generate HTML, I could easily port over my old posts once the dust had settled.</p>]]></summary>
-</entry>
-<entry>
-    <title>A Fuzzy Finder in Haskell</title>
-    <link href="A Fuzzy Finder in HaskellA Fuzzy Finder in Haskell" />
-    <id>A Fuzzy Finder in HaskellA Fuzzy Finder in Haskell</id>
-    <published>2016-06-24T00:00:00Z</published>
-    <updated>A Fuzzy Finder in Haskell</updated>
-    <summary type="html"><![CDATA[<p>This is a response to <em><a href="http://blog.amjith.com/fuzzyfinder-in-10-lines-of-python">FuzzyFinder - in 10 lines of Python</a></em>, which was posted to reddit yesterday.</p>
-<p>Following the blogpost linked above, I decided to write my own fuzzy finder in Haskell, because that is the language I am currently learning, and think has great potential. It is also a more interesting <a href="https://github.com/sulami/spielwiese/tree/master/hEuler">exercise</a> than <a href="https://projecteuler.net/">Project Euler</a>.</p>
-<p>Just in case you have not read the original post and do not know what a fuzzy finder is, it is a mechanism to filter and sort a list of strings by searching for substrings. It is often used in text editors like vim or Sublime Text, where you can just type in <em>“accmanba”</em> and they will open up <code>account_management_backend.py</code> for you. As you can see, it makes switching between more than two files in a project much easier and faster.</p>
-<p>Amjith wrote his finder using regular expressions, which are part of the Python standard library and can be compiled to be reasonably fast very easily. Sadly, Haskell has no implementation of regular expressions in its standard library, and I did not want to use third-party ones just for this. But as it turns out, we do not even need them, because the task is so simple and Haskell’s string manipulation capabilities are incredible, so that we can solve this by implementing the search algorithm ourselves and still achieve good performance.</p>
-<p>So, let us get on to some actual code. The most interesting part here is the matching algorithm:</p>
-<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">partOf ::</span> <span class="dt">Char</span> <span class="ot">-&gt;</span> [<span class="dt">Char</span>] <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> (<span class="dt">Bool</span>, <span class="dt">Int</span>)
-partOf _ []     r <span class="fu">=</span> (<span class="dt">False</span>, <span class="dv">0</span>)
-partOf c (x<span class="fu">:</span>xs) r <span class="fu">|</span>    c <span class="fu">==</span> x <span class="fu">=</span> (<span class="dt">True</span>, r <span class="fu">+</span> <span class="dv">1</span>)
-                  <span class="fu">|</span> otherwise <span class="fu">=</span> partOf c xs <span class="fu">$</span> r <span class="fu">+</span> <span class="dv">1</span>
-
-<span class="ot">match ::</span> [<span class="dt">Char</span>] <span class="ot">-&gt;</span> ([<span class="dt">Char</span>], [<span class="dt">Char</span>]) <span class="ot">-&gt;</span> (<span class="dt">Bool</span>, [<span class="dt">Int</span>])
-match i s <span class="fu">=</span> match&#39; i (snd s) []
-  <span class="kw">where</span>
-<span class="ot">    match&#39; ::</span> [<span class="dt">Char</span>] <span class="ot">-&gt;</span> [<span class="dt">Char</span>] <span class="ot">-&gt;</span> [<span class="dt">Int</span>] <span class="ot">-&gt;</span> (<span class="dt">Bool</span>, [<span class="dt">Int</span>])
-    match&#39; []     _ r <span class="fu">=</span> (<span class="dt">True</span>, r)
-    match&#39; (x<span class="fu">:</span>xs) s r <span class="fu">|</span> fst check <span class="fu">=</span> match&#39; xs (drop used s) <span class="fu">$</span> r <span class="fu">++</span> [used]
-                      <span class="fu">|</span> otherwise <span class="fu">=</span> (<span class="dt">False</span>, r)
-      <span class="kw">where</span>
-        used <span class="fu">=</span> snd check
-        check <span class="fu">=</span> partOf x s <span class="dv">0</span></code></pre></div>
-<p>I know this is not really optimized for readability and especially not if you do not know Haskell, but stay with me, it is quite simple. Before we compare the input, we map all the possible solutions to lowercase and store them in a tuple like <code>(&quot;String&quot;, &quot;string&quot;)</code>. This way, we can compare against the lowercase version and return the properly capitalized one later on. All we do then is check for each possible solution if each character of the input string appears in order in the solution. If so, we add it to a list along with some data, specifically the position of the first match and the distance between the first and last matched character in the solution. This is the same Amjith did for sorting. All this data gets returned in a big list of tuples with both versions of the solutions and the match data. It is not pretty, but it works.</p>
-<p>The one function the module actually exports is <code>fuzzyFinder</code>:</p>
-<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">fuzzyFinder ::</span> [<span class="dt">Char</span>] <span class="ot">-&gt;</span> [[<span class="dt">Char</span>]] <span class="ot">-&gt;</span> [[<span class="dt">Char</span>]]
-fuzzyFinder input list <span class="fu">=</span> map fst <span class="fu">.</span> map snd <span class="fu">$</span> sort combo
-  <span class="kw">where</span>
-    combo <span class="fu">=</span> zip (zip ((map sum <span class="fu">.</span> map tail) scores) (map head scores)) matches
-    scores <span class="fu">=</span> map snd <span class="fu">$</span> map (match input) matches
-    matches <span class="fu">=</span> filter (fst <span class="fu">.</span> match input) <span class="fu">$</span> prepInput list</code></pre></div>
-<p>All this function does is build the tuple list with the lowercase versions, toss it into the match function and filter out the correct versions from the matches that came back, ordering them by the match data in the same way Amjith did it. There are just a couple of extra lines that I omitted here because they are not important, but you can find the complete source on <a href="https://github.com/sulami/spielwiese/tree/master/hFuzzyFinder">Github</a>.</p>
-<p>Now you might say, this cannot be fast, it is iterating through all this stuff and with big enough input it will take forever to present results. Let me show you this:</p>
-<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">readL ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> [<span class="dt">String</span>]
-readL a <span class="fu">=</span> read <span class="fu">$</span> <span class="st">&quot;[&quot;</span> <span class="fu">++</span> a <span class="fu">++</span> <span class="st">&quot;]&quot;</span>
-
-main <span class="fu">=</span> <span class="kw">do</span> args <span class="ot">&lt;-</span> getArgs
-          <span class="kw">if</span> length args <span class="fu">==</span> <span class="dv">2</span> <span class="kw">then</span> <span class="kw">do</span>
-            list <span class="ot">&lt;-</span> readFile <span class="fu">$</span> args <span class="fu">!!</span> <span class="dv">1</span>
-            print <span class="fu">$</span> fuzzyFinder (args <span class="fu">!!</span> <span class="dv">0</span>) <span class="fu">$</span> readL list
-          <span class="kw">else</span>
-            putStrLn <span class="st">&quot;Wrong number of args&quot;</span></code></pre></div>
-<p>This is a small program that takes two arguments, the query string and a file path of a list of possible solutions and performs the actions outlined above. Using a 2.2GHz Core 2 Duo, because I am using my laptop, and a 46K list containing over 5000 words (Thanks, Project Euler), this happens:</p>
-<pre><code>λ time ./interactive roro ../hEuler/022.input
-[&quot;ROBERTO&quot;,&quot;RODRIGO&quot;,&quot;ROSARIO&quot;,&quot;GREGORIO&quot;,&quot;RIGOBERTO&quot;]
-./interactive roro ../hEuler/022.input  0.08s user 0.00s system 96% cpu 0.079 total</code></pre>
-<p>The execution time goes up to 0.09 seconds when printing out really many names, but that is caused by the fact that we have to print out 100 lines or more to the console, which also takes time. But in my opinion, this is more than fast enough for auto-completion, which is the main use for fuzzy finders.</p>
-<p>So overall, I am really happy with how this turned out. I was able to write this on one morning despite still learning the language. It is reasonably concise despite the fact that I did not use regular expressions but searched the strings manually and also quite fast.</p>]]></summary>
 </entry>
 
 </feed>

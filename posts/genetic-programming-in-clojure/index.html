@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>sulami's blog - Genetic Programming in Clojure</title>
+        <link rel="stylesheet" type="text/css" href="../../stylesheet.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="apple-touch-icon" sizes="180x180" href="../../images/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="../../images/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="../../images/favicon-16x16.png">
+        <link rel="manifest" href="../../images/site.webmanifest">
+        <link rel="mask-icon" href="../../images/safari-pinned-tab.svg" color="#5bbad5">
+        <link rel="shortcut icon" href="../../images/favicon.ico">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="msapplication-config" content="/images/browserconfig.xml">
+        <meta name="theme-color" content="#5bbad5">
+        <link href="../../atom.xml" type="application/atom+xml" rel="alternate" title="sulami's blog feed" />
+    </head>
+    <body>
+        <div id="header">
+            <div id="navigation" style="margin-top: 2em">
+                <a href="../../">Home</a>
+                ·
+                <a href="../../archive/">Archive</a>
+                ·
+                <a href="../../atom.xml">Feed</a>
+                ·
+                <a href="../../pages/about/">About</a>
+                ·
+                <a href="../../pages/cv/">CV</a> <a href="../../pages/cv.pdf">(PDF)</a>
+                ·
+                <a href="../../pages/uses-this/">Uses This</a>
+                ·
+                <a href="../../pages/frankenwm/">FrankenWM</a>
+            </div>
+        </div>
+
+        <div id="content">
+            <article>
+                <h1>Genetic Programming in Clojure</h1>
+                <div class="info">
+                    
+                        Posted on November 17, 2018
+                    
+                    
+                </div>
+
+                <section>
+            <h2 id="the-theory">The Theory</h2>
+<p>Like most programmers I have always had a vague interest in AI, and one of its branches that requires less complicated maths than recurrent neural networks which are the most well known one, is genetic programming. The idea of genetic programming is quite simple<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle" /><span class="sidenote">If you are into more visual examples, this I believe is a very good practical example: <a href="http://rednuht.org/genetic_cars_2/" class="uri">http://rednuht.org/genetic_cars_2/</a><br />
+<br />
+</span></span>:</p>
+<ol style="list-style-type: decimal">
+<li>You build something that is parameterised in key places</li>
+<li>You build a scoring function to assess the performance of your something with a set of parameters</li>
+<li>You randomly adjust (mutate) your parameters in some way a couple of times and compare the score of each set</li>
+<li>You take the best one or ones as a base to start a new round of mutations and scoring</li>
+<li>Basically just repeat steps 3 &amp; 4 for a while and your parameters will tend towards a maximum score</li>
+</ol>
+<p>Depending on a variety of meta-parameters that control for example the size of each generation or the nature of the mutations you might just find a local maximum, but often times this can yield pretty good results for a variety of problems.</p>
+<h2 id="the-practice">The Practice</h2>
+<p>I have toyed around with this over the last couple of days and built an very simple abstract implementation in Clojure, which I am going to share here (and eventually will be somewhere on Github as well). Let us explore it from the inside out.</p>
+<p>First of all we need to be able to generate some mutations of our specimen. Because we do not assume anything about the specimen, this ends up being quite simple because a lot of the heavy lifting is done outside of this implementation as it is specific to the problem in question.</p>
+<p>This returns a potentially infinite list containing first the specimen passed in, and then as many mutations of it as we want.</p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="bu">defn</span><span class="fu"> mutate</span>
+  <span class="st">&quot;Generator that mutates a base, the first element being the base.&quot;</span>
+  [base mutator]
+  (<span class="kw">concat</span> [base]
+          (<span class="kw">repeatedly</span> #(mutator base))))</code></pre></div>
+<p>Next we also need to be able to score it. In this case we would like to attach the scores to the specimens so that we can use them to sort and select specimens without losing the specimens themselves.</p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="bu">defn</span><span class="fu"> attach-score</span>
+  <span class="st">&quot;Attaches the score to a specimen.&quot;</span>
+  [score-fn specimen]
+  [specimen (score-fn specimen)])</code></pre></div>
+<p>Now let us begin to tie these together. A single generation should take a base specimen, mutate it a couple of times, score each of them, and then select the “fittest” based on the scores<span><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle" /><span class="sidenote">This also only keeps the best specimen in every generation, which makes the code much simpler. For actual real world usage it might be beneficial to keep the best <code>n</code> specimens in every generation to avoid running into local maxima. This would make the mutation slightly more complex though because there would be several base specimens which need to be mutated, so I decided to leave out this feature for the purposes of explanation.<br />
+<br />
+</span></span>. Note that in this implementation a lower score is better. To change this just reverse the sorting.</p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="bu">defn</span><span class="fu"> generation</span>
+  <span class="st">&quot;Picks out the best one from a generation.&quot;</span>
+  [base mutator score-fn gen-size]
+  (<span class="kw">-&gt;&gt;</span> (mutate base mutator)
+       (<span class="kw">take</span> gen-size)
+       (<span class="kw">map</span> (<span class="kw">partial</span> attach-score score-fn))
+       (<span class="kw">sort-by</span> <span class="kw">second</span>)
+       <span class="kw">first</span>
+       <span class="kw">first</span>))</code></pre></div>
+<p>And to finish off, we just need to run a number of generations, each based on the previous one’s winner.</p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="bu">defn</span><span class="fu"> evolution</span>
+  <span class="st">&quot;Generator for generations.&quot;</span>
+  [base mutator score-fn gen-size]
+  (<span class="kw">iterate</span> #(generation % mutator score-fn gen-size) base))</code></pre></div>
+<p>The lazy nature of this implementation is allows us to inspect intermediate results easily, as we can see the path evolution has taken in the form of each generation’s winner.</p>
+<h2 id="the-actual-practice">The Actual Practice</h2>
+<p>Now this above is actually not that much code, and it is very abstract in its nature, so let us have a look at what it looks like when we actually use it. A simple example would be approximating a single number that is hard to approximate, like √2.</p>
+<p>Our specimen is just a float, and any will do as the initial seed. It is itself the only parameter.</p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="bu">def</span><span class="fu"> base </span><span class="fl">0.0</span>)</code></pre></div>
+<p>To mutate it, we just adjust it by a random amount within <code>0.5</code> in either direction.</p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="bu">defn</span><span class="fu"> mutator </span>[base]
+  (<span class="kw">-&gt;</span> (<span class="kw">rand</span>)
+      (<span class="kw">-</span> <span class="fl">0.5</span>)
+      (<span class="kw">+</span> base)))</code></pre></div>
+<p>Our scoring function is cheating a little, because we already know the target, we can just compare against it and use the distance as the score.</p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="bu">defn</span><span class="fu"> score-fn </span>[x]
+  (<span class="kw">-&gt;</span> x
+      (<span class="kw">-</span> (Math/sqrt <span class="dv">2</span>))
+      Math/abs))</code></pre></div>
+<p>Now when we run this, we can see how it approximates the target value over time (<code>√2 ≈ 1.4142</code>).</p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="kw">take</span> <span class="dv">6</span> (evolution base mutator score-fn <span class="dv">25</span>))
+<span class="co">;; =&gt; (0.0</span>
+<span class="co">;;     0.33079046010191426</span>
+<span class="co">;;     0.7509224756253191</span>
+<span class="co">;;     1.2164225056336746</span>
+<span class="co">;;     1.3768753691848903</span>
+<span class="co">;;     1.4125030676422798)</span></code></pre></div>
+<p>Because <code>evolution</code> returns an infinite sequence, we can just use <code>nth</code> on it to get the winner after a certain number of generations.</p>
+<p>While this is a very simple example, I am currently working on a way of using this to build and mutate a Clojure <a href="https://en.wikipedia.org/wiki/S-expression">S-expression</a> and score it by running a series of unit tests against the generated code. If this works out I might write about it here soon.</p>
+                </section>
+        </div>
+        <div id="footer">
+            Site proudly generated by
+            <a href="http://jaspervdj.be/hakyll">Hakyll</a>
+        </div>
+    </body>
+</html>
