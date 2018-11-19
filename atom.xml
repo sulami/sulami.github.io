@@ -8,13 +8,13 @@
         <name>Robin Schroer</name>
         <email>sulami@peerwire.org</email>
     </author>
-    <updated>Genetic Programming in Clojure</updated>
+    <updated>2018-11-17T00:00:00Z</updated>
     <entry>
     <title>Genetic Programming in Clojure</title>
-    <link href="Genetic Programming in ClojureGenetic Programming in Clojure" />
-    <id>Genetic Programming in ClojureGenetic Programming in Clojure</id>
+    <link href="https://sulami.github.io/posts/genetic-programming-in-clojure/index.html" />
+    <id>https://sulami.github.io/posts/genetic-programming-in-clojure/index.html</id>
     <published>2018-11-17T00:00:00Z</published>
-    <updated>Genetic Programming in Clojure</updated>
+    <updated>2018-11-17T00:00:00Z</updated>
     <summary type="html"><![CDATA[<h2 id="the-theory">The Theory</h2>
 <p>Like most programmers I have always had a vague interest in AI, and one of its branches that requires less complicated maths than recurrent neural networks which are the most well known one, is genetic programming. The idea of genetic programming is quite simple<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote">If you are into more visual examples, this I believe is a very good practical example: <a href="http://rednuht.org/genetic_cars_2/" class="uri">http://rednuht.org/genetic_cars_2/</a><br />
 <br />
@@ -86,10 +86,10 @@
 </entry>
 <entry>
     <title>Working remotely (Part 2)</title>
-    <link href="Working remotely (Part 2)Working remotely (Part 2)" />
-    <id>Working remotely (Part 2)Working remotely (Part 2)</id>
+    <link href="https://sulami.github.io/posts/working-remotely-part-two/index.html" />
+    <id>https://sulami.github.io/posts/working-remotely-part-two/index.html</id>
     <published>2018-11-05T00:00:00Z</published>
-    <updated>Working remotely (Part 2)</updated>
+    <updated>2018-11-05T00:00:00Z</updated>
     <summary type="html"><![CDATA[<p>It has now been 48 days since the first part of this post, and 42 days since I moved into my current flat in Amsterdam. Time for me to write the promised follow-up and explain what has happened so far and how things have been going.</p>
 <h2 id="the-good">The Good</h2>
 <p>First of all, I am a lot happier in my personal life, moving was definitely the right decision for me in general, all work things aside. Having made the step into a remote agreement frees me up to move when- and wherever I want, as my employer does not care about from where I actually work at this point, apart from timezone-related concerns.</p>
@@ -106,10 +106,10 @@
 </entry>
 <entry>
     <title>Running Clojurescript Tests on the JVM</title>
-    <link href="Running Clojurescript Tests on the JVMRunning Clojurescript Tests on the JVM" />
-    <id>Running Clojurescript Tests on the JVMRunning Clojurescript Tests on the JVM</id>
+    <link href="https://sulami.github.io/posts/running-clojurescript-tests-on-the-jvm/index.html" />
+    <id>https://sulami.github.io/posts/running-clojurescript-tests-on-the-jvm/index.html</id>
     <published>2018-10-01T00:00:00Z</published>
-    <updated>Running Clojurescript Tests on the JVM</updated>
+    <updated>2018-10-01T00:00:00Z</updated>
     <summary type="html"><![CDATA[<p>Recently I have been writing a lot of Clojure and Clojurescript for my side projects. This is my first post on the language &amp; ecosystem, so I what follows below might be very wrong in places. Nontheless I want to share something I worked out myself and might be useful to someone else. The topic we’re going to be looking at is running (unit) tests for a <a href="https://github.com/Day8/re-frame">re-frame</a>-based Clojurescript application, though it actually applies to almost any CLJS application.</p>
 <p>Last week I was finally adding tests to one of my side projects<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote">Way too late as well, I should have <a href="https://www.obeythetestinggoat.com">obeyed the testing goat</a>. I had quite some trouble untangling my wild-west design to be able to even write proper unit tests.<br />
 <br />
@@ -165,10 +165,10 @@
 </entry>
 <entry>
     <title>Working Remotely (Part 1)</title>
-    <link href="Working Remotely (Part 1)Working Remotely (Part 1)" />
-    <id>Working Remotely (Part 1)Working Remotely (Part 1)</id>
+    <link href="https://sulami.github.io/posts/working-remotely-part-one/index.html" />
+    <id>https://sulami.github.io/posts/working-remotely-part-one/index.html</id>
     <published>2018-09-18T00:00:00Z</published>
-    <updated>Working Remotely (Part 1)</updated>
+    <updated>2018-09-18T00:00:00Z</updated>
     <summary type="html"><![CDATA[<p>As of next week I will be full-time working remotely again, after having worked on-site for almost two years now. This weekend I will be moving from London back to what they call Europe or the continent here in London, specifically Amsterdam.<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote">Even though it does play a minor role, this is not directly due to Brexit and more a personal lifestyle choice.<br />
 <br />
 </span></span> As I worked full-time remotely before, two years ago, I have some experience and I want to lay out my ideas and plans to make this a successful endeavour. Part two will be published in a few weeks and give an update on how things are going once I settled in.</p>
@@ -185,10 +185,10 @@
 </entry>
 <entry>
     <title>Pipes in Python</title>
-    <link href="Pipes in PythonPipes in Python" />
-    <id>Pipes in PythonPipes in Python</id>
+    <link href="https://sulami.github.io/posts/pipes-in-python/index.html" />
+    <id>https://sulami.github.io/posts/pipes-in-python/index.html</id>
     <published>2018-08-21T00:00:00Z</published>
-    <updated>Pipes in Python</updated>
+    <updated>2018-08-21T00:00:00Z</updated>
     <summary type="html"><![CDATA[<p>I just found <a href="https://hackernoon.com/adding-a-pipe-operator-to-python-19a3aa295642">an article about pipes in Python</a> on lobste.rs and was reminded that I was toying with the exact same thing recently. Using a lot of functional languages (mainly Haskell, Clojure, Elixir)<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote">… but being paid to write (mostly highly object-oriented) Python four out of five days a week. We do use some Elixir at my place, but we are still a Python shop first.<br />
 <br />
 </span></span> and also a fair bit of bash, I am very used to streaming data through chains of functions using pipe-like constructs. Python does make this quite difficult and encourages a more imperative approach with intermediate variables.</p>
@@ -244,10 +244,10 @@ pype(
 </entry>
 <entry>
     <title>How this blog is made</title>
-    <link href="How this blog is madeHow this blog is made" />
-    <id>How this blog is madeHow this blog is made</id>
+    <link href="https://sulami.github.io/posts/how-this-blog-is-made/index.html" />
+    <id>https://sulami.github.io/posts/how-this-blog-is-made/index.html</id>
     <published>2018-07-26T00:00:00Z</published>
-    <updated>How this blog is made</updated>
+    <updated>2018-07-26T00:00:00Z</updated>
     <summary type="html"><![CDATA[<p>While this blog has always been powered by a static-page generator, a while ago I switched from using <a href="https://blog.getpelican.com/">Pelican</a>, a Python-based generator, to <a href="https://jaspervdj.be/hakyll/">Hakyll</a>, a Haskell-based one. There was no real practical reason for this, and objectively the switch has been a huge waste of time, though I have learned a lot about Haskell and am very happy with how this blog currently works.</p>
 <p>The basic setup is quite simple, I am using <a href="https://docs.haskellstack.org/en/stable/README/">Stack</a> to manage build dependencies and sandboxing for Haskell<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote">This is actually one of my basic requirements for new languages that I pick up. It is 2018, you can ship your language with a package manager that sandboxes by default. One of my biggest problems with Python is virtualenv.<br />
 <br />
@@ -267,10 +267,10 @@ pype(
 </entry>
 <entry>
     <title>Does popularity matter when choosing a stack?</title>
-    <link href="Does popularity matter when choosing a stack?Does popularity matter when choosing a stack?" />
-    <id>Does popularity matter when choosing a stack?Does popularity matter when choosing a stack?</id>
+    <link href="https://sulami.github.io/posts/does-popularity-matter-when-choosing-a-stack/index.html" />
+    <id>https://sulami.github.io/posts/does-popularity-matter-when-choosing-a-stack/index.html</id>
     <published>2018-06-29T00:00:00Z</published>
-    <updated>Does popularity matter when choosing a stack?</updated>
+    <updated>2018-06-29T00:00:00Z</updated>
     <summary type="html"><![CDATA[<p>Recently there has been a lot of turmoil around <a href="https://github.com/vuejs/vue">Vue.js</a> <a href="https://hasvuepassedreactyet.surge.sh">reaching the same number of stars on GitHub</a> as <a href="https://github.com/facebook/react">React</a>. While stars on GitHub are far from a reliable indicator of actual popularity and size of user base, it does raise the question whether these should actually matter when choosing a stack for a new piece of software.</p>
 <p>The easy answer is that it should not really matter. Especially if you are working in a somewhat specialised environment or are under a lot of constraints, like low-power hardware or strict performance requirements, you will probably end up using a very domain-specific set of tools. A language like Kotlin is the recommended way forward if you are developing an android application, but looking at the <a href="https://www.tiobe.com/tiobe-index/">TIOBE index</a><span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote">I have to mention that I believe the TIOBE index to be a bit biased though, not that I was perfectly objective. The overall “winner” of 2013 is Transact-SQL, a language many programmers will not even have heard of.<br />
 <br />
@@ -284,10 +284,10 @@ pype(
 </entry>
 <entry>
     <title>React Native &amp; ClojureScript - An obscure stack</title>
-    <link href="React Native &amp; ClojureScript - An obscure stackReact Native &amp; ClojureScript - An obscure stack" />
-    <id>React Native &amp; ClojureScript - An obscure stackReact Native &amp; ClojureScript - An obscure stack</id>
+    <link href="https://sulami.github.io/posts/react-native-and-clojurescript/index.html" />
+    <id>https://sulami.github.io/posts/react-native-and-clojurescript/index.html</id>
     <published>2018-06-15T00:00:00Z</published>
-    <updated>React Native &amp; ClojureScript - An obscure stack</updated>
+    <updated>2018-06-15T00:00:00Z</updated>
     <summary type="html"><![CDATA[<p>I have been working on a new side project for about two months now, a task manager app which is primarily aimed at iOS. This is a typical “scratching my own itch” side project. There are plenty of task manager apps on the App Store, but none of them seems to do exactly what I would like mine to do.<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote">Of course I cannot disclose the exact of features at this point, both because I’m really slow at development and also because a lot is still work in progress. I can say that none of the big ones (top 200 productivity) does everything I want.<br />
 <br />
 </span></span></p>
@@ -304,10 +304,10 @@ pype(
 </entry>
 <entry>
     <title>Distractions, Productivity, and Working from Home</title>
-    <link href="Distractions, Productivity, and Working from HomeDistractions, Productivity, and Working from Home" />
-    <id>Distractions, Productivity, and Working from HomeDistractions, Productivity, and Working from Home</id>
+    <link href="https://sulami.github.io/posts/distractions/index.html" />
+    <id>https://sulami.github.io/posts/distractions/index.html</id>
     <published>2017-12-20T00:00:00Z</published>
-    <updated>Distractions, Productivity, and Working from Home</updated>
+    <updated>2017-12-20T00:00:00Z</updated>
     <summary type="html"><![CDATA[<p>I have been working from home more than usual recently, thanks to my employer, who understands that five days a week in an open office aren’t the ideal environment for everyone. After mentioning that I noticed a perceived increase in productivity, I was asked to find out what it is that makes me so much more productive at home. The obvious answer is that there are fewer distracting factors at home than at the office<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote">This can be coworkers directly, but also just things like background chatter, the coffee machine, or even just visual distractions in the form of people walking in your field of vision all the time.<br />
 <br />
 </span></span>, which of course is true, but it is not necessarily the truth.</p>
@@ -327,10 +327,10 @@ pype(
 </entry>
 <entry>
     <title>Hello, World! Again!</title>
-    <link href="Hello, World! Again!Hello, World! Again!" />
-    <id>Hello, World! Again!Hello, World! Again!</id>
+    <link href="https://sulami.github.io/posts/hello-world-again/index.html" />
+    <id>https://sulami.github.io/posts/hello-world-again/index.html</id>
     <published>2017-11-11T00:00:00Z</published>
-    <updated>Hello, World! Again!</updated>
+    <updated>2017-11-11T00:00:00Z</updated>
     <summary type="html"><![CDATA[<p>First of all, I know it has been quite silent on here for a while. Since the last time I posted here, I switched jobs, and moved countries, so it would be fair to say that I have been quite busy in the meanwhile. But I’d still like to apologise, and I promise I will try to post more frequently from now on.</p>
 <p>If you have been here before, you might have noticed that things have changed a fair bit. This is the new blog, reborn from the ashes, so to say. Though only because I felt like it was necessary to burn the old one. It’s now built using <a href="https://jaspervdj.be/hakyll/">Hakyll</a> instead of <a href="https://blog.getpelican.com">Pelican</a><span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote">Why switch, you ask? Shiny toys, that’s why.<br />
 <br />
