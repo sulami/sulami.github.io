@@ -8,8 +8,35 @@
         <name>Robin Schroer</name>
         <email>sulami@peerwire.org</email>
     </author>
-    <updated>2018-11-17T00:00:00Z</updated>
+    <updated>2019-02-02T00:00:00Z</updated>
     <entry>
+    <title>Building a Literal Library of Building Blocks</title>
+    <link href="https://sulami.github.io/posts/building-a-literal-library-of-building-blocks/index.html" />
+    <id>https://sulami.github.io/posts/building-a-literal-library-of-building-blocks/index.html</id>
+    <published>2019-02-02T00:00:00Z</published>
+    <updated>2019-02-02T00:00:00Z</updated>
+    <summary type="html"><![CDATA[<p>This post<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote">I know, insert the obligatory “I haven’t posted in a while” bit here.<br />
+<br />
+</span></span> is heavily inspired by <a href="https://soundcloud.com/defn-771544745/30-zach-tellman-aka-ztellman">a remark Zach Tellman made on the defn podcast</a>, where he says:</p>
+<blockquote>
+<p>Having been a professional programmer for a decade, I have a decade’s worth of experience at writing stuff from scratch, not a decade’s worth of tools in my toolbox. And that seems like a not optimal set of circumstances. <em>[Quote at 57:45]</em></p>
+</blockquote>
+<p>I have listened to this some time around Christmas, and this quote has kept me thinking over the past couple of months. What Zach is talking about is a project he is working on which would allow you to capture explorative programming in the branching fashion in which it happens. His example revolves around using a shell to perform some work, like extracting some specific values from a file.<span><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle"/><span class="sidenote">You should really go and listen to the episode, he has a lot of very great insights.<br />
+<br />
+</span></span> He explains how we work out these sequences of commands that to accomplish our goal, but never generalise them, but instead throw them away, just to write them from scratch the next time we encounter a similar problem. This rings true for all kinds of programming, not just shell scripting, though shell scripts are especially susceptible to this.</p>
+<p>Like Zach, I believe this to be a suboptimal situation. Especially being a functional programmer, I believe in small, abstract building blocks, composition, and code reuse, rather than overly specific, bespoke solutions that have to be written from scratch every time. I am someone who tinkers a lot, and there is a lot of code I never commit anywhere. As a matter of fact, I have a habit of creating throw-away files or whole projects in <code>/tmp</code> just to play with something for anywhere between five minutes and a weekend. At the same time I also have a repository on my Github literally called playground, which contains all kinds of small things that I did not want to go through the hassle of creating a Github repository for.<span><label for="sn-3" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-3" class="margin-toggle"/><span class="sidenote">Interesting aside: while creating a local repository has so little friction that I do it all the time, only a fraction of them ever touch Github’s servers, as creating a repository through the web interface incurs so much friction.<br />
+<br />
+</span></span></p>
+<p>This repository has allowed me to cannibalise some snippets of codes I used in the past, but it is not what I would call a comprehensive library of generalised solutions to problems I repeatedly face. And that has been hugely helpful already, for example I have written about path-finding using the A* algorithm before, so I had a working implementation ready when I needed it for another project.</p>
+<p>Having a library, in the worldly sense of the word, of useful, generalised snippets of code would institutionalise the knowledge of them. You would not have to remember how to invert a binary tree, because if you have ever played with binary trees you would already have an implementation handy, and it would be tried and tested, and performance-optimised.</p>
+<h2 id="practical-implementations">Practical Implementations</h2>
+<p>Having arrived at the decision of generalising and collecting useful snippets of code somewhere, we are now facing the question of where somewhere actually is, and how we distribute the snippets in a way that allows us to easily use them.</p>
+<p>The simplest solution would be to maintain one or several collections of useful snippets, and just copy-pasting them into the code you are writing. While this is fast and simple, it does not facilitate innovation flowing in either direction. Updates to the generalised versions are not included in downstream products using them, and vice versa. The result would likely be a duplication of similar, but subtly different solutions to all kinds of problems, scattered over various projects. Bugs that have long been fixed in one of them might still be present in others.</p>
+<p>The alternative solution is packaging your snippets, and using them as a library. Most of the practical implementation will depend on the programming language you are using, and what kind of projects you are usually working on. Zach Tellman himself has a Clojure library called <a href="https://github.com/ztellman/potemkin">Potemkin</a>, which is a collection of “some ideas which are almost good”, and which he uses as a dependency for most of his other libraries.</p>
+<p>While this incurs some overhead, namely the packaging of the library, it does come with a lot of advantages. Other people can benefit from your library. Depending on the scale of the overhead involved with building a library, splitting snippets by topic into “actual” libraries might make sense. It does require more abstraction, and more documentation, but that is not a bad thing. For a simple library with a handful of data structures or functions, writing a quick readme and some docstrings takes less than an hour.</p>
+<p>There is still room for a default, catch-all library that is just for personal use and contains miscellaneous snippets without any particular topic, and it can be where new snippets end up first. If a section of it grows large enough, it can be extracted into its own library. The bottom line here is, if you write something that solves a problem, keep it somewhere, ideally where you can find it again. Even if it is not generalised or documented, it might come in handy in the future.</p>]]></summary>
+</entry>
+<entry>
     <title>Genetic Programming in Clojure</title>
     <link href="https://sulami.github.io/posts/genetic-programming-in-clojure/index.html" />
     <id>https://sulami.github.io/posts/genetic-programming-in-clojure/index.html</id>
@@ -324,23 +351,6 @@ pype(
 <p>Even when working from home, I make an effort to stay connected, which today means having Slack on all my devices<span><label for="sn-3" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-3" class="margin-toggle"/><span class="sidenote">This is in general a terrible idea, don’t do this. I will write about information diets at some point.<br />
 <br />
 </span></span> and being transparent about what I am doing. This is an important step when building trust so your employer does not feel like you are just abusing this privilege to catch up on Westworld. I also only work from home when I know I am not required in any meetings, and I make a point of talking to everyone I need to talk to the day before, so I can tie up all loose ends.</p>]]></summary>
-</entry>
-<entry>
-    <title>Hello, World! Again!</title>
-    <link href="https://sulami.github.io/posts/hello-world-again/index.html" />
-    <id>https://sulami.github.io/posts/hello-world-again/index.html</id>
-    <published>2017-11-11T00:00:00Z</published>
-    <updated>2017-11-11T00:00:00Z</updated>
-    <summary type="html"><![CDATA[<p>First of all, I know it has been quite silent on here for a while. Since the last time I posted here, I switched jobs, and moved countries, so it would be fair to say that I have been quite busy in the meanwhile. But I’d still like to apologise, and I promise I will try to post more frequently from now on.</p>
-<p>If you have been here before, you might have noticed that things have changed a fair bit. This is the new blog, reborn from the ashes, so to say. Though only because I felt like it was necessary to burn the old one. It’s now built using <a href="https://jaspervdj.be/hakyll/">Hakyll</a> instead of <a href="https://blog.getpelican.com">Pelican</a><span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote">Why switch, you ask? Shiny toys, that’s why.<br />
-<br />
-</span></span>, and it’s using <a href="https://edwardtufte.github.io/tufte-css/">Tufte CSS</a> instead of my homegrown Jinja2 templates and CSS. I spent much more time on setting this up than I care to admit. The upshot is, I have new CSS without having to rewrite all my custom templates from scratch, and get to use these neat stylesheets.</p>
-<p>One of my major pains with my old setup was the setup required to just write something quickly, due to the fact that I was maintaining my own styles and sources in different repositories, and also because Python requirements are notoriously janky if you’re not careful. This new system is handled entirely by <a href="https://www.stackage.org">stack</a>, which makes things much easier.<span><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle"/><span class="sidenote">By the way, you can get the source of this blog <a href="https://github.com/sulami/sulami.github.io">over here</a>, if you want to steal some code, or just look at it.<br />
-<br />
-</span></span> Initial setup takes quite a while, because I have to compile a whole load of dependencies, but it’s a fully automatic setup.</p>
-<p>I have to admit, I was tempted to just switch to Medium during this whole process. But now that I have figured out how to build this whole thing<span><label for="sn-3" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-3" class="margin-toggle"/><span class="sidenote">Read: get it to compile<br />
-<br />
-</span></span>, I am quite happy with the results. Because Hakyll, just like Pelican, uses Markdown as source to generate HTML, I could easily port over my old posts once the dust had settled.</p>]]></summary>
 </entry>
 
 </feed>
