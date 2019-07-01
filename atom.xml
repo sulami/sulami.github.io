@@ -8,8 +8,80 @@
         <name>Robin Schroer</name>
         <email>sulami@peerwire.org</email>
     </author>
-    <updated>2019-02-02T00:00:00Z</updated>
+    <updated>2019-07-01T00:00:00Z</updated>
     <entry>
+    <title>My Thoughts on spec</title>
+    <link href="https://sulami.github.io/posts/my-thoughts-on-spec/index.html" />
+    <id>https://sulami.github.io/posts/my-thoughts-on-spec/index.html</id>
+    <published>2019-07-01T00:00:00Z</published>
+    <updated>2019-07-01T00:00:00Z</updated>
+    <summary type="html"><![CDATA[<p>In the beginning of this year I started a new job, and I am now fortunate enough to be writing <a href="https://clojure.org">Clojure</a> full-time. I believe that Clojure is a very well crafted language and enables developers like few others, but I have also some grievances to report. I want to prefix this by saying that I love Clojure despite its faults, and this is more of a constructive criticism piece than anything else.</p>
+<h2 id="what-is-spec">What Is spec?</h2>
+<p>What I want to discuss today is <a href="https://clojure.org/guides/spec"><code>clojure.spec</code></a>, the gradual typing solution shipped with Clojure since 1.9.<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote">I am of course aware that spec is officially in alpha, and that there is a second alpha version which might address some of my points here. But as I have not tried alpha 2 yet, and a lot of people are using alpha 1, we will be mostly looking at alpha 1 in this post. Still, feel free to contact me and tell me how alpha 2 will improve things.<br />
+<br />
+</span></span> In case you are not familiar with spec, here is a quick run-down of how it works:</p>
+<p>Clojure is a dynamically typed language, meaning no (or very few) type annotations in the source code, unlike say Haskell or most curl-brace languages. While this removes a lot of visual clutter, and the language is designed in such a way that most functions can operate on most types for maximum flexibility, this also means that sometimes things break at run time due to type errors. To make dealing with types easier, spec allows you to place type definitions in strategic places, say at entry- and exit points of an app or a module to ensure that your idea of structure and type of your data still lines up with reality.</p>
+<p>The benefit of this approach over static typing is that you can encapsulate parts of your software with type safety without having to deal with the encumbrance in the internals. You define a contract to the outside, but stay flexible in your implementation.</p>
+<p>In practice it looks like this:</p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="kw">ns</span> spec-demo
+  (<span class="at">:require</span> [clojure.spec.alpha <span class="at">:as</span> s]
+            [clojure.spec.gen.alpha <span class="at">:as</span> gen]))
+            
+(s/def <span class="at">::name</span> <span class="kw">string?</span>)
+(s/def <span class="at">::age</span> pos-int?)
+
+(s/def <span class="at">::person</span>
+  (s/keys <span class="at">:req-un</span> [<span class="at">::name</span>
+                   <span class="at">::age</span>]))
+                
+(s/valid? <span class="at">::person</span>
+          {<span class="at">:name</span> <span class="st">&quot;John&quot;</span>
+           <span class="at">:age</span> <span class="dv">35</span>})
+<span class="co">;; =&gt; true</span>
+
+(s/explain <span class="at">::person</span>
+           {<span class="at">:name</span> <span class="dv">35</span>})
+<span class="co">;; =&gt; 35 - failed: string? in: [name] at: [:name] spec: :spec-demo/name</span>
+<span class="co">;;    {:name 35} - failed: (contains? % :age) spec: :spec-demo/person</span>
+
+(gen/generate
+  (s/gen <span class="at">::person</span>))
+<span class="co">;; =&gt; {:name &quot;3o311eSXA4Dm9cLkENIt3J5Gb&quot;, :age 3318}</span></code></pre></div>
+<p>This snippet demonstrates creating a spec <code>person</code> which has sub-specs <code>name</code> and <code>age</code>, validates some data against the spec, explains why some data does not validate, and also generates some random data compliant with the spec. The last bit is incredibly useful for testing, as you can imagine. There are some more advanced features than what I have shown here, like specs for in- and output types of functions, but this is the gist of it.</p>
+<h2 id="so-what-is-wrong-with-spec">So What Is Wrong with spec?</h2>
+<h3 id="specs-as-macros">specs as Macros</h3>
+<p>spec is implemented using macros, which are compile-time expansions, think template meta-programming in C++. This brings some limitations, which are especially noticeable in Clojure where, like in most other Lisps, code is treated as data and many parts of your software are introspectable at run time. specs are, once defined, not easy to extract data from.</p>
+<p>Contrast this with <a href="https://github.com/plumatic/schema">schema</a>, a Clojure library which does essentially the same thing, and got started before spec. schema “schemas” are just hash maps, which are easily constructed and introspected at run time. schema has other problems, but the community seems to generally flock to spec as the officially blessed version.</p>
+<p>The situation I have now repeatedly seen is one where I have a spec defining a specific representation of an entity, where for example one spec extends another one. A practical example here is when augmenting an entity with additional data, so that the output representation is a modified version of the input type.</p>
+<p>You can define a spec as a superset of another spec, and only in that direction, using <code>s/or</code>, but at that point you are already stuck in the spec an cannot get the list of fields easily out of your specs. It would be nice to be able to define one spec in terms of flat data, which would also be available at run time. This would be incredibly helpful for use with something like <code>select-keys</code>.</p>
+<p>There are ways of working around this, for example by using <code>eval</code>, or wrapping your spec macros in another layer of macros, but both of these are more hacks than solutions. <a href="https://github.com/clojure/spec-alpha2/wiki/Differences-from-spec.alpha">spec alpha 2</a> promises to solve this particular problem by separating symbolic specs from spec objects, the former being just flat data which can also be generated programmatically.</p>
+<p>If spec alpha 2 works out the way I hope, this will be solved soon, and the documentation looks promising so far.</p>
+<h3 id="namespacing">Namespacing</h3>
+<p>spec is very intent on you using namespaces for your keywords, which in general is a good idea. Many developers, including myself, have been using the namespace of a key to give context about its use, for example <code>:person/name</code> is a different spec from <code>:company/name</code>. The problem with this is the overloading of namespaced keywords, which are an existing Clojure feature. These namespaces <code>person</code> and <code>company</code> do not actually exist, and I do not want to clutter all my keys with a long prefix like <code>:myapp.entities.person/name</code> to make it match a real namespace.</p>
+<p>Now namespaced keywords can have any namespace, and the namespace does not actually have to exist for everything related to keywords to work well, except when it does. If you want to use a spec from another namespace, but <code>alias</code> that namespace to shorten it, you need to <code>require</code> that namespace, for which it needs to exist. As a workaround to this I have created “fake” namespaces in the past using a helper.</p>
+<p>This actually leads me to another problem, which is the question of where to place specs in the first place. spec comes with a global, centralised registry for specs, which in alpha 1 you cannot opt out of. In theory this allows you to define/register your spec once in any place you like, and then access it from anywhere without having to know where it comes from or requiring it. This, while having the potential for being too opaque and magical, is actually a very good feature in my opinion. It is trivial to override specs when reloading them, and I have not experienced any issues with evaluation order yet. Due to specs referring to other specs by their name, you can define dependencies of a spec after the fact, and the system will pick them up accordingly.</p>
+<p>My current solution for this is having a file &amp; namespace for every entity which can be required and aliased normally, the only problem with this being relationships between specs. As soon as one spec needs to include another spec, dependencies get muddled, so I have experimented with having a special namespace for specs which are shared across many other specs, but this is far from ideal. I wish there was a cleaner way to do this, especially leveraging the global registry.</p>
+<h3 id="function-spec-definitions">Function spec Definitions</h3>
+<p>I mentioned above that spec also allows instrumenting functions, but the semantics for this are a bit wonky in my opinion. See for yourself:</p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="bu">defn</span><span class="fu"> double </span>[x]
+  (<span class="kw">*</span> <span class="dv">2</span> x))
+  
+(s/fdef <span class="kw">double</span>
+  <span class="at">:args</span> (s/cat <span class="at">:x</span> int?)
+  <span class="at">:ret</span> int?
+  <span class="at">:fn</span> #(<span class="kw">=</span> (<span class="at">:ret</span> %)
+          (<span class="kw">-&gt;</span> % <span class="at">:args</span> <span class="at">:x</span> (<span class="kw">*</span> <span class="dv">2</span>))))</code></pre></div>
+<p>This naive spec restricts in- and output types to integers, which is okay in this case. The <code>:fn</code> key describes the relationship between in- and output, and is in this case actually absurdly strict, but this is just an example. There are two issues I have with this:</p>
+<p>First the <code>:fn</code> definition tends to be very elaborate and hard to understand at a glance. Even in this simple case, there is a lot going on in there, and the use of anonymous functions does not help it. In practice, this key is optional and I omit it almost always, because I cannot think of any formal assertions I want to make about the output which are also reasonably simple to encode. And if you want to make several separate assertions about the output, you almost cannot avoid breaking up the spec into pieces, at which point you have predicates which exist purely for spec.</p>
+<p>The other issue I have is that this is decoupled from the actual function definition. In theory you can place the spec in a different namespace and refer to the function using its fully qualified name, and this is tempting, especially when looking at my previous point about these specs having the potential to be far more longer than the actual function definitions. But then your function exists conceptually in two places, and these two places have to be kept in sync. If you move, rename, or modify the function in almost any way, you have to modify the spec, too, but first you have to find the spec.</p>
+<p>The problem I can see with this is that <code>:fn</code> can be used to make assertions about the functions, which can in almost all cases be made in unit tests as well. In fact, unit tests are meant for exactly this, asserting single assumptions about units at a time. The condition above could just as well be a test called <code>the result equals twice the input value</code>. Functions are usually only instrumented locally and/or during testing, as they incur non-negligible overhead, and I would argue that they do not provide significant assurances over unit tests.</p>
+<p>I would much rather drop the <code>:fn</code> key, and include type declarations in the actual function definition, which is incidentally how schema works:</p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(s/defn <span class="kw">double</span> <span class="at">:-</span> s/Int
+  [x <span class="at">:-</span> s/Int]
+  (<span class="kw">*</span> <span class="dv">2</span> x))</code></pre></div>
+<p>In the end, I am looking forward to the next iteration of spec, and hope it addresses as many issues as possible, and I am already blown away by how much better it is than alternatives available in other languages.</p>]]></summary>
+</entry>
+<entry>
     <title>Building a Literal Library of Building Blocks</title>
     <link href="https://sulami.github.io/posts/building-a-literal-library-of-building-blocks/index.html" />
     <id>https://sulami.github.io/posts/building-a-literal-library-of-building-blocks/index.html</id>
@@ -328,29 +400,6 @@ pype(
 </span></span> I am currently in contact with the maintainer of the ClojureScript library which wraps a JavaScript library which has broken backwards compatibility, and I am working on fixing these issues myself, a great challenge considering I have about a month of ClojureScript experience at this point, but also a lot of fun.</p>
 <p>My goal for this is to eventually end up on the App Store, use it myself, and <em>maybe</em> even make some money out of this. I do not expect this to ever become remotely profitable, but it is going to be a nice bullet point on my CV. So far I have a small fraction of the features I have planned, but I believe I have worked out most of the difficult parts to the point where I can quite efficiently extend the functionality on top of what I have built so far.</p>
 <p>Bottom line of this post is, I like this stack a lot. It has not been smooth sailing all the way, and some of the tooling I use is still in quite early development, but I have yet to find anything that completely blocks me for more than an hour.</p>]]></summary>
-</entry>
-<entry>
-    <title>Distractions, Productivity, and Working from Home</title>
-    <link href="https://sulami.github.io/posts/distractions/index.html" />
-    <id>https://sulami.github.io/posts/distractions/index.html</id>
-    <published>2017-12-20T00:00:00Z</published>
-    <updated>2017-12-20T00:00:00Z</updated>
-    <summary type="html"><![CDATA[<p>I have been working from home more than usual recently, thanks to my employer, who understands that five days a week in an open office aren’t the ideal environment for everyone. After mentioning that I noticed a perceived increase in productivity, I was asked to find out what it is that makes me so much more productive at home. The obvious answer is that there are fewer distracting factors at home than at the office<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote">This can be coworkers directly, but also just things like background chatter, the coffee machine, or even just visual distractions in the form of people walking in your field of vision all the time.<br />
-<br />
-</span></span>, which of course is true, but it is not necessarily the truth.</p>
-<p>The reason I feel more productive when working from home, and thus better in general, is my ability to easily get into the Zone™, the state of mind where focus on the task at hand trumps everything else. My objectively measured output in the form of commits can be easily gauged by just having a look at the Github activity histogram of my account, which shows that over the last month, the days I worked from home have seen almost a doubling of activity. This seems like a pretty obvious gain no one should be able to deny, but I am going to argue at this point that there is more to my job than just pumping out code.</p>
-<h2 id="what-makes-a-great-engineer">What makes a great engineer?</h2>
-<p>Sure, one part of my just is producing features and fixing bugs, but software engineering has a huge social component many tend to forget about. During the days I am in the office, I talk to developers from other teams, catch up on the latest developments, discuss design decisions for upcoming features and projects, help out in situations that are not strictly my responsibility, and generally just trade in some of my personal productivity to bring up company productivity. I think it is important to make this division, because on some days I personally do not write a single line of code, but I enable others to sometimes save hours of their time, which arguably is the greater gain for the company. Building a Fortress of Solitude can be tempting to boost personal output, but it is not what makes a great engineer.</p>
-<h2 id="but-why">But why?</h2>
-<p>Even after coming to the conclusion that the gain in personal productivity might not be worth it when looking at the big picture, I still maintain that I want to work from home some of the time. Why is that? The gain here is personal happiness for me. My happiness is, at least to some degree, bound to my (perceived) personal productivity. When I track time in the evening, write my work journal<span><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle"/><span class="sidenote">Something I have been experimenting with. More on that in a future post. But it’s basically just writing down what I did by the end of the day.<br />
-<br />
-</span></span> or talk about yesterday in the daily standup, I feel pressured to have produced something more or less tangible. But on some days, I do not really have anything I can say I produced. I do not think anyone actually minds, because I just say “I spent eight hours yesterday helping someone unbreak the builds”, but somewhere deep down it still feels wrong.</p>
-<p>Another thought I had was that I am not nearly as closely monitored when working from home compared to the days I am coming in. This allows me to just wander off to the kitchen, the toilet, or the supermarket if I feel like I need a couple of minutes to think something over. This is considerably harder to do in the office, even though our open office is not quite an Orwellian surveillance state. Instead of taking these small breaks, or sometimes even power naps, I just try to soldier through while I am at the office, because that is what I am there for.</p>
-<h2 id="finding-a-compromise">Finding a compromise</h2>
-<p>So what should you be doing? First of all, every situation is unique, and I cannot give any blanket advice. If you get the chance, I think you should definitely try working from home at some point. It does require some discipline, more if your home is actually busy with family or flat-mates. But do not take this opportunity for granted, and if your employer says that this is not working out from their perspective, you have no real alternative to accepting that fact.</p>
-<p>Even when working from home, I make an effort to stay connected, which today means having Slack on all my devices<span><label for="sn-3" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-3" class="margin-toggle"/><span class="sidenote">This is in general a terrible idea, don’t do this. I will write about information diets at some point.<br />
-<br />
-</span></span> and being transparent about what I am doing. This is an important step when building trust so your employer does not feel like you are just abusing this privilege to catch up on Westworld. I also only work from home when I know I am not required in any meetings, and I make a point of talking to everyone I need to talk to the day before, so I can tie up all loose ends.</p>]]></summary>
 </entry>
 
 </feed>
