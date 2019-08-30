@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>sulami's blog - Fighting the Borrow Checker</title>
+        <link rel="stylesheet" type="text/css" href="../../stylesheet.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="apple-touch-icon" sizes="180x180" href="../../images/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="../../images/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="../../images/favicon-16x16.png">
+        <link rel="manifest" href="../../images/site.webmanifest">
+        <link rel="mask-icon" href="../../images/safari-pinned-tab.svg" color="#5bbad5">
+        <link rel="shortcut icon" href="../../images/favicon.ico">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="msapplication-config" content="/images/browserconfig.xml">
+        <meta name="theme-color" content="#5bbad5">
+        <link href="../../atom.xml" type="application/atom+xml" rel="alternate" title="sulami's blog feed" />
+    </head>
+    <body>
+        <div id="header">
+            <div id="navigation" style="margin-top: 2em">
+                <a href="../../">Home</a>
+                ·
+                <a href="../../archive/">Archive</a>
+                ·
+                <a href="../../atom.xml">Feed</a>
+                ·
+                <a href="../../pages/about/">About</a>
+                ·
+                <a href="../../pages/cv/">CV</a> <a href="../../pages/cv.pdf">(PDF)</a>
+                ·
+                <a href="../../pages/uses-this/">Uses This</a>
+                ·
+                <a href="../../pages/frankenwm/">FrankenWM</a>
+            </div>
+        </div>
+
+        <div id="content">
+            <article>
+                <h1>Fighting the Borrow Checker</h1>
+                <div class="info">
+                    
+                        Posted on August 16, 2019
+                    
+                    
+                </div>
+
+                <section>
+            <p>I have spent the last couple of weeks working through the second half of <a href="https://craftinginterpreters.com">Crafting Interpreters</a><span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle" /><span class="sidenote">I can also really recommend this book, even if you are only using it as a rough guide, like I am, it does a very good job of explaining the concepts and has plenty of useful illustrations.<br />
+<br />
+</span></span>, which guides the reader through building a bytecode compiler and VM. I decided to stray from the book in two ways: first, instead of implementing the Losp language, which had been invented for the book, I would build a Scheme-inspired Lisp. Second, instead of using C, I would take this opportunity to actually have a go at Rust<span><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle" /><span class="sidenote">Pun intended.<br />
+<br />
+</span></span>.</p>
+<p>Rust is a language I have been meaning to try out for several years now. It is a C-like language without classic garbage collection, but it has an elaborate system to free memory in a deterministic fashion as entities leave the scope. It couples this with a system that tracks the lifetime of entities at compile-time and can tell you when your references (pointers) are not guaranteed to point to valid memory. This system is called the Borrow Checker, and “fighting the Borrow Checker” is widely used phrase among Rust users.</p>
+<p>The good news is that I managed to build a Lisp<span><label for="sn-3" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-3" class="margin-toggle" /><span class="sidenote">I called it losp, as a fusion of Lox &amp; Lisp. You can see it <a href="https://github.com/sulami/interpreter-book">here</a>, though there currently is no documentation, and the compiler does not always deal very well with invalid code, but it compiles and runs programs. It even has a REPL.<br />
+<br />
+</span></span>, and it works. It has some types, (in theory) even first class functions. No lists at this point yet, which means also no <code>(eval)</code> and no macros. If you thought this were the bad news, here it comes: it is also about 25% as fast as Python for function calls, which is anything but impressive. For reference, the C implementation of Lox is considerably faster than Python for the same benchmark.<span><label for="sn-4" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-4" class="margin-toggle" /><span class="sidenote">For reference, the benchmark is a recursive Fibonacci implementation.<br />
+<br />
+</span></span></p>
+<p>The reason for this is that on every function call, the VM has to copy some bytecode into the new call frame, because the borrow checker does not allow me to just use a pointer. I am aware that this might very well be hinting at an architectural issue, but at this point I feel like I am truly “fighting the Borrow Checker”.</p>
+<p>Here is the reason I think this is bad, at least for me: it feels like my tooling is less smart than me, and I have to fight it. This is a very frustrating experience, because especially as developers we are used to optimising our environment, and a lot of our tools are much smarter than we are, so they can raise our efficiency dramatically.</p>
+<p>Something as simple as “jump to definition” in your favourite editor is smart enough to figure out what you are looking at, consider all the context of the source file, and then decide where the definition for a function or method resides (well, most of the time), all that within a split second. Autocompletion often times is syntax- and type-aware and proposes completions that make sense in the context. Good compilers and linters can give us hints along the lines of “did you mean to do X?”</p>
+<p>And now suddenly you are passing around some data and the Rust compiler just tells you “X does not live long enough”. It might be right, it honestly is most likely right, but appeasing the compiler does not feel like this is the problem I want to solve.</p>
+<p>I have had similar experiences in Haskell, where the type checker would sometimes be very cryptic about its unhappiness, but type errors are very straightforward. In theory the Borrow Checker falls into the same category of “something does not line up here”, but it feels more like an arbitrary limitation. While I might have declared a type that is not actually matched, I never asked for that memory to be freed.</p>
+<p>I believe this has to do with the semantics of Rust, which make it seem like lifetime annotations serve the purpose of, well, declaring the lifetime of a value. In reality it is more for the Borrow Checker to figure out what is happening, because giving you any meaningful information if you do not declare your intentions is quite tricky. The Rust book acknowledges this issue, saying this:</p>
+<blockquote>
+<p>This often happens because the programmer’s mental model of how ownership should work doesn’t match the actual rules that Rust implements. You probably will experience similar things at first.</p>
+</blockquote>
+<p>The way the model works is actually somewhat simple, once you wrap your head around it. All your code is running in scopes and nested sub-scopes, as you would expect. Every value you declare lives within its scope, and dies once that scope ends, as you would expect. When it dies, all references (pointers) to it become invalid, so Rust makes sure that anytime you use a reference to a value, it is guaranteed to still be alive.</p>
+<div class="sourceCode"><pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> foo () <span class="op">{</span>
+    <span class="kw">let</span> x = <span class="dv">1</span>;
+<span class="op">}</span> <span class="co">// x dies here</span></code></pre></div>
+<p>If you want to pass a value up a scope so it can outlive the scope it was created in, you have to return it.</p>
+<div class="sourceCode"><pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> foo() -&gt; <span class="dt">i32</span> <span class="op">{</span>
+    <span class="kw">let</span> x = <span class="dv">1</span>;
+    x  <span class="co">// outlives the scope of foo</span>
+<span class="op">}</span>
+
+<span class="kw">fn</span> bar() <span class="op">{</span>
+    <span class="kw">let</span> x = foo();
+    <span class="co">// can still use x here</span>
+<span class="op">}</span></code></pre></div>
+<p>Rust has the idea of ownership, meaning each value can only be directly bound to one name at a time. Changing ownership is called “moving”</p>
+<div class="sourceCode"><pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">struct</span> Inner <span class="op">{</span>
+    i: <span class="dt">usize</span>,
+<span class="op">}</span>
+
+<span class="kw">struct</span> Outer&lt;<span class="ot">'a</span>&gt; <span class="op">{</span>
+    xs: <span class="dt">Vec</span>&lt;&amp;<span class="ot">'a</span> Inner&gt;,
+<span class="op">}</span>
+
+<span class="kw">fn</span> deep_down(outer: &amp;<span class="kw">mut</span> Outer) <span class="op">{</span>
+    <span class="kw">let</span> inner = Inner<span class="op">{</span>i: <span class="dv">0</span><span class="op">}</span>;
+    outer.xs.append(&amp;<span class="kw">mut</span> <span class="pp">vec!</span><span class="op">[</span>&amp;inner<span class="op">]</span>);
+<span class="op">}</span>
+
+<span class="kw">fn</span> main() <span class="op">{</span>
+    <span class="kw">let</span> <span class="kw">mut</span> outer = Outer<span class="op">{</span>xs: <span class="pp">vec!</span><span class="op">[]}</span>;
+    deep_down(&amp;<span class="kw">mut</span> outer);
+<span class="op">}</span></code></pre></div>
+<p>It is not possible to return a reference to an object created inside a function from the same function.</p>
+                </section>
+        </div>
+        <div id="footer">
+            Site proudly generated by
+            <a href="http://jaspervdj.be/hakyll">Hakyll</a>
+        </div>
+    </body>
+</html>
