@@ -34,7 +34,7 @@
 <p>Clojure is explicitly designed as a hosted language, which I think was a very good move. If you are writing a new language today, it might be better than the established ones, but the cost of leaving an existing ecosystem of libraries and Stack Overflow answers just because the new language is 5% nicer is not a trade off many people will want to make. Clojure being hosted and having excellent interoperability with its host platform means it can benefit from existing ecosystem, let alone platform implementations.<span><label for="sn-5" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-5" class="margin-toggle"/><span class="sidenote">Do you really want to implement your runtime for FreeBSD on a smart toaster oven? Raspberry Pis are non x86, BSD is not Linux, and who knows what is up with Windows. This matrix is growing quickly.<br />
 <br />
 </span></span></p>
-<p>While the primary platform is the JVM, superbly uncool but stable and relatively performant, there is a CLR (.NET) version which is “almost even on features” thanks to Alex Miller, as well as a very mature JavaScript version in the shape of ClojureScript. The JVM (and to some extent the CLR) have excellent support by big software vendors, if you buy some kind of software with an API, chances are there is a Java SDK which you can use easily from your Clojure code. The JavaScript ecosystem is the largest in numbers<span><label for="sn-6" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-6" class="margin-toggle"/><span class="sidenote">In part due to left-pad-like five-line-packages, but still.<br />
+<p>While the primary platform is the JVM, superbly uncool but stable and relatively performant, there is a CLR (.NET) version which is “almost even on features” thanks to Davit Miller, as well as a very mature JavaScript version in the shape of ClojureScript. The JVM (and to some extent the CLR) have excellent support by big software vendors, if you buy some kind of software with an API, chances are there is a Java SDK which you can use easily from your Clojure code. The JavaScript ecosystem is the largest in numbers<span><label for="sn-6" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-6" class="margin-toggle"/><span class="sidenote">In part due to left-pad-like five-line-packages, but still.<br />
 <br />
 </span></span>, and includes Electron and React-Native, both of which can be used with some, but not unreasonable, effort from ClojureScript code. One of the newest additions has been GraalVM, which while not 100% feature-complete yet, already allows compilation to native static binaries of many Clojure programs<span><label for="sn-7" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-7" class="margin-toggle"/><span class="sidenote"><a href="https://github.com/kkinnear/zprint">Zprint</a> is one of those CLI tools that takes advantage of the reduced startup time.<br />
 <br />
@@ -52,66 +52,6 @@
 <p>In the end, it comes down to enjoyment. I enjoy working with Clojure. I feel like there is a lot to learn, and the language is inviting me to explore beyond the current possibilities of software development. I feel good about the elegant and concise solutions<span><label for="sn-11" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-11" class="margin-toggle"/><span class="sidenote">concise ≠ obtuse<br />
 <br />
 </span></span> I can come up with. It has changed the way I think, in a good way.</p>]]></summary>
-</entry>
-<entry>
-    <title>Fighting the Borrow Checker</title>
-    <link href="https://sulami.github.io/posts/org/index.html" />
-    <id>https://sulami.github.io/posts/org/index.html</id>
-    <published>2019-08-16T00:00:00Z</published>
-    <updated>2019-08-16T00:00:00Z</updated>
-    <summary type="html"><![CDATA[<p>I have spent the last couple of weeks working through the second half of <a href="https://craftinginterpreters.com">Crafting Interpreters</a><span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote">I can also really recommend this book, even if you are only using it as a rough guide, like I am, it does a very good job of explaining the concepts and has plenty of useful illustrations.<br />
-<br />
-</span></span>, which guides the reader through building a bytecode compiler and VM. I decided to stray from the book in two ways: first, instead of implementing the Losp language, which had been invented for the book, I would build a Scheme-inspired Lisp. Second, instead of using C, I would take this opportunity to actually have a go at Rust<span><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle"/><span class="sidenote">Pun intended.<br />
-<br />
-</span></span>.</p>
-<p>Rust is a language I have been meaning to try out for several years now. It is a C-like language without classic garbage collection, but it has an elaborate system to free memory in a deterministic fashion as entities leave the scope. It couples this with a system that tracks the lifetime of entities at compile-time and can tell you when your references (pointers) are not guaranteed to point to valid memory. This system is called the Borrow Checker, and “fighting the Borrow Checker” is widely used phrase among Rust users.</p>
-<p>The good news is that I managed to build a Lisp<span><label for="sn-3" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-3" class="margin-toggle"/><span class="sidenote">I called it losp, as a fusion of Lox &amp; Lisp. You can see it <a href="https://github.com/sulami/interpreter-book">here</a>, though there currently is no documentation, and the compiler does not always deal very well with invalid code, but it compiles and runs programs. It even has a REPL.<br />
-<br />
-</span></span>, and it works. It has some types, (in theory) even first class functions. No lists at this point yet, which means also no <code>(eval)</code> and no macros. If you thought this were the bad news, here it comes: it is also about 25% as fast as Python for function calls, which is anything but impressive. For reference, the C implementation of Lox is considerably faster than Python for the same benchmark.<span><label for="sn-4" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-4" class="margin-toggle"/><span class="sidenote">For reference, the benchmark is a recursive Fibonacci implementation.<br />
-<br />
-</span></span></p>
-<p>The reason for this is that on every function call, the VM has to copy some bytecode into the new call frame, because the borrow checker does not allow me to just use a pointer. I am aware that this might very well be hinting at an architectural issue, but at this point I feel like I am truly “fighting the Borrow Checker”.</p>
-<p>Here is the reason I think this is bad, at least for me: it feels like my tooling is less smart than me, and I have to fight it. This is a very frustrating experience, because especially as developers we are used to optimising our environment, and a lot of our tools are much smarter than we are, so they can raise our efficiency dramatically.</p>
-<p>Something as simple as “jump to definition” in your favourite editor is smart enough to figure out what you are looking at, consider all the context of the source file, and then decide where the definition for a function or method resides (well, most of the time), all that within a split second. Autocompletion often times is syntax- and type-aware and proposes completions that make sense in the context. Good compilers and linters can give us hints along the lines of “did you mean to do X?”</p>
-<p>And now suddenly you are passing around some data and the Rust compiler just tells you “X does not live long enough”. It might be right, it honestly is most likely right, but appeasing the compiler does not feel like this is the problem I want to solve.</p>
-<p>I have had similar experiences in Haskell, where the type checker would sometimes be very cryptic about its unhappiness, but type errors are very straightforward. In theory the Borrow Checker falls into the same category of “something does not line up here”, but it feels more like an arbitrary limitation. While I might have declared a type that is not actually matched, I never asked for that memory to be freed.</p>
-<p>I believe this has to do with the semantics of Rust, which make it seem like lifetime annotations serve the purpose of, well, declaring the lifetime of a value. In reality it is more for the Borrow Checker to figure out what is happening, because giving you any meaningful information if you do not declare your intentions is quite tricky. The Rust book acknowledges this issue, saying this:</p>
-<blockquote>
-<p>This often happens because the programmer’s mental model of how ownership should work doesn’t match the actual rules that Rust implements. You probably will experience similar things at first.</p>
-</blockquote>
-<p>The way the model works is actually somewhat simple, once you wrap your head around it. All your code is running in scopes and nested sub-scopes, as you would expect. Every value you declare lives within its scope, and dies once that scope ends, as you would expect. When it dies, all references (pointers) to it become invalid, so Rust makes sure that anytime you use a reference to a value, it is guaranteed to still be alive.</p>
-<div class="sourceCode"><pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> foo () <span class="op">{</span>
-    <span class="kw">let</span> x = <span class="dv">1</span>;
-<span class="op">}</span> <span class="co">// x dies here</span></code></pre></div>
-<p>If you want to pass a value up a scope so it can outlive the scope it was created in, you have to return it.</p>
-<div class="sourceCode"><pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> foo() -&gt; <span class="dt">i32</span> <span class="op">{</span>
-    <span class="kw">let</span> x = <span class="dv">1</span>;
-    x  <span class="co">// outlives the scope of foo</span>
-<span class="op">}</span>
-
-<span class="kw">fn</span> bar() <span class="op">{</span>
-    <span class="kw">let</span> x = foo();
-    <span class="co">// can still use x here</span>
-<span class="op">}</span></code></pre></div>
-<p>Rust has the idea of ownership, meaning each value can only be directly bound to one name at a time. Changing ownership is called “moving”</p>
-<div class="sourceCode"><pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">struct</span> Inner <span class="op">{</span>
-    i: <span class="dt">usize</span>,
-<span class="op">}</span>
-
-<span class="kw">struct</span> Outer&lt;<span class="ot">&#39;a</span>&gt; <span class="op">{</span>
-    xs: <span class="dt">Vec</span>&lt;&amp;<span class="ot">&#39;a</span> Inner&gt;,
-<span class="op">}</span>
-
-<span class="kw">fn</span> deep_down(outer: &amp;<span class="kw">mut</span> Outer) <span class="op">{</span>
-    <span class="kw">let</span> inner = Inner<span class="op">{</span>i: <span class="dv">0</span><span class="op">}</span>;
-    outer.xs.append(&amp;<span class="kw">mut</span> <span class="pp">vec!</span><span class="op">[</span>&amp;inner<span class="op">]</span>);
-<span class="op">}</span>
-
-<span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> <span class="kw">mut</span> outer = Outer<span class="op">{</span>xs: <span class="pp">vec!</span><span class="op">[]}</span>;
-    deep_down(&amp;<span class="kw">mut</span> outer);
-<span class="op">}</span></code></pre></div>
-<p>It is not possible to return a reference to an object created inside a function from the same function.</p>]]></summary>
 </entry>
 <entry>
     <title>My Thoughts on spec</title>
@@ -467,6 +407,23 @@ pype(
 <p>This blog is currently hosted in two locations, <a href="https://pages.github.com/">Github Pages</a> which I have been using for many years, and <a href="https://docs.gitlab.com/ee/user/project/pages/">GitLab pages</a>, which I only added recently. While the build and deployment process for these two platforms is slightly different, they mostly work off the same codebase, with the only difference being a <a href="https://github.com/sulami/sulami.github.io/blob/develop/Makefile">makefile for Github</a> being replaced by the <a href="https://gitlab.com/sulami/sulami.gitlab.io/blob/develop/.gitlab-ci.yml">GitLab-specific build file</a>. The Github version I generate locally with my locally compiled Hakyll, and then push the the right branch using the makefile. This makefile also allows me to run a local server to preview the rendered output before committing. The GitLab repository is setup to mirror the one on GitHub and rebuild via GitLab CI on every change, so it is compiling the Hakyll application in a Docker container and the generating the output.</p>
 <p>These two build processes have different pros and cons. The GitHub version is available slightly faster, as my local render only takes a couple of seconds and after pushing I just have to wait for Github’s cache to refresh, which usually takes only a couple of minutes, while the GitLab version has to run the CI job which takes a couple of minutes. On the upside the GitLab version does not require me to have a locally installed version of Haskell, Stack or anything else, as long as I can push to the repository, allowing me to explore workflows which happen end-to-end on iOS. I have been investigating this exact workflow, using a combination of <a href="https://itunes.apple.com/us/app/ia-writer/id775737172">iA Writer</a>, <a href="https://itunes.apple.com/us/app/workflow/id915249334">Workflow</a> and <a href="https://itunes.apple.com/us/app/working-copy/id896694807">Working Copy</a> to write, transform and push the posts, leaving the build process to GitLab CI.</p>
 <p>If you are interested in details, have a look at the source on either <a href="https://github.com/sulami/sulami.github.io">Github</a> or <a href="https://gitlab.com/sulami/sulami.gitlab.io">GitLab</a>.</p>]]></summary>
+</entry>
+<entry>
+    <title>Does popularity matter when choosing a stack?</title>
+    <link href="https://sulami.github.io/posts/does-popularity-matter-when-choosing-a-stack/index.html" />
+    <id>https://sulami.github.io/posts/does-popularity-matter-when-choosing-a-stack/index.html</id>
+    <published>2018-06-29T00:00:00Z</published>
+    <updated>2018-06-29T00:00:00Z</updated>
+    <summary type="html"><![CDATA[<p>Recently there has been a lot of turmoil around <a href="https://github.com/vuejs/vue">Vue.js</a> <a href="https://hasvuepassedreactyet.surge.sh">reaching the same number of stars on GitHub</a> as <a href="https://github.com/facebook/react">React</a>. While stars on GitHub are far from a reliable indicator of actual popularity and size of user base, it does raise the question whether these should actually matter when choosing a stack for a new piece of software.</p>
+<p>The easy answer is that it should not really matter. Especially if you are working in a somewhat specialised environment or are under a lot of constraints, like low-power hardware or strict performance requirements, you will probably end up using a very domain-specific set of tools. A language like Kotlin is the recommended way forward if you are developing an android application, but looking at the <a href="https://www.tiobe.com/tiobe-index/">TIOBE index</a><span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote">I have to mention that I believe the TIOBE index to be a bit biased though, not that I was perfectly objective. The overall “winner” of 2013 is Transact-SQL, a language many programmers will not even have heard of.<br />
+<br />
+</span></span>, and still it only comes in at position 49 at the time of writing, so obviously popularity cannot matter more than platform constraints.</p>
+<p>Another quite important factor is the already present repertoire of tools. Many tools, especially languages and large frameworks, like Vue.js and React, require rather large upfront learning efforts before they can be used efficiently. If you already know React inside out, why would you learn Vue, assuming it fundamentally does not enable you to do anything React does not? I am currently paying for my food by writing code in a primarily Python/Django environment, and sometimes I look over at the neat lawn the Ruby on Rails crowd seems to have, but it would not be wise of me to invest a sizeable amount of time to switch ecosystems without actually gaining much.<span><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle"/><span class="sidenote">Apart from that Python is also larger and growing in comparison to Ruby. Ruby is probably not dying anytime soon, but it is definitely declining since the days when everything was Rails, much to my dismay.<br />
+<br />
+</span></span></p>
+<p>I can already hear you type your furious <a href="https://twitter.com/_sulami_">tweets at me</a>, claiming how popularity of course makes a difference. And you are not wrong, there are very valid arguments to be made.</p>
+<p>Popularity does indeed matter when you chose a technology to use, for example if you need to add support for a new data format and shop around for libraries. Especially in the open-source world a larger user base means more eyes scanning the code for bugs, more potential contributors keeping the software updated and supplying it with new features, and better chances it will stay maintained overall. If you use a common set of softwares, chances are they can interact easily in some way, saving you time for integrating them. All of these are important factors which should be considered when making a voice of tooling.</p>
+<p>In the end there is no single deciding factor to look at, like for example popularity, but instead a lot of different ones. It is crucial to recognise all of them and think about how to weight them in importance. Newer (and shiny) tools might offer significant gains, but come at the price of a smaller community, so less support and a higher risk of abandonment.</p>]]></summary>
 </entry>
 
 </feed>
