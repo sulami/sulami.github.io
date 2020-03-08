@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>sulami's blog - The Value of Planning Documents</title>
+        <link rel="stylesheet" type="text/css" href="../../stylesheet.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="apple-touch-icon" sizes="180x180" href="../../images/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="../../images/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="../../images/favicon-16x16.png">
+        <link rel="manifest" href="../../images/site.webmanifest">
+        <link rel="mask-icon" href="../../images/safari-pinned-tab.svg" color="#5bbad5">
+        <link rel="shortcut icon" href="../../images/favicon.ico">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="msapplication-config" content="/images/browserconfig.xml">
+        <meta name="theme-color" content="#5bbad5">
+        <link href="../../atom.xml" type="application/atom+xml" rel="alternate" title="sulami's blog feed" />
+    </head>
+    <body>
+        <div id="header">
+            <div id="navigation" style="margin-top: 2em">
+                <a href="../../">Home</a>
+                ·
+                <a href="../../archive/">Archive</a>
+                ·
+                <a href="../../atom.xml">Feed</a>
+                ·
+                <a href="../../pages/about/">About</a>
+                ·
+                <a href="../../pages/cv/">CV</a> <a href="../../pages/cv.pdf">(PDF)</a>
+                ·
+                <a href="../../pages/uses-this/">Uses This</a>
+                ·
+                <a href="../../pages/frankenwm/">FrankenWM</a>
+            </div>
+        </div>
+
+        <div id="content">
+            <article>
+                <h1>The Value of Planning Documents</h1>
+                <div class="info">
+                    
+                        Posted on March  8, 2020
+                    
+                    
+                </div>
+
+                <section>
+            <p>Last weekend I attended <a href="https://clojured.de/">clojureD</a> and saw Paulus Esterhazy’s talk on writing for engineers<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle" /><span class="sidenote">I’ll add a link once it gets uploaded.<br />
+<br />
+</span></span>. The talk proposes an RFC-process, which lays out a decision, its reasons and alternatives. At Circle we do something very similar, we are writing <a href="https://en.wikipedia.org/wiki/Architectural_decision">decision records</a>, which are mostly the same thing. So while I was already familiar with most of the ideas, I still found it a good summary and introduction for developers, or anyone really, to get started writing more.</p>
+<p>One of the reasons Paulus describes, which is also present in <a href="https://takesmartnotes.com">Taking Smart Notes</a><span><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle" /><span class="sidenote">This book has been making the rounds in the software world a lot recently. I do have some opinions on it, but this is not the right place for them.<br />
+<br />
+</span></span>, is writing as a method to think. While Smart Notes is mostly concerned with the connection between notes, Paulus focuses on writing long form prose, full sentences, paragraphs, and pages, to force yourself to really think through the issue at hand.</p>
+<p>There is the famous quote by the economist Milton Friedman:</p>
+<blockquote>
+<p>If you cannot state a proposition clearly and unambiguously, you do not understand it.</p>
+</blockquote>
+<p>And the slightly less famous one by Leslie Lamport from <a href="http://channel9.msdn.com/Events/Build/2014/3-642">this talk</a>:</p>
+<blockquote>
+<p>Writing is nature’s way of letting you know how sloppy your thinking is.</p>
+</blockquote>
+<p>The basic idea is that writing out a plan requires you to not only think through the problem without glossing over potential pitfalls, but also to put your assumptions into words. This way problems can get surfaced early on, before a lot of time, effort, and money have been spent on implementing a faulty plan. Of course you should show your resulting document to various other people and get some feedback.</p>
+<h2 id="the-planning-document">The Planning Document</h2>
+<p>While RFCs/decision records have their use, I have recently started to write more planning documents for smaller tasks and features. This has several advantages, such as estimates being much more accurate instead of guesswork, and handing off work has never been easier.</p>
+<p>At my day job, every feature translates into an Epic in JIRA, which is owned by someone, usually a developer. The owner of the epic is in charge of planning the feature, writing all the sub-tasks and giving a rough estimate of the effort required.</p>
+<p>One of the tools I have started to use is writing a planning document when tasked with filling out an epic. These are separate documents that could live somewhere like Google Docs, but I usually just keep them in my local org-mode stash, and eventually just export them into JIRA. There is less emphasis on peer-review, as usually few people read the document, but even more on the thinking aspect.</p>
+<p>The basic structure of these documents looks like this:</p>
+<pre class="org"><code>* Title - Short description of the Feature
+
+** Abstract
+
+Some sentences about what we're doing and why. Give product context,
+link to everything that is relevant.
+
+** Tasks
+
+*** Step 1 - Do a Thing
+
+Break it down into steps that are PR-sized.
+
+Each step needs the following information (in particular format):
+
+- Which are the relevant code bits? Modules/classes/functions/lines?
+- What will need to be modified?
+- Where do we add new code?
+- What is the general structure going to be?
+- Can we mock up any types or sample data?</code></pre>
+<p>Because we use JIRA, the title &amp; abstract usually go into the epic itself, and each of the steps becomes a task within. The size of the steps also means that pull requests link nicely 1-1 to a ticket.</p>
+<p>I do not think this way of working is consuming more time than not planning up front, at least not significantly, as I would spend the same time doing research while doing the implementation otherwise. This way, the implementation is much quicker, because I just need to follow the steps I have already pre-planned, filling in the gaps. On the other hand I probably save some time because I do run into situations less often where a feature suddenly balloons because some assumptions do not actually hold.</p>
+<p>As a bonus, I get some nice documents to reference months and years later, when I wonder how or why something was implemented, which can be quite useful.</p>
+                </section>
+        </div>
+        <div id="footer">
+            Site proudly generated by
+            <a href="http://jaspervdj.be/hakyll">Hakyll</a>
+        </div>
+    </body>
+</html>
