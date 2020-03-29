@@ -33,7 +33,7 @@
                 ·
                 <a href="../../pages/about/">About</a>
                 ·
-                <a href="../../pages/cv/">CV</a> <a href="../../pages/cv.pdf">(PDF)</a>
+                <a href="../../pages/cv/">CV</a> <a href="../../pages/robin-schroer-cv.pdf">(PDF)</a>
                 ·
                 <a href="../../pages/uses-this/">Uses This</a>
                 ·
@@ -79,7 +79,8 @@ X <span class="op">*</span> X          <span class="op">*******</span>  X       
 X <span class="op">*</span> XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</code></pre></div>
 <p>A maze of this size can be solved in about a quarter of a second on my 2008 laptop. So let us find out, how one would implement this sort of path finding using a purely functional language like Haskell.</p>
 <p>The core of this algorithm is essentially a <a href="https://en.wikipedia.org/wiki/Flood_fill">flood fill</a>. But where a flood fill expands in all directions equally (if it is a queue-based one), A Star reorders the cells to fill after every filled cell using a cost function, and always fills the cheapest cell available. As such, our function needs to take a couple of arguments to work, the grid on which it works, the start and finish positions on the grid (we will need the target to determine costs), a function that can determine the valid cells a path could advance on, and a cost function that can determine the cost of a path.</p>
-<p>The grid, start and finish positions are quite easy, in our case we have a two-dimensional grid that consists of <code>Char</code>s, and positions on it look like <code>(x,y)</code>. The cost function has to follow a couple of basic rules. If you have a look at the Wikipedia page I linked at the very top, there is a part that explains that the cost of a path consists of the sum of its length, and an estimate of the distance between its end and the target. It should also not overestimate the minimal distance to the target. In our case, this is very simple. I define the rules of motion to be that we can only move in four directions, and not into or through walls (duh). This means our example cost function looks like this:</p>
+<p>The grid, start and finish positions are quite easy, in our case we have a two-dimensional grid that consists of <code>Char=s, and positions on it
+look like =(x,y)</code>. The cost function has to follow a couple of basic rules. If you have a look at the Wikipedia page I linked at the very top, there is a part that explains that the cost of a path consists of the sum of its length, and an estimate of the distance between its end and the target. It should also not overestimate the minimal distance to the target. In our case, this is very simple. I define the rules of motion to be that we can only move in four directions, and not into or through walls (duh). This means our example cost function looks like this:</p>
 <div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">cost ::</span> <span class="dt">Coord</span> <span class="ot">-&gt;</span> <span class="dt">Path</span> <span class="ot">-&gt;</span> <span class="dt">Int</span>
 cost fin path <span class="fu">=</span> <span class="kw">let</span> l <span class="fu">=</span> last path <span class="kw">in</span> (length path <span class="fu">-</span> <span class="dv">1</span>) <span class="fu">+</span> (dist l fin)
   <span class="kw">where</span>

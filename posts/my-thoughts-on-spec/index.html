@@ -33,7 +33,7 @@
                 ·
                 <a href="../../pages/about/">About</a>
                 ·
-                <a href="../../pages/cv/">CV</a> <a href="../../pages/cv.pdf">(PDF)</a>
+                <a href="../../pages/cv/">CV</a> <a href="../../pages/robin-schroer-cv.pdf">(PDF)</a>
                 ·
                 <a href="../../pages/uses-this/">Uses This</a>
                 ·
@@ -63,14 +63,14 @@
 <div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="kw">ns</span> spec-demo
   (<span class="at">:require</span> [clojure.spec.alpha <span class="at">:as</span> s]
             [clojure.spec.gen.alpha <span class="at">:as</span> gen]))
-            
+
 (s/def <span class="at">::name</span> <span class="kw">string?</span>)
 (s/def <span class="at">::age</span> pos-int?)
 
 (s/def <span class="at">::person</span>
   (s/keys <span class="at">:req-un</span> [<span class="at">::name</span>
                    <span class="at">::age</span>]))
-                
+
 (s/valid? <span class="at">::person</span>
           {<span class="at">:name</span> <span class="st">&quot;John&quot;</span>
            <span class="at">:age</span> <span class="dv">35</span>})
@@ -102,7 +102,7 @@
 <p>I mentioned above that spec also allows instrumenting functions, but the semantics for this are a bit wonky in my opinion. See for yourself:</p>
 <div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="bu">defn</span><span class="fu"> double </span>[x]
   (<span class="kw">*</span> <span class="dv">2</span> x))
-  
+
 (s/fdef <span class="kw">double</span>
   <span class="at">:args</span> (s/cat <span class="at">:x</span> int?)
   <span class="at">:ret</span> int?

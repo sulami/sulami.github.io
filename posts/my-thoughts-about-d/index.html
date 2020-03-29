@@ -33,7 +33,7 @@
                 ·
                 <a href="../../pages/about/">About</a>
                 ·
-                <a href="../../pages/cv/">CV</a> <a href="../../pages/cv.pdf">(PDF)</a>
+                <a href="../../pages/cv/">CV</a> <a href="../../pages/robin-schroer-cv.pdf">(PDF)</a>
                 ·
                 <a href="../../pages/uses-this/">Uses This</a>
                 ·
@@ -68,7 +68,7 @@
 <p>This is an simple echo clone, which echoes back one command-line argument per line. As you can see, it almost looks like C. Instead of <code>#include</code> there is <code>import</code>, and there is native string support, as well as foreach, but the general picture is pretty similar. But already the first line brings me to something I really like about D, the standard library. <a href="http://dlang.org/library/index.html">D’s standard library</a>, called “Phobos” is incredible. Aside from the usual filesystem inspection, math, time, hash and socket stuff, there is something like <a href="http://dlang.org/library/std/getopt.html">getopt</a>, a library which allows you to make reading command line arguments really easy, with defining short and long aliases (<code>-l|--list</code>) and returning the not used arguments afterwards.</p>
 <p>D has been modeled after C, which makes it both an application and a system level language, but unlike most C-based languages, it also has a proper web framework, <a href="http://vibed.org/">vibe.d</a>. Vibe is comparable to Flask, as in it provides a low amount of predefined structures, and echo-webservers are just a couple of lines long (as can be seen on the vibe website). But it can be used for large scale projects, if properly maintained. Aside from native code made from D, which makes it easily faster than most interpreted solutions, it uses the <a href="http://vibed.org/templates/diet">Diet</a> template language, which is an extended Jade (used by node.js). I would personally describe it as “the markdown of html templates”, because it almost looks like markdown, but with a lot more control over html attributes and the ability to embed D code in the template. I am currently working on proper syntax highlighting for diet in vim (<a href="https://github.com/sulami/diet.vim">here</a>).</p>
 <p>If you now think “Wow, that sounds great”, you are pretty much on my side, I already fell in love with D. The only major downside I can see is the adoption. D has been around for almost a decade now and the only case of someone actually using it I have heard of (aside from myself and the D community) is Facebook. I believe D could be the next big language, if it gets adopted.</p>
-<p><strong>TL;DR</strong> D is great for a lot of applications, especially ones with high performance requirements, has a great standard library and relatively simple interaction with C code, as well as a nice package manager/build system combo. It lacks in terms of adoption, resulting in few ports to D, few frameworks, few third-party documentation. If D gets adopted, it will be a major success.</p>
+<p>TL;DR* D is great for a lot of applications, especially ones with high performance requirements, has a great standard library and relatively simple interaction with C code, as well as a nice package manager/build system combo. It lacks in terms of adoption, resulting in few ports to D, few frameworks, few third-party documentation. If D gets adopted, it will be a major success.</p>
                 </section>
         </div>
         <div id="footer">

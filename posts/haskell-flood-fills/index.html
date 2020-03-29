@@ -33,7 +33,7 @@
                 ·
                 <a href="../../pages/about/">About</a>
                 ·
-                <a href="../../pages/cv/">CV</a> <a href="../../pages/cv.pdf">(PDF)</a>
+                <a href="../../pages/cv/">CV</a> <a href="../../pages/robin-schroer-cv.pdf">(PDF)</a>
                 ·
                 <a href="../../pages/uses-this/">Uses This</a>
                 ·
@@ -106,7 +106,7 @@ main <span class="fu">=</span> <span class="kw">do</span> grid <span class="ot">
           <span class="kw">let</span> path <span class="fu">=</span> head <span class="fu">$</span> filter (reachesTarget grid) <span class="fu">$</span> flood grid start
           print <span class="fu">$</span> length path</code></pre></div>
 <p>You can use this code pretty much like this (I hereby license it under ISC), by just filling in <code>possibleWays</code>. Note that this can get a bit slow when the grid is large and contains few or no walls, because the list of paths to iterate over grows rather large. You can probably gain some additional performance by introducing parallelism via <code>par</code> and <code>pseq</code> if that becomes a problem.</p>
-<p><strong>PS</strong> If you are taking part in the competition, flood fills will not bring you far, the solution is a different one.</p>
+<p>PS* If you are taking part in the competition, flood fills will not bring you far, the solution is a different one.</p>
                 </section>
         </div>
         <div id="footer">
