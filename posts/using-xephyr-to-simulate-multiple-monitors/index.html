@@ -57,7 +57,7 @@
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">Xephyr</span> -screen 640x480 -screen 640x480 +xinerama :1 <span class="kw">&amp;</span></code></pre></div>
 <p>This simple line starts Xephyr with two screens in one and uses Xinerama, :1.0 and :1.1, if that makes any sense. The result looks something like this:</p>
 <div class="figure">
-<img src="../../images/scrot_xephyr_multihead.png" alt="Xephyr in action" />
+<img src="../../images/scrot_xephyr_multihead.png" alt="Xephyr in action" class="fullwidth" />
 <p class="caption">Xephyr in action</p>
 </div>
 <p>Because I am currently working on the proper support, FrankenWM still uses the whole screen as one, rather than using a separate desktop for each monitor.</p>
