@@ -52,7 +52,9 @@
                 </div>
 
                 <section>
-            <p>I have been reading <em><a href="http://www.gigamonkeys.com/book/">Practical Common Lisp</a></em> by Peter Seibel over the weekend, which is an excellent introduction to Common Lisp, showcasing its power by writing real programs. If you are interested in Lisp or programming languages at all, I recommend at least skimming it, it is free to read online.</p>
+            <p><em><strong>Errata:</strong> An earlier version of this post was misrepresenting conditions as exceptions, which has been addressed.</em></p>
+<hr />
+<p>I have been reading <em><a href="http://www.gigamonkeys.com/book/">Practical Common Lisp</a></em> by Peter Seibel over the weekend, which is an excellent introduction to Common Lisp, showcasing its power by writing real programs. If you are interested in Lisp or programming languages at all, I recommend at least skimming it, it is free to read online.</p>
 <p>Writing a Lisp-descended language professionally, and also living inside Emacs, I had dabbled in Common Lisp before, but I still found something I was not aware of, restarts. I do not think that this is a particularly well known feature outside the Lisp world, so I would like to spread awareness, as I think it is a particularly interesting take on error handling.</p>
 <p>The book explains restarts using a mocked parser, which I will slightly modify for my example. Imagine you are writing an interpreter/compiler for a language. On the lowest level you are parsing lines to some internal representation:</p>
 <div class="sourceCode"><pre class="sourceCode commonlisp"><code class="sourceCode commonlisp">(<span class="kw">define-condition</span><span class="fu"> invalid-line-error </span>(<span class="kw">error</span>)
@@ -62,15 +64,15 @@
   (<span class="kw">if</span> (valid-line-p line)
       (to-ir line)
     (<span class="kw">error</span> 'invalid-line-error :line line)))</code></pre></div>
-<p>We define a condition,<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle" /><span class="sidenote">While Common Lisp calls them “conditions”, I will stick with “error” in this post, because I don’t think “condition” is very self-explanatory if you’re not familiar with the language already. Please forgive my inaccuracy.<br />
+<p>We define a condition, which is similar to an exception object with metadata in other languages<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle" /><span class="sidenote">A “condition” in Common Lisp, as has been explained to me by <a href="https://phoe.github.io">Michał “phoe” Herda</a>, is a way of signalling arbitrary events up the stack to allow running of additional code, not just signalling errors. They’re comparable to hooks in Emacs, but dynamically scoped to the current call stack.<br />
 <br />
-</span></span> which is very similar to an exception object with metadata in other languages, and a function which attempts to parse a single line.<span><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle" /><span class="sidenote">This is assuming of course that a line always represents a complete parsable entity, but this is only an example after all.<br />
+</span></span>, and a function which attempts to parse a single line.<span><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle" /><span class="sidenote">This is assuming of course that a line always represents a complete parsable entity, but this is only an example after all.<br />
 <br />
-</span></span> If it turns out that the line is invalid, it throws an error up the stack. We attach the line encountered, in case we want to use it for error reporting.</p>
+</span></span> If it turns out that the line is invalid, it signals a condition up the stack. We attach the line encountered, in case we want to use it for error reporting.</p>
 <p>Now imagine your parser is used in two situations: there is a compiler, and a REPL. For the compiler, you would like to abort at the first invalid line you encounter, which is what we are currently set up to do. But for the REPL, you would like to ignore the line and just continue with the next line.<span><label for="sn-3" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-3" class="margin-toggle" /><span class="sidenote">I’m not saying that is necessarily a good idea, but it is something some REPLs do, for example some Clojure REPLs.<br />
 <br />
 </span></span></p>
-<p>To ignore a line, we would have to either do it on a low-level, return <code>nil</code> instead of throwing and filter out <code>nil</code> values up the stack. Catching the error will not help us a lot, because at that point we have lost our position in the file already, or have we?</p>
+<p>To ignore a line, we would have to either do it on a low-level, return <code>nil</code> instead of signalling and filter out <code>nil</code> values up the stack. Handling the condition will not help us a lot, because at that point we have lost our position in the file already, or have we?</p>
 <p>The next layer up is parsing a collection of lines:</p>
 <div class="sourceCode"><pre class="sourceCode commonlisp"><code class="sourceCode commonlisp">(<span class="kw">defun</span><span class="fu"> parse-lines </span>(lines)
   (<span class="kw">loop</span> for line in lines
@@ -78,11 +80,11 @@
                      (parse-line line)
                      (skip-line () <span class="kw">nil</span>))
         <span class="kw">when</span> entry collect it))</code></pre></div>
-<p>This is where the magic begins. The <code>loop</code> construct just loops over the lines, applies <code>parse-line</code> to every element of the list, and returns a list containing all results which are not <code>nil</code>. The feature I am showcasing in this post is <code>restart-case</code>. Think of it this way: it does <strong>not</strong> catch an error, but when the stack starts unwinding <span><label for="sn-4" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-4" class="margin-toggle" /><span class="sidenote">Technically not unwinding yet, at least not in Common Lisp.<br />
+<p>This is where the magic begins. The <code>loop</code> construct just loops over the lines, applies <code>parse-line</code> to every element of the list, and returns a list containing all results which are not <code>nil</code>. The feature I am showcasing in this post is <code>restart-case</code>. Think of it this way: it does <strong>not</strong> handle a condition, but when the stack starts unwinding <span><label for="sn-4" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-4" class="margin-toggle" /><span class="sidenote">Technically not unwinding yet, at least not in Common Lisp.<br />
 <br />
-</span></span> because we threw an error in <code>parse-line</code>, it registers a possible restart-position. If the error is caught at some point,<span><label for="sn-5" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-5" class="margin-toggle" /><span class="sidenote">If it isn’t caught, you will get dropped into the debugger, which also gives you the option to restart.<br />
+</span></span> because we signalled a condition in <code>parse-line</code>, it registers a possible restart-position. If the condition is handled at some point,<span><label for="sn-5" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-5" class="margin-toggle" /><span class="sidenote">If it isn’t caught, you will get dropped into the debugger, which also gives you the option to restart.<br />
 <br />
-</span></span> the error handler can choose to restart at any restart-point that has been registered down the stack.</p>
+</span></span> the signal handler can choose to restart at any restart-point that has been registered down the stack.</p>
 <p>Now let us have a look at the callers:</p>
 <div class="sourceCode"><pre class="sourceCode commonlisp"><code class="sourceCode commonlisp">(<span class="kw">defun</span><span class="fu"> parse-compile </span>(lines)
   (<span class="kw">handler-case</span>
@@ -95,9 +97,9 @@
                   #'(<span class="kw">lambda</span> (e)
                       (<span class="kw">invoke-restart</span> 'skip-line))))
     (parse-lines lines)))</code></pre></div>
-<p>There is a lot to unpack here. The compiler code is using <code>handler-case</code>, which is comparable to <code>catch</code> in other languages. It unwinds the stack to the current point and runs the error handling code, in this case <code>print-error</code>.</p>
-<p>Because we do not actually want to unwind the stack all the way, but resume execution inside the <code>loop</code> in <code>parse-lines</code>, we use a different construct, <code>handler-bind</code>, which automatically catches <code>invalid-line-error</code> and invokes the <code>skip-line</code> restart. If you scroll up to <code>parse-lines</code> now, you will see that the restart clause says, if we restart here, just return <code>nil</code>, and <code>nil</code> will be filtered on the very next line by <code>when entry</code>.</p>
-<p>The elegance here is the split of error handling code, and decisions about which error handling approach to take. You can register a lot of different <code>restart-case</code> statements throughout the stack, and let the caller decide if some errors are okay to ignore, without the caller having to have intricate knowledge of the lower-level code.<span><label for="sn-6" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-6" class="margin-toggle" /><span class="sidenote">It does need to know about the registered <code>restart-case</code> statements though, at least by name.<br />
+<p>There is a lot to unpack here. The compiler code is using <code>handler-case</code>, which is comparable to <code>catch</code> in other languages. It unwinds the stack to the current point and runs the signal handling code, in this case <code>print-error</code>.</p>
+<p>Because we do not actually want to unwind the stack all the way, but resume execution inside the <code>loop</code> in <code>parse-lines</code>, we use a different construct, <code>handler-bind</code>, which automatically handles <code>invalid-line-error</code> and invokes the <code>skip-line</code> restart. If you scroll up to <code>parse-lines</code> now, you will see that the restart clause says, if we restart here, just return <code>nil</code>, and <code>nil</code> will be filtered on the very next line by <code>when entry</code>.</p>
+<p>The elegance here is the split of signal handling code, and decisions about which signal handling approach to take. You can register a lot of different <code>restart-case</code> statements throughout the stack, and let the caller decide if some signals are okay to ignore, without the caller having to have intricate knowledge of the lower-level code.<span><label for="sn-6" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-6" class="margin-toggle" /><span class="sidenote">It does need to know about the registered <code>restart-case</code> statements though, at least by name.<br />
 <br />
 </span></span></p>
 <p>If you want to learn more about this, make sure to have a look at the book, it goes into much more detail than I did here.</p>
