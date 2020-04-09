@@ -76,6 +76,10 @@ x <span class="fu">&amp;</span> f <span class="fu">=</span> f x</code></pre></di
         </div>
         </div>
         </div>
+        <!-- Below is some JS, the only on this page. Things should be -->
+        <!-- generally fine if you block it, but I'm adding notes so you -->
+        <!-- can decide how you feel about each element. -->
+        <!-- Colour theme switcher -->
         <script>
           const themeSwitch = document.querySelector('#lightswitch');
           themeSwitch.checked = localStorage.getItem('switchedTheme') === 'true';
@@ -90,5 +94,7 @@ x <span class="fu">&amp;</span> f <span class="fu">=</span> f x</code></pre></di
               }
           });
         </script>
+        <!-- Privacy-aware analytics by https://www.goatcounter.com/ -->
+        <script data-goatcounter="https://sulami-blog.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
     </body>
 </html>
