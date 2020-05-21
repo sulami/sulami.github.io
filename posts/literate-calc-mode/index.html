@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Literate Calculations in Emacs - sulami's blog</title>
+        <link rel="stylesheet" type="text/css" href="../../stylesheet.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="apple-touch-icon" sizes="180x180" href="../../images/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="../../images/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="../../images/favicon-16x16.png">
+        <link rel="manifest" href="../../images/site.webmanifest">
+        <link rel="mask-icon" href="../../images/safari-pinned-tab.svg" color="#5bbad5">
+        <link rel="shortcut icon" href="../../images/favicon.ico">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="msapplication-config" content="/images/browserconfig.xml">
+        <meta name="theme-color" content="#5bbad5">
+        <link href="../../atom.xml" type="application/atom+xml" rel="alternate" title="sulami's blog feed" />
+    </head>
+    <body>
+        <input type="checkbox" id="lightswitch" />
+        <div id="body">
+        <div id="container">
+        <div id="header">
+            <div id="navigation">
+                <label for="lightswitch" id="lightswitch-label">☀</label>
+                ·
+                <a href="../../">Home</a>
+                ·
+                <a href="../../archive/">Archive</a>
+                ·
+                <a href="../../atom.xml">Feed</a>
+                ·
+                <a href="../../pages/about/">About</a>
+                ·
+                <a href="../../pages/cv/">CV</a> <a href="../../pages/robin-schroer-cv.pdf">(PDF)</a>
+                ·
+                <a href="../../pages/uses-this/">Uses This</a>
+                ·
+                <a href="../../pages/frankenwm/">FrankenWM</a>
+            </div>
+        </div>
+
+        <div id="content">
+            <article>
+                <h1>Literate Calculations in Emacs</h1>
+                <div class="info">
+                    
+                        Posted on May 21, 2020
+                    
+                    
+                </div>
+
+                <section>
+            <p>It is no secret that I am a big fan of <a href="https://en.wikipedia.org/wiki/Literate_programming">literate programming</a> for many use cases. I think it is a great match for investigative or exploratory notes, research, and <a href="https://github.com/sulami/dotfiles/blob/master/emacs/.emacs/README.org">configuration</a>.</p>
+<p>On a Friday evening about two weeks ago, my flatmate came up with an idea for doing calculations in a literate way. Of course, if you really wanted to, you could use a <a href="https://jupyter.org/try">Jupyter Notebook</a>, but we were looking for something more lightweight, and ideally integrated into Emacs.</p>
+<p>A quick search came up empty, so on Saturday morning I got started writing what came to be <a href="https://github.com/sulami/literate-calc-mode.el">Literate Calc Mode</a>. The features I wanted included named references to earlier results, spreadsheet-like recalculations on every change, and the ability to save my calculations to a file. And then of course the ability to interlace calculations with explanatory text.</p>
+<p>It was in part inspired by the iOS app <a href="http://tydligapp.com/">Tydlig</a><span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle" /><span class="sidenote"><img src="../../images/tydlig.png" title="fig:" alt="Screenshot of Tydlig" /><br />
+<br />
+</span></span>, which also provides calculations with automatically updating references to earlier results, but does not allow saving the workspaces as files, which I find very limiting.</p>
+<p>But enough talk, this is what the result looks like in action:</p>
+<div class="figure">
+<video controls proload="none" alt="Demo Video">
+<source src="../../raw/literate-calc-demo.webm" type="video/webm">
+</video>
+</div>
+<p>This is <code>literate-calc-minor-mode</code>, running alongside <code>org-mode</code>. As you can see, it automatically picks up calculations and inserts the results as overlays at the end of the line. It allows the user to bind results to variables, which can even have names with spaces. Any change causes all values to be recalculated, similar to a spreadsheet.</p>
+<p>Because it uses Emacs’ built-in <code>calc-eval</code> behind the scenes, it supports almost everything <code>M-x calc</code> does, including formulas, complex units, and unresolved mathematical variables.</p>
+<p>Of course there are also other convenience functions, such as evaluating just a single line, or inserting the results into the file for sharing. I do have some more plans for the future, which are outlined in the <a href="https://github.com/sulami/literate-calc-mode.el#roadmap">documentation</a>.</p>
+<p>In addition to hopefully providing some value to other Emacs users, this was also a great learning experience.<span><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle" /><span class="sidenote">On a meta-level, writing this post has taught me how to use <code>&lt;video&gt;</code> on my blog.<br />
+<br />
+</span></span> I have learned a lot about overlays in Emacs, and I published my first package on <a href="https://melpa.org/">MELPA</a>, which was a thoroughly pleasant experience.</p>
+                </section>
+        </div>
+        <div id="footer">
+            Site proudly generated by
+            <a href="http://jaspervdj.be/hakyll">Hakyll</a>
+        </div>
+        </div>
+        </div>
+        <!-- Below is some JS, the only on this page. Things should be -->
+        <!-- generally fine if you block it, but I'm adding notes so you -->
+        <!-- can decide how you feel about each element. -->
+
+        <!-- Privacy-aware analytics by https://www.goatcounter.com/ -->
+        <!-- Stats are publicly available at https://sulami-blog.goatcounter.com/ -->
+        <script data-goatcounter="https://sulami-blog.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+
+        <!-- Colour theme switcher -->
+        <script>
+          const themeSwitch = document.querySelector('#lightswitch');
+          themeSwitch.checked = localStorage.getItem('switchedTheme') === 'true';
+
+          themeSwitch.addEventListener('change', function (e) {
+              if(e.currentTarget.checked === true) {
+                  // Add item to localstorage
+                  localStorage.setItem('switchedTheme', 'true');
+              } else {
+                  // Remove item if theme is switched back to normal
+                  localStorage.removeItem('switchedTheme');
+              }
+          });
+        </script>
+    </body>
+</html>
