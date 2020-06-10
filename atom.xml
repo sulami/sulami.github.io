@@ -8,8 +8,58 @@
         <name>Robin Schroer</name>
         <email>blog@peerwire.org</email>
     </author>
-    <updated>2020-05-21T00:00:00Z</updated>
+    <updated>2020-06-10T00:00:00Z</updated>
     <entry>
+    <title>LISP&lt;sub&gt;1&lt;/sub&gt; Has Won</title>
+    <link href="https://sulami.github.io/posts/lisp-1/index.html" />
+    <id>https://sulami.github.io/posts/lisp-1/index.html</id>
+    <published>2020-06-10T00:00:00Z</published>
+    <updated>2020-06-10T00:00:00Z</updated>
+    <summary type="html"><![CDATA[<p>I am currently working on a compiler for a new programming language which has been in the making for a few months at this point. There is nothing public to show yet, everything is very early stage, and there are plenty of decisions to make and work to be done before I will publish anything.</p>
+<p>That being said, I will write about both the progress as well as different topics I come across, so <a href="/atom.xml">stay tuned</a> if you are interested in that.</p>
+<p>The language I am writing currently has a Lisp-like syntax, because that is easy to parse an work with,<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote">I just really don’t want to deal with operator precedence, and honestly I like writing Lisp, so I find it unlikely that I’ll actually change to a non-Lisp-like syntax.<br />
+<br />
+</span></span> which is why I am sharing some thoughts on one of the big bike sheds in software history.</p>
+<h2 id="lispwhat">LISP<sub>what?</sub></h2>
+<p>LISP<sub>1</sub> and LISP<sub>2</sub> are terms to describe the way symbol namespaces work in different LISP-like programming languages.<span><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle"/><span class="sidenote">It can also be applied to other languages with first-class functions, e.g. Python &amp; Ruby.<br />
+<br />
+</span></span> The explanation is actually very simple, LISP<sub>1</sub> has a single shared namespace for functions and variables. This means a symbol can refer to either a function or a variable, but not both. Consider the following Racket code:</p>
+<div class="sourceCode"><pre class="sourceCode scheme"><code class="sourceCode scheme">(<span class="kw">define</span><span class="fu"> </span>(double x)
+  (* <span class="dv">2</span> x))
+
+(<span class="kw">define</span><span class="fu"> triple </span>(* <span class="dv">3</span> <span class="dv">4</span>))
+
+double
+<span class="co">;; =&gt; #&lt;procedure:double&gt;</span>
+
+triple
+<span class="co">;; =&gt; 12</span>
+
+(double triple)
+<span class="co">;; =&gt; 24</span></code></pre></div>
+<p>When you resolve a symbol to a variable, you cannot know if it will resolve to a function or not.</p>
+<p>LISP<sub>2</sub> on the other hand has a separate namespace for functions. This has the advantage that every name can be used twice,<span><label for="sn-3" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-3" class="margin-toggle"/><span class="sidenote">I’m glossing over the fact that Common Lisp actually has more than two namespaces, depending on your definition of the term namespace.<br />
+<br />
+</span></span> once for a function, and once for a variable. The tradeoff is that the user has to specify in which namespace they want to resolve a symbol. Consider the following Emacs Lisp code:</p>
+<div class="sourceCode"><pre class="sourceCode commonlisp"><code class="sourceCode commonlisp">(<span class="kw">defun</span><span class="fu"> double </span>(x)
+  (<span class="op">*</span> <span class="dv">2</span> x))
+
+(<span class="kw">defvar</span><span class="fu"> double </span>(<span class="op">*</span> <span class="dv">2</span> <span class="dv">4</span>))
+
+(<span class="kw">funcall</span> #&#39;double double)
+<span class="co">;; =&gt; (funcall &lt;function double&gt; &lt;variable double&gt;)</span>
+<span class="co">;; =&gt; (double 6)</span>
+<span class="co">;; =&gt; 12</span></code></pre></div>
+<p>Note the added punctuation to denote the first <code>double</code> as a symbol resolving to a function.</p>
+<h2 id="lispwhy">LISP<sub>why?</sub></h2>
+<p>LISP is one of the oldest programming languages that is still used commercially today in some form, if you accept Common Lisp in its lineage. It appears that the namespace separation in the original LISP 1.5 was mostly incidental, and <a href="http://www.nhplace.com/kent/Papers/Technical-Issues.html">has been regretted since</a>.</p>
+<p>The set of LISP<sub>2</sub> languages is quite small these days. Besides Common Lisp and Emacs Lisp, both of which are over three decades old at this point, there are also Ruby and Perl.<span><label for="sn-4" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-4" class="margin-toggle"/><span class="sidenote">Honourable mention: <a href="http://lfe.io/">Lisp Flavoured Erlang</a> is a LISP<sub>2</sub>.<br />
+<br />
+</span></span></p>
+<p>The other ancient LISP-like language, Scheme, is a LISP<sub>1</sub>, and so is its popular modern dialect Racket (as demonstrated above). Almost every other somewhat popular language chooses to share a single namespace between functions and variables. Examples include Clojure, Janet, Python, Java, JavaScript, and even Rust.</p>
+<p>Clearly the benefits of less syntactic clutter and cognitive overhead have won in the popular arena, to the point that the established de facto standard itself becomes a good reason to stick with a single unified namespace. Of course improvement, by its very definition, always requires change, but language designers need to be acutely aware of the cost incurred by diverging from the established norm.</p>]]></summary>
+</entry>
+<entry>
     <title>Literate Calculations in Emacs</title>
     <link href="https://sulami.github.io/posts/literate-calc-mode/index.html" />
     <id>https://sulami.github.io/posts/literate-calc-mode/index.html</id>
@@ -408,65 +458,6 @@
 <h2 id="closing-notes">Closing Notes</h2>
 <p>If you want to go remote I recommend you do what I (we) did and get a remote working agreement that is signed by you and your employer. It should capture the terms of the remote work, such as work hours, visits, who pays for transport and how long much in advance a warning needs to be given for you to be called into the office.</p>
 <p>The last point is quite important especially if you are expected to pay for transport (and possibly lodging) which can be much more expensive if booked spontaneously.</p>]]></summary>
-</entry>
-<entry>
-    <title>Running Clojurescript Tests on the JVM</title>
-    <link href="https://sulami.github.io/posts/running-clojurescript-tests-on-the-jvm/index.html" />
-    <id>https://sulami.github.io/posts/running-clojurescript-tests-on-the-jvm/index.html</id>
-    <published>2018-10-01T00:00:00Z</published>
-    <updated>2018-10-01T00:00:00Z</updated>
-    <summary type="html"><![CDATA[<p>Recently I have been writing a lot of Clojure and Clojurescript for my side projects. This is my first post on the language &amp; ecosystem, so I what follows below might be very wrong in places. Nontheless I want to share something I worked out myself and might be useful to someone else. The topic we’re going to be looking at is running (unit) tests for a <a href="https://github.com/Day8/re-frame">re-frame</a>-based Clojurescript application, though it actually applies to almost any CLJS application.</p>
-<p>Last week I was finally adding tests to one of my side projects<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote">Way too late as well, I should have <a href="https://www.obeythetestinggoat.com">obeyed the testing goat</a>. I had quite some trouble untangling my wild-west design to be able to even write proper unit tests.<br />
-<br />
-</span></span> and I was wondering how to run them easily. Clojure comes with a great bulid tool, <a href="https://leiningen.org">leiningen</a>, which allows you to run tests quite easily, at least for Clojure code.</p>
-<h2 id="ways-to-run-tests">Ways to Run Tests</h2>
-<p>Now the way I run my code is by compiling my code to Javascript, launching a browser session through Leiningen, and running my code in the browser’s runtime. This works very well for actually running the code using <a href="https://github.com/bhauman/lein-figwheel">figwheel</a>, but less well for running tests.</p>
-<p>The first reason this is a bit impractical is because it requires a lot of setup to actually make it work, you need to update your <code>project.clj</code> to have a testing build, which needs proper cleaning up as well, and then somehow manage the browser runtime as well. Depending on how you do this, this also incurs heavy startup time penalties.<span><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle"/><span class="sidenote">Full test compiles from CLJS to JS for a small test suite (~20 test cases) already takes about 5-10 seconds.<br />
-<br />
-</span></span></p>
-<p>To avoid the browser, which is just unnecessarily heavyweight if all you need is just a JS runtime, the go-to solution used to be <a href="http://phantomjs.org">PhantomJS</a>, a headless browser that can be used for various tasks that do not require an actual human seeing rendered output. Sadly, PhantomJS suspended development earlier this year due to lack of active contributors, so I am not very confident in building on top of it, especially considering the speed at which the web and standards are currently changing.</p>
-<p>While PhantomJS comes with a whole DOM emulation, what we are actually looking for is only a JS runtime, for reasons that will become apparent later. This leads us to <a href="https://nodejs.org/en/">Node.js</a>, which is exactly that, a stand-alone JS runtime. Running tests inside Node is quite a viable option, as it does not impose any meaningful startup time penalty by itself, meaning we can just start it up fresh for every test run and not <a href="https://twitter.com/garybernhardt/status/1007699556832817152">have to deal with persistence and state</a>.</p>
-<p>We could stop there, write a custom test build target and a custom test command that just runs that file for Leiningen and be done with it. But we still have the compilation time to JS which is just too long if you want to have a very tight TDD loop. Then I realised that we do not actually need to compile to JS at all, in the end we just want to test Clojure code, which can run on a variety of different platforms.</p>
-<p>One of the fastest platforms available to us is the original platform Clojure targeted, the JVM. Because I am using Emacs with <a href="https://github.com/clojure-emacs/cider">CIDER</a>, I already have a long-running JVM<span><label for="sn-3" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-3" class="margin-toggle"/><span class="sidenote">I know we are back to long-running processes, which is a bit unfair, but CIDER allows me to basically instantaneously reload the whole project, which so far worked without any hiccups.<br />
-<br />
-</span></span>, I do not even have to consider the ~1s startup time the JVM incurs. This setup allows us to run tests in well under one second, but leads me to the next section.</p>
-<h2 id="the-theory-decoupling-logic-from-presentation">The Theory: Decoupling Logic from Presentation</h2>
-<p>If we want to run our Clojure code, which does not specify a target platform, on the JVM, we cannot depend on any platform-specific features. This means, our Clojurescript application needs to be split into platform-independent Clojure code and Clojurescript glue code. Incidentally, this is also the structure TDD favours and I think that leads to the code easiest to reason about.</p>
-<p>re-frame does come with an <a href="https://github.com/Day8/re-frame/blob/master/docs/Testing.md#exposing-event-handlers-for-test">example of how to expose event handlers for tests</a>, which are the part of our application that should contain the bulk of the application logic. The basic gist is this: any kind of state should be mutated by passing it into a pure function, which just returns the new, modified state. Every variable is state.<span><label for="sn-4" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-4" class="margin-toggle"/><span class="sidenote">Ideally abandon the idea of a variable as well, default to immutable values everywhere.<br />
-<br />
-</span></span> Then use the most basic glue code you can come up with to glue this together.<span><label for="sn-5" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-5" class="margin-toggle"/><span class="sidenote">This is really just functional programming, which has been around for over half a century.<br />
-<br />
-</span></span></p>
-<p>This allows us to then test the application logic in isolation, by just passing a piece of state into a function and checking properties on the returned value. If it makes sense, we can also use properties to randomly generate a huge amount inputs according to some rules and make sure that we do not forget any edge cases we did not think of writing tests for. Because none of this code actually depends on anything related to the presentation, it does not matter whether it runs in a browser or on the JVM.</p>
-<h2 id="the-practice-the-implementation-of-re-frame-tests">The Practice: The Implementation of re-frame Tests</h2>
-<p>In order to be able to run Clojure code on the JVM, it cannot be Clojurescript code, meaning it cannot reside in <code>.cljs</code> files and cannot use CLJS-specific libraries, but some of your code will invariably be specific to Clojurescript, like for example</p>
-<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="kw">ns</span> foo.bar
-  (<span class="at">:require</span> [cljs.spec.alpha <span class="at">:as</span> s]))</code></pre></div>
-<p>needs to be</p>
-<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="kw">ns</span> foo.bar
-  (<span class="at">:require</span> [clojure.spec.alpha <span class="at">:as</span> s]))</code></pre></div>
-<p>to work on the JVM. This can be solved quite easily by using <a href="https://clojure.org/guides/reader_conditionals">reader conditionals</a>. The basic idea is to save your application logic in Common Clojure (<code>.cljc</code>) files, write the wrapper around your application in Clojurescript (<code>.cljs</code>) and your test suite in Clojure (<code>.clj</code>). Within Common Clojure you have access to reader conditionals which are a feature in Clojure &gt;= 1.7 which allow modifying code at “compile-time”<span><label for="sn-6" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-6" class="margin-toggle"/><span class="sidenote">I do not actually know in depth how this works behind the scenes yet, but I believe this is a fair approximation even if potentially inaccurate.<br />
-<br />
-</span></span> depending on the compilation target. This is what it looks like in action:</p>
-<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="kw">ns</span> foo.bar
-  (<span class="at">:require</span> #?(<span class="at">:clj</span>  [clojure.spec.alpha <span class="at">:as</span> s]
-               <span class="at">:cljs</span> [cljs.spec.alpha <span class="at">:as</span> s])))</code></pre></div>
-<p>Once we are at this point, writing the actual tests is quite easy. I am going to borrow an example from the <a href="https://github.com/Day8/re-frame/blob/master/docs/Testing.md">re-frame docs</a> here:</p>
-<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="kw">let</span> [
-      <span class="co">;; setup - cummulatively build up db</span>
-      db (<span class="kw">-&gt;</span> {}    <span class="co">;; empty db</span>
-             (initialise-db [<span class="at">:initialise-db</span>])   <span class="co">;; each event handler expects db and event</span>
-             (clear-panel   [<span class="at">:clear-panel</span>])
-             (draw-triangle [<span class="at">:draw-triangle</span> <span class="dv">1</span> <span class="dv">2</span> <span class="dv">3</span>]))
-
-      event  [<span class="at">:select-triange</span> <span class="at">:other</span> <span class="at">:stuff</span>]
-
-      <span class="co">;; now execute the event handler under test</span>
-      db&#39;    (select-triange db event)]
-
-      <span class="co">;; validate that db&#39; is correct</span>
-      (<span class="kw">is</span> ...)</code></pre></div>
-<p>In this example, <code>db</code> is the global state map, which gets passed into a chain of pure event handler functions, after which the returned new state can be validated. All we need to do to run these is set a <code>:test-paths</code> setting in <code>project.clj</code> and <code>lein test</code> will pick up the tests.</p>]]></summary>
 </entry>
 
 </feed>

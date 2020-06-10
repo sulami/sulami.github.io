@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>LISP1 Has Won - sulami's blog</title>
+        <link rel="stylesheet" type="text/css" href="../../stylesheet.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="apple-touch-icon" sizes="180x180" href="../../images/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="../../images/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="../../images/favicon-16x16.png">
+        <link rel="manifest" href="../../images/site.webmanifest">
+        <link rel="mask-icon" href="../../images/safari-pinned-tab.svg" color="#5bbad5">
+        <link rel="shortcut icon" href="../../images/favicon.ico">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="msapplication-config" content="/images/browserconfig.xml">
+        <meta name="theme-color" content="#5bbad5">
+        <link href="../../atom.xml" type="application/atom+xml" rel="alternate" title="sulami's blog feed" />
+    </head>
+    <body>
+        <input type="checkbox" id="lightswitch" />
+        <div id="body">
+        <div id="container">
+        <div id="header">
+            <div id="navigation">
+                <label for="lightswitch" id="lightswitch-label">☀</label>
+                ·
+                <a href="../../">Home</a>
+                ·
+                <a href="../../archive/">Archive</a>
+                ·
+                <a href="../../atom.xml">Feed</a>
+                ·
+                <a href="../../pages/about/">About</a>
+                ·
+                <a href="../../pages/cv/">CV</a> <a href="../../pages/robin-schroer-cv.pdf">(PDF)</a>
+                ·
+                <a href="../../pages/uses-this/">Uses This</a>
+                ·
+                <a href="../../pages/frankenwm/">FrankenWM</a>
+            </div>
+        </div>
+
+        <div id="content">
+            <article>
+                <h1>LISP<sub>1</sub> Has Won</h1>
+                <div class="info">
+                    
+                        Posted on June 10, 2020
+                    
+                    
+                </div>
+
+                <section>
+            <p>I am currently working on a compiler for a new programming language which has been in the making for a few months at this point. There is nothing public to show yet, everything is very early stage, and there are plenty of decisions to make and work to be done before I will publish anything.</p>
+<p>That being said, I will write about both the progress as well as different topics I come across, so <a href="../../atom.xml">stay tuned</a> if you are interested in that.</p>
+<p>The language I am writing currently has a Lisp-like syntax, because that is easy to parse an work with,<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle" /><span class="sidenote">I just really don’t want to deal with operator precedence, and honestly I like writing Lisp, so I find it unlikely that I’ll actually change to a non-Lisp-like syntax.<br />
+<br />
+</span></span> which is why I am sharing some thoughts on one of the big bike sheds in software history.</p>
+<h2 id="lispwhat">LISP<sub>what?</sub></h2>
+<p>LISP<sub>1</sub> and LISP<sub>2</sub> are terms to describe the way symbol namespaces work in different LISP-like programming languages.<span><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle" /><span class="sidenote">It can also be applied to other languages with first-class functions, e.g. Python &amp; Ruby.<br />
+<br />
+</span></span> The explanation is actually very simple, LISP<sub>1</sub> has a single shared namespace for functions and variables. This means a symbol can refer to either a function or a variable, but not both. Consider the following Racket code:</p>
+<div class="sourceCode"><pre class="sourceCode scheme"><code class="sourceCode scheme">(<span class="kw">define</span><span class="fu"> </span>(double x)
+  (* <span class="dv">2</span> x))
+
+(<span class="kw">define</span><span class="fu"> triple </span>(* <span class="dv">3</span> <span class="dv">4</span>))
+
+double
+<span class="co">;; =&gt; #&lt;procedure:double&gt;</span>
+
+triple
+<span class="co">;; =&gt; 12</span>
+
+(double triple)
+<span class="co">;; =&gt; 24</span></code></pre></div>
+<p>When you resolve a symbol to a variable, you cannot know if it will resolve to a function or not.</p>
+<p>LISP<sub>2</sub> on the other hand has a separate namespace for functions. This has the advantage that every name can be used twice,<span><label for="sn-3" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-3" class="margin-toggle" /><span class="sidenote">I’m glossing over the fact that Common Lisp actually has more than two namespaces, depending on your definition of the term namespace.<br />
+<br />
+</span></span> once for a function, and once for a variable. The tradeoff is that the user has to specify in which namespace they want to resolve a symbol. Consider the following Emacs Lisp code:</p>
+<div class="sourceCode"><pre class="sourceCode commonlisp"><code class="sourceCode commonlisp">(<span class="kw">defun</span><span class="fu"> double </span>(x)
+  (<span class="op">*</span> <span class="dv">2</span> x))
+
+(<span class="kw">defvar</span><span class="fu"> double </span>(<span class="op">*</span> <span class="dv">2</span> <span class="dv">4</span>))
+
+(<span class="kw">funcall</span> #'double double)
+<span class="co">;; =&gt; (funcall &lt;function double&gt; &lt;variable double&gt;)</span>
+<span class="co">;; =&gt; (double 6)</span>
+<span class="co">;; =&gt; 12</span></code></pre></div>
+<p>Note the added punctuation to denote the first <code>double</code> as a symbol resolving to a function.</p>
+<h2 id="lispwhy">LISP<sub>why?</sub></h2>
+<p>LISP is one of the oldest programming languages that is still used commercially today in some form, if you accept Common Lisp in its lineage. It appears that the namespace separation in the original LISP 1.5 was mostly incidental, and <a href="http://www.nhplace.com/kent/Papers/Technical-Issues.html">has been regretted since</a>.</p>
+<p>The set of LISP<sub>2</sub> languages is quite small these days. Besides Common Lisp and Emacs Lisp, both of which are over three decades old at this point, there are also Ruby and Perl.<span><label for="sn-4" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-4" class="margin-toggle" /><span class="sidenote">Honourable mention: <a href="http://lfe.io/">Lisp Flavoured Erlang</a> is a LISP<sub>2</sub>.<br />
+<br />
+</span></span></p>
+<p>The other ancient LISP-like language, Scheme, is a LISP<sub>1</sub>, and so is its popular modern dialect Racket (as demonstrated above). Almost every other somewhat popular language chooses to share a single namespace between functions and variables. Examples include Clojure, Janet, Python, Java, JavaScript, and even Rust.</p>
+<p>Clearly the benefits of less syntactic clutter and cognitive overhead have won in the popular arena, to the point that the established de facto standard itself becomes a good reason to stick with a single unified namespace. Of course improvement, by its very definition, always requires change, but language designers need to be acutely aware of the cost incurred by diverging from the established norm.</p>
+                </section>
+        </div>
+        <div id="footer">
+            Site proudly generated by
+            <a href="http://jaspervdj.be/hakyll">Hakyll</a>
+        </div>
+        </div>
+        </div>
+        <!-- Below is some JS, the only on this page. Things should be -->
+        <!-- generally fine if you block it, but I'm adding notes so you -->
+        <!-- can decide how you feel about each element. -->
+
+        <!-- Privacy-aware analytics by https://www.goatcounter.com/ -->
+        <!-- Stats are publicly available at https://sulami-blog.goatcounter.com/ -->
+        <script data-goatcounter="https://sulami-blog.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+
+        <!-- Colour theme switcher -->
+        <script>
+          const themeSwitch = document.querySelector('#lightswitch');
+          themeSwitch.checked = localStorage.getItem('switchedTheme') === 'true';
+
+          themeSwitch.addEventListener('change', function (e) {
+              if(e.currentTarget.checked === true) {
+                  // Add item to localstorage
+                  localStorage.setItem('switchedTheme', 'true');
+              } else {
+                  // Remove item if theme is switched back to normal
+                  localStorage.removeItem('switchedTheme');
+              }
+          });
+        </script>
+    </body>
+</html>
