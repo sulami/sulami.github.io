@@ -8,8 +8,49 @@
         <name>Robin Schroer</name>
         <email>blog@peerwire.org</email>
     </author>
-    <updated>2020-06-10T00:00:00Z</updated>
+    <updated>2020-07-10T00:00:00Z</updated>
     <entry>
+    <title>Keyboardio Atreus Review</title>
+    <link href="https://sulami.github.io/posts/atreus/index.html" />
+    <id>https://sulami.github.io/posts/atreus/index.html</id>
+    <published>2020-07-10T00:00:00Z</published>
+    <updated>2020-07-10T00:00:00Z</updated>
+    <summary type="html"><![CDATA[<p>I recently received my early bird <a href="https://shop.keyboard.io/products/keyboardio-atreus">Keybardio Atreus</a><span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote"><img src="/images/atreus.jpg" /> Promotional photo courtesy of Keyboardio<br />
+<br />
+</span></span> from <a href="https://www.kickstarter.com/projects/keyboardio/atreus/description">the Kickstarter</a> and have now been using it for about three weeks, so I am writing a review for folks considering buying one after release.</p>
+<h2 id="a-bit-of-history">A Bit of History</h2>
+<p>Most of this is also outlined on the Atreus website, but here is the short version: my colleague Phil Hagelberg designed <a href="http://atreus.technomancy.us/">the original Atreus</a> keyboard in 2014, and has been selling kits for self-assembly ever since.</p>
+<p>In 2019 Keyboardio, the company which created the <a href="https://www.kickstarter.com/projects/keyboardio/the-model-01-an-heirloom-grade-keyboard-for-seriou">Model 01</a>, got together with Phil to build a pre-assembled commercial version of the Atreus. Their Kickstarter ran earlier in 2020 and collected almost $400k.</p>
+<p>Phil’s original 42-key version can be built with either a PCB or <a href="https://www.youtube.com/watch?v=zY2k75eWrLQ">completely hand-wired</a>, and uses a wooden, acrylic, or completely custom (e.g. 3D-printed) case.</p>
+<p>Keyboardio split the two larger thumb keys into two regular size keys, bringing the total up to 44, and uses a PCB and Cherry MX-style switches mounted on an Aluminium plate inside a black ABS case.</p>
+<h2 id="hardware">Hardware</h2>
+<p>At a first impression, it is incredibly small<span><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle"/><span class="sidenote">Dimensions taking from the product page: 24.3 × 10 × 2.8cm, 310g.<br />
+<br />
+</span></span>, noticeably smaller still than the small <a href="https://www.apple.com/shop/product/MLA22LL/A/magic-keyboard-us-english">Apple Magic Keyboard</a>. At the same time, it uses a regular key spacing, so once your hands are in place it does not feel cramped at all. On the contrary, every time I use a different keyboard now, I feel that half the keys are too far away to reach comfortably. It is also flat enough that I can use it without a wrist rest.</p>
+<p>Mine has <a href="https://cdn.shopify.com/s/files/1/3099/8088/files/CPG151101D213_Copper.pdf?11838687770053773851">Kailh Speed Copper</a> switches, which require 40g of force to actuate, with very early actuation points. They are somewhat comparable to <a href="https://www.cherrymx.de/_Resources/Persistent/13618248706cd28e75ab9bdf9e55e9f8794611c1/EN_CHERRY_MX_BROWN.pdf">Cherry MX Browns</a> without the dead travel before the tactile bump. As mentioned above, the switches are mounted on an aluminium plate, and can be swapped without disassembly.</p>
+<p>The early actuation point of the switches does require some getting used to, I keep experiencing some key chatter, especially on my weaker fingers, though Jesse from Keyboardio is working hard on alleviating that.</p>
+<p>When it comes to noise, you can hear that it is a mechanical keyboard. Even with relatively quiet switches, the open construction means that the sound of the keys getting released is audible in most environments. I would hesitate to bring it to a public space, like a café or a co-working space. Open-office depends on the general noise level, and how tolerant your coworkers are, I have not had anyone complain about the sound level in video conferences.</p>
+<p>The keycaps used are XDA-profile<span><label for="sn-3" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-3" class="margin-toggle"/><span class="sidenote">Symmetrical and the same height across the keyboard, like lower profile SDA. That means you can rearrange them between rows.<br />
+<br />
+</span></span> laser-engraved PBT of medium thickness. Apparently there have been a lot of issues with the durability of the labels, so the specifics of that might change. I personally have had a single key start to fade a bit over 3 weeks of use, but I do not actually care.</p>
+<p>The keyboard is powered by the <a href="https://www.microchip.com/wwwproducts/en/ATmega32U4">ATmega32U4</a>, which is a pretty standard controller for a keyboard, it is also used in the <a href="https://www.pjrc.com/teensy/">Teensy 2.0</a> for example.</p>
+<p>I would judge the overall build quality as good. While it does not feel like an ultra-premium product, there is nothing specific I can actually complain about, no rough edges or manufacturing artefacts.</p>
+<h2 id="software">Software</h2>
+<p>Out of the box, the keyboard uses the open-source <a href="https://github.com/keyboardio/Kaleidoscope">Kaleidoscope</a> firmware, which can be configured with the (also open-source) <a href="https://github.com/keyboardio/Chrysalis">Chrysalis</a> graphical configurator.<span><label for="sn-4" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-4" class="margin-toggle"/><span class="sidenote"><img src="/images/chrysalis.png" /> Chrysalis with my Layer 0<br />
+<br />
+</span></span> Supposedly it is also possible to use <a href="https://qmk.fm/">QMK</a>, and Phil has recently written <a href="https://git.sr.ht/~technomancy/menelaus">Menelaus</a>, a firmware in <a href="https://ryansuchocki.github.io/microscheme/">Microscheme</a>.</p>
+<p>I have stuck with (pre-release versions of) Kaleidoscope so far, which has worked out fairly well. Chrysalis is a React Native app, and doing sweeping changes in it can be a bit cumbersome compared to using text-based, declarative configuration, but it does the job. Flashing a new version onto the keyboard only takes a few seconds. I also have to mention the <a href="https://kaleidoscope.readthedocs.io/en/latest/">extensive documentation</a> available. Kaleidoscope has a rich plugin infrastructure, very little of which I actually use, but it does seem to rival QMK in flexibility.</p>
+<p>I am using the Atreus with <a href="https://colemak.com/">Colemak</a>, the same layout I have been using for almost a decade now, and compared to trying the <a href="https://ergodox-ez.com/">Ergodox</a>,<span><label for="sn-5" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-5" class="margin-toggle"/><span class="sidenote">When I tried using an Ergodox for the first time, the ortholinear layout really threw me off, and I kept hitting right in between keys.<br />
+<br />
+</span></span> the switching was much smoother. I am mostly back to my regular typing speed of 80-90 WPM after three weeks, and I can still use a regular staggered layout keyboard without trouble.</p>
+<p>The modifier keys at the bottom are unusual, but work for me. I use the three innermost keys with my thumbs, and the bottom edges by just pushing down with my palm. It does require some careful arrangement to avoid often having to press two modifiers on the same time at once.</p>
+<p>With only 44 physical keys, the keyboard makes heavy use of layers, which can be temporarily shifted to when holding a key, or switched to permanently. By default the first extra layer has common special characters on the left half, and a numpad on the right, which works better than a regular keyboard for me.</p>
+<p>The only problem I sometimes have is the lack of a status indicator. This means I have to keep track of the keyboard state in my head when switching layers. Not a big problem though.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>My conclusion is quite simple: if you are in the market for a keyboard like this, this might be the keyboard for you. It does what it does well, and is much cheaper than anything comparable that does not require manual assembly. I personally enjoy the small form factor, the flexible (set of) firmware, and the RSI-friendly layout.</p>
+<p>I also want to highlight the truly amazing effort Keyboardio puts into supporting their customers. You can browse the Kickstarter or their GitHub projects to see how much effort they put into this, and I have been in contact with Jesse myself while trying to debug a debouncing issue in the firmware. I am very happy to support them with my wallet.</p>]]></summary>
+</entry>
+<entry>
     <title>LISP&lt;sub&gt;1&lt;/sub&gt; Has Won</title>
     <link href="https://sulami.github.io/posts/lisp-1/index.html" />
     <id>https://sulami.github.io/posts/lisp-1/index.html</id>
@@ -438,26 +479,6 @@ triple
 <span class="co">;;     1.4125030676422798)</span></code></pre></div>
 <p>Because <code>evolution</code> returns an infinite sequence, we can just use <code>nth</code> on it to get the winner after a certain number of generations.</p>
 <p>While this is a very simple example, I am currently working on a way of using this to build and mutate a Clojure <a href="https://en.wikipedia.org/wiki/S-expression">S-expression</a> and score it by running a series of unit tests against the generated code. If this works out I might write about it here soon.</p>]]></summary>
-</entry>
-<entry>
-    <title>Working remotely (Part 2)</title>
-    <link href="https://sulami.github.io/posts/working-remotely-part-two/index.html" />
-    <id>https://sulami.github.io/posts/working-remotely-part-two/index.html</id>
-    <published>2018-11-05T00:00:00Z</published>
-    <updated>2018-11-05T00:00:00Z</updated>
-    <summary type="html"><![CDATA[<p>It has now been 48 days since the first part of this post, and 42 days since I moved into my current flat in Amsterdam. Time for me to write the promised follow-up and explain what has happened so far and how things have been going.</p>
-<h2 id="the-good">The Good</h2>
-<p>First of all, I am a lot happier in my personal life, moving was definitely the right decision for me in general, all work things aside. Having made the step into a remote agreement frees me up to move when- and wherever I want, as my employer does not care about from where I actually work at this point, apart from timezone-related concerns.</p>
-<p>I also think that full control over my workspace can drastically improve my productivity, the main benefit being the lack of distractions.</p>
-<p>Last time I mentioned that I would go back to London once a month. So far I am keeping to this schedule, and my first visit has been quite pleasant, even if a little stressful. But being able see my team members in person, catching up and meeting new hires allows us to stay more in touch. My only minor complaint is that travel is quite a hassle, especially at this rate, so I might try to turn down the frequency a bit.</p>
-<h2 id="the-bad">The Bad</h2>
-<p>After the moving process, which included being legally homeless for a weekend in France, I was quite happy to be able to stay home for a bit, so I ended up working from my living room for a couple of weeks. In addition to that, coworking spaces are (to me) surprisingly expensive for what they are.<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote">200€/mo. for something they call “a desk” but in reality is just a slot at a table, electricity, wifi and access to a kitchen with free coffee is quite a lot in my opinion. If I wanted an actual desk and office chair, ideally with a set of walls around it, I can expect to pay at least twice that.<br />
-<br />
-</span></span> But after a while I started suffering from both cabin fever and loneliness, so I bit the bullet and subscribed to one. This also ended up being the right decision, because just the way I wrote the last time, I have a physical location I can go to to work, but it is purely optional.</p>
-<p>In addition to potential extra costs and stress due to more traveling, some employers also seem to think that remote workers should by default earn less than the ones coming into the office. It is true that remote work in and of itself can be seen as a perk, but I also believe that correctly executed remote work is beneficial to everyone involved.</p>
-<h2 id="closing-notes">Closing Notes</h2>
-<p>If you want to go remote I recommend you do what I (we) did and get a remote working agreement that is signed by you and your employer. It should capture the terms of the remote work, such as work hours, visits, who pays for transport and how long much in advance a warning needs to be given for you to be called into the office.</p>
-<p>The last point is quite important especially if you are expected to pay for transport (and possibly lodging) which can be much more expensive if booked spontaneously.</p>]]></summary>
 </entry>
 
 </feed>
