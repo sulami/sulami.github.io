@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Testing Hexagonal Architecture - sulami's blog</title>
+        <link rel="stylesheet" type="text/css" href="../../stylesheet.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="apple-touch-icon" sizes="180x180" href="../../images/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="../../images/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="../../images/favicon-16x16.png">
+        <link rel="manifest" href="../../images/site.webmanifest">
+        <link rel="mask-icon" href="../../images/safari-pinned-tab.svg" color="#5bbad5">
+        <link rel="shortcut icon" href="../../images/favicon.ico">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="msapplication-config" content="/images/browserconfig.xml">
+        <meta name="theme-color" content="#5bbad5">
+        <link href="../../atom.xml" type="application/atom+xml" rel="alternate" title="sulami's blog feed" />
+    </head>
+    <body>
+        <input type="checkbox" id="lightswitch" />
+        <div id="body">
+        <div id="container">
+        <div id="header">
+            <div id="navigation">
+                <label for="lightswitch" id="lightswitch-label">☀</label>
+                ·
+                <a href="../../">Home</a>
+                ·
+                <a href="../../posts/">Archive</a>
+                ·
+                <a href="../../atom.xml">Feed</a>
+                ·
+                <a href="../../pages/about/">About</a>
+                ·
+                <a href="../../pages/cv/">CV</a> <a href="../../pages/robin-schroer-cv.pdf">(PDF)</a>
+                ·
+                <a href="../../pages/uses-this/">Uses This</a>
+                ·
+                <a href="../../pages/frankenwm/">FrankenWM</a>
+            </div>
+        </div>
+
+        <div id="content">
+            <article>
+                <h1>Testing Hexagonal Architecture</h1>
+                <div class="info">
+                    
+                        Posted on October 11, 2020
+                    
+                    
+                </div>
+
+                <section>
+            <p><a href="https://web.archive.org/web/20180822100852/http://alistair.cockburn.us/Hexagonal+architecture"><em>Hexagonal Architecture</em></a>, also known as <em>Ports and Adapters</em>, was first conceived by Cockburn in 2005, and popularised by Freeman &amp; Pryce’s <a href="http://www.growing-object-oriented-software.com/"><em>Growing Object-Oriented Software, Guided by Tests</em></a> in 2009. For those unfamiliar, it describes an application architecture entirely comprised of ports, which are interfaces, and adaptors, which are implementations for those interfaces. The adaptors can depend on other ports, but not on other adaptors. A system is then constructed by selecting a full set of adaptors, depending on the requirements, and composing them using <a href="https://en.wikipedia.org/wiki/Dependency_injection">dependency injection</a>.</p>
+<p>A port can represent an external resource or service, but also a logical component of the system, like an HTTP server or a queue handler.</p>
+<h2 id="an-example-port-adaptor">An Example Port &amp; Adaptor</h2>
+<p>A simple example for a port could be blob storage. I will be using Clojure in this post, but no prior knowledge is required for understanding.<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle" /><span class="sidenote">This also allows me to gloss over types (or specs) which I would normally add in various places. As an aside, Clojure in particular is not great at this, as record methods cannot be defined by specs, requiring function wrappers.<br />
+<br />
+Also, the example ports &amp; adaptors in this post are modelled after Stuart Sierra’s <a href="https://github.com/stuartsierra/component">component</a> library.<br />
+<br />
+</span></span> A port in this case is a protocol, which we implement like so:</p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="bu">defprotocol</span><span class="fu"> BlobStoragePort</span>
+  (store-object [this loc obj]
+    <span class="st">&quot;Store `obj` at  `loc`.&quot;</span>)
+  (retrieve-object [this loc]
+    <span class="st">&quot;Retrieve the object at `loc`.</span>
+<span class="st">    Returns `nil` if not found.&quot;</span>))</code></pre></div>
+<p>Now that we have a port with an interface in the form of abstract method declarations, we can implement an adaptor, for example using S3:</p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="bu">defrecord</span><span class="fu"> S3StorageAdaptor </span>[bucket-loc]
+  BlobStoragePort
+  (store-object [this loc obj]
+    (s3/put-object <span class="at">:bucket-loc</span> bucket-loc
+                   <span class="at">:key</span> loc
+                   <span class="at">:file</span> obj))
+  (retrieve-object [this loc]
+    (s3/get-object <span class="at">:bucket-loc</span> bucket-loc
+                   <span class="at">:key</span> loc)))
+
+(<span class="bu">defn</span><span class="fu"> new-s3-storage-adaptor </span>[bucket-loc]
+  (s3/create-bucket bucket-loc)
+  (-&gt;S3StorageAdaptor bucket-loc))</code></pre></div>
+<p>During tests, we would like to use a blob storage that is much faster and not dependent on external state, so we can use a simple map in an atom:<span><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle" /><span class="sidenote">For those not familiar with Clojure, an <a href="https://clojure.org/reference/atoms">atom</a> is reference type that allows us to essentially implement a shared, safely mutable value among Clojure’s normally immutable values. Think of it as a pointer with automatic locking.<br />
+<br />
+</span></span></p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="bu">defrecord</span><span class="fu"> MemoryBlobStorageAdaptor </span>[storage-map]
+  BlobStoragePort
+  (store-object [this loc obj]
+    (<span class="kw">swap!</span> storage-map <span class="kw">assoc</span> loc obj))
+  (retrieve-object [this loc]
+    (<span class="at">:loc</span> <span class="at">@storage-map)))</span>
+
+(<span class="bu">defn</span><span class="fu"> new-memory-blob-storage-adaptor </span>[]
+  (-&gt;MemoryBlobStorageAdaptor (<span class="kw">atom</span> {})))</code></pre></div>
+<h2 id="testing-the-port">Testing the Port</h2>
+<p>It has been long known that a direct mapping of tests to internal methods is an anti-pattern to be avoided.<span><label for="sn-3" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-3" class="margin-toggle" /><span class="sidenote">Again, <em>Growing Object-Oriented Software</em> has a sub-chapter devoted to this, <em>Unit-Test Behavior, Not Methods</em>. It highlights the difference in ease of understanding, but another factor is ease of refactoring, which is significantly higher if the internal method hierarchy is not married to the test suite.<br />
+<br />
+</span></span> As such we will prefer testing on a port-level over testing on an adaptor-level. In practice that means we assert a certain set of behaviours about every adaptor for a given port by using only the public port methods in our tests, and using the same tests for all adaptors.</p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure"><span class="co">;; Abstract port test suite</span>
+
+(<span class="bu">defn-</span><span class="fu"> store-and-retrieve-test </span>[adaptor]
+  (<span class="kw">testing</span> <span class="st">&quot;store and retrieve returns the object&quot;</span>
+    (<span class="kw">let</span> [loc <span class="st">&quot;store-and-retrieve&quot;</span>
+          obj <span class="st">&quot;test-object&quot;</span>]
+      (store-object adaptor loc obj)
+      (<span class="kw">is</span> (<span class="kw">=</span> obj
+             (retrieve-object adaptor loc))))))
+
+(<span class="bu">defn-</span><span class="fu"> not-found-test </span>[adaptor]
+  (<span class="kw">testing</span> <span class="st">&quot;returns nil for nonexistent objects&quot;</span>
+    (<span class="kw">is</span> (<span class="kw">nil?</span> (retrieve-object adaptor <span class="st">&quot;not-found&quot;</span>)))))
+
+<span class="co">;; Specific adaptor tests</span>
+
+(<span class="bu">deftest</span><span class="fu"> blob-storage-adaptor-test</span>
+  (<span class="kw">let</span> [adaptors [(new-memory-blob-storage-adaptor)
+                  (new-s3-blob-storage-adaptor <span class="st">&quot;test&quot;</span>)]]
+    (<span class="kw">for</span> [adaptor adaptors]
+      (store-and-retrieve-test adaptor)
+      (not-found-test adaptor))))</code></pre></div>
+<p>This has the advantage of establishing a consistent set of behaviours across all adaptors and keeping them in sync. One might wonder about intended behavioural differences between adaptors for the same port, but I would argue that from the outside, all adaptors for a given port should exhibit the same behaviour.<span><label for="sn-4" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-4" class="margin-toggle" /><span class="sidenote">If you really need different behaviour in some situations, I would recommend adding a flag or switch controlling this behaviour across all adaptors.<br />
+<br />
+</span></span> Because we are only using the public interface for testing, any internal differences are conveniently hidden from us.</p>
+<h2 id="the-rest-of-the-system">The Rest of the System</h2>
+<p>Now that we have established a port, as well as some adaptors, we can build on top of them. Blob storage is a lower level ports in our system, and we are going to add a higher level port that implements some kind of business logic which requires blob storage.</p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure"><span class="co">;; Port definition omitted for brevity.</span>
+
+(<span class="bu">defrecord</span><span class="fu"> BusinessLogicAdaptor </span>[blob-storage-adaptor]
+  BusinessLogicPort
+  (retrieve-double [this loc]
+    (<span class="kw">*</span> <span class="dv">2</span> (retrieve-object blob-storage-adaptor loc))))</code></pre></div>
+<p>We are free to use different blob storage adaptors for different systems, for example production, staging, CI, or local development. The business logic adaptor is oblivious to the actual blob storage implementation injected.</p>
+<h2 id="on-mocks-stubs">On Mocks &amp; Stubs</h2>
+<p>The careful reader might have noticed that the dependency injection of different adaptors looks a lot like mocking, and this is very much true. While mocking has been considered more and more problematic in recent years, the fact that we assert the same set of behaviours for our mocks as we assert for the “real components” leads us to much more fully featured and realistic mocks, compared to the ones which are written for specific tests and then rarely touched after.</p>
+<p>If the difference in behaviour between different adaptors leads to problems which are not caught by the test suite, the problems is not mocking, but an incomplete behaviour specification for the adaptor in question.</p>
+                </section>
+        </div>
+        <div id="footer">
+            Site proudly generated by
+            <a href="http://jaspervdj.be/hakyll">Hakyll</a>
+        </div>
+        </div>
+        </div>
+        <!-- Below is some JS, the only on this page. Things should be -->
+        <!-- generally fine if you block it, but I'm adding notes so you -->
+        <!-- can decide how you feel about each element. -->
+
+        <!-- Privacy-aware analytics by https://www.goatcounter.com/ -->
+        <!-- Stats are publicly available at https://sulami-blog.goatcounter.com/ -->
+        <script data-goatcounter="https://sulami-blog.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+
+        <!-- Colour theme switcher -->
+        <script>
+          const themeSwitch = document.querySelector('#lightswitch');
+          themeSwitch.checked = localStorage.getItem('switchedTheme') === 'true';
+
+          themeSwitch.addEventListener('change', function (e) {
+              if(e.currentTarget.checked === true) {
+                  // Add item to localstorage
+                  localStorage.setItem('switchedTheme', 'true');
+              } else {
+                  // Remove item if theme is switched back to normal
+                  localStorage.removeItem('switchedTheme');
+              }
+          });
+        </script>
+    </body>
+</html>

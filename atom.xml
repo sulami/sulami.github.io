@@ -8,8 +8,96 @@
         <name>Robin Schroer</name>
         <email>blog@peerwire.org</email>
     </author>
-    <updated>2020-07-10T00:00:00Z</updated>
+    <updated>2020-10-11T00:00:00Z</updated>
     <entry>
+    <title>Testing Hexagonal Architecture</title>
+    <link href="https://blog.sulami.xyz/posts/testing-hexagonal-architecture/index.html" />
+    <id>https://blog.sulami.xyz/posts/testing-hexagonal-architecture/index.html</id>
+    <published>2020-10-11T00:00:00Z</published>
+    <updated>2020-10-11T00:00:00Z</updated>
+    <summary type="html"><![CDATA[<p><a href="https://web.archive.org/web/20180822100852/http://alistair.cockburn.us/Hexagonal+architecture"><em>Hexagonal Architecture</em></a>, also known as <em>Ports and Adapters</em>, was first conceived by Cockburn in 2005, and popularised by Freeman &amp; Pryce’s <a href="http://www.growing-object-oriented-software.com/"><em>Growing Object-Oriented Software, Guided by Tests</em></a> in 2009. For those unfamiliar, it describes an application architecture entirely comprised of ports, which are interfaces, and adaptors, which are implementations for those interfaces. The adaptors can depend on other ports, but not on other adaptors. A system is then constructed by selecting a full set of adaptors, depending on the requirements, and composing them using <a href="https://en.wikipedia.org/wiki/Dependency_injection">dependency injection</a>.</p>
+<p>A port can represent an external resource or service, but also a logical component of the system, like an HTTP server or a queue handler.</p>
+<h2 id="an-example-port-adaptor">An Example Port &amp; Adaptor</h2>
+<p>A simple example for a port could be blob storage. I will be using Clojure in this post, but no prior knowledge is required for understanding.<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote">This also allows me to gloss over types (or specs) which I would normally add in various places. As an aside, Clojure in particular is not great at this, as record methods cannot be defined by specs, requiring function wrappers.<br />
+<br />
+Also, the example ports &amp; adaptors in this post are modelled after Stuart Sierra’s <a href="https://github.com/stuartsierra/component">component</a> library.<br />
+<br />
+</span></span> A port in this case is a protocol, which we implement like so:</p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="bu">defprotocol</span><span class="fu"> BlobStoragePort</span>
+  (store-object [this loc obj]
+    <span class="st">&quot;Store `obj` at  `loc`.&quot;</span>)
+  (retrieve-object [this loc]
+    <span class="st">&quot;Retrieve the object at `loc`.</span>
+<span class="st">    Returns `nil` if not found.&quot;</span>))</code></pre></div>
+<p>Now that we have a port with an interface in the form of abstract method declarations, we can implement an adaptor, for example using S3:</p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="bu">defrecord</span><span class="fu"> S3StorageAdaptor </span>[bucket-loc]
+  BlobStoragePort
+  (store-object [this loc obj]
+    (s3/put-object <span class="at">:bucket-loc</span> bucket-loc
+                   <span class="at">:key</span> loc
+                   <span class="at">:file</span> obj))
+  (retrieve-object [this loc]
+    (s3/get-object <span class="at">:bucket-loc</span> bucket-loc
+                   <span class="at">:key</span> loc)))
+
+(<span class="bu">defn</span><span class="fu"> new-s3-storage-adaptor </span>[bucket-loc]
+  (s3/create-bucket bucket-loc)
+  (-&gt;S3StorageAdaptor bucket-loc))</code></pre></div>
+<p>During tests, we would like to use a blob storage that is much faster and not dependent on external state, so we can use a simple map in an atom:<span><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle"/><span class="sidenote">For those not familiar with Clojure, an <a href="https://clojure.org/reference/atoms">atom</a> is reference type that allows us to essentially implement a shared, safely mutable value among Clojure’s normally immutable values. Think of it as a pointer with automatic locking.<br />
+<br />
+</span></span></p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="bu">defrecord</span><span class="fu"> MemoryBlobStorageAdaptor </span>[storage-map]
+  BlobStoragePort
+  (store-object [this loc obj]
+    (<span class="kw">swap!</span> storage-map <span class="kw">assoc</span> loc obj))
+  (retrieve-object [this loc]
+    (<span class="at">:loc</span> <span class="at">@storage-map)))</span>
+
+(<span class="bu">defn</span><span class="fu"> new-memory-blob-storage-adaptor </span>[]
+  (-&gt;MemoryBlobStorageAdaptor (<span class="kw">atom</span> {})))</code></pre></div>
+<h2 id="testing-the-port">Testing the Port</h2>
+<p>It has been long known that a direct mapping of tests to internal methods is an anti-pattern to be avoided.<span><label for="sn-3" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-3" class="margin-toggle"/><span class="sidenote">Again, <em>Growing Object-Oriented Software</em> has a sub-chapter devoted to this, <em>Unit-Test Behavior, Not Methods</em>. It highlights the difference in ease of understanding, but another factor is ease of refactoring, which is significantly higher if the internal method hierarchy is not married to the test suite.<br />
+<br />
+</span></span> As such we will prefer testing on a port-level over testing on an adaptor-level. In practice that means we assert a certain set of behaviours about every adaptor for a given port by using only the public port methods in our tests, and using the same tests for all adaptors.</p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure"><span class="co">;; Abstract port test suite</span>
+
+(<span class="bu">defn-</span><span class="fu"> store-and-retrieve-test </span>[adaptor]
+  (<span class="kw">testing</span> <span class="st">&quot;store and retrieve returns the object&quot;</span>
+    (<span class="kw">let</span> [loc <span class="st">&quot;store-and-retrieve&quot;</span>
+          obj <span class="st">&quot;test-object&quot;</span>]
+      (store-object adaptor loc obj)
+      (<span class="kw">is</span> (<span class="kw">=</span> obj
+             (retrieve-object adaptor loc))))))
+
+(<span class="bu">defn-</span><span class="fu"> not-found-test </span>[adaptor]
+  (<span class="kw">testing</span> <span class="st">&quot;returns nil for nonexistent objects&quot;</span>
+    (<span class="kw">is</span> (<span class="kw">nil?</span> (retrieve-object adaptor <span class="st">&quot;not-found&quot;</span>)))))
+
+<span class="co">;; Specific adaptor tests</span>
+
+(<span class="bu">deftest</span><span class="fu"> blob-storage-adaptor-test</span>
+  (<span class="kw">let</span> [adaptors [(new-memory-blob-storage-adaptor)
+                  (new-s3-blob-storage-adaptor <span class="st">&quot;test&quot;</span>)]]
+    (<span class="kw">for</span> [adaptor adaptors]
+      (store-and-retrieve-test adaptor)
+      (not-found-test adaptor))))</code></pre></div>
+<p>This has the advantage of establishing a consistent set of behaviours across all adaptors and keeping them in sync. One might wonder about intended behavioural differences between adaptors for the same port, but I would argue that from the outside, all adaptors for a given port should exhibit the same behaviour.<span><label for="sn-4" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-4" class="margin-toggle"/><span class="sidenote">If you really need different behaviour in some situations, I would recommend adding a flag or switch controlling this behaviour across all adaptors.<br />
+<br />
+</span></span> Because we are only using the public interface for testing, any internal differences are conveniently hidden from us.</p>
+<h2 id="the-rest-of-the-system">The Rest of the System</h2>
+<p>Now that we have established a port, as well as some adaptors, we can build on top of them. Blob storage is a lower level ports in our system, and we are going to add a higher level port that implements some kind of business logic which requires blob storage.</p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure"><span class="co">;; Port definition omitted for brevity.</span>
+
+(<span class="bu">defrecord</span><span class="fu"> BusinessLogicAdaptor </span>[blob-storage-adaptor]
+  BusinessLogicPort
+  (retrieve-double [this loc]
+    (<span class="kw">*</span> <span class="dv">2</span> (retrieve-object blob-storage-adaptor loc))))</code></pre></div>
+<p>We are free to use different blob storage adaptors for different systems, for example production, staging, CI, or local development. The business logic adaptor is oblivious to the actual blob storage implementation injected.</p>
+<h2 id="on-mocks-stubs">On Mocks &amp; Stubs</h2>
+<p>The careful reader might have noticed that the dependency injection of different adaptors looks a lot like mocking, and this is very much true. While mocking has been considered more and more problematic in recent years, the fact that we assert the same set of behaviours for our mocks as we assert for the “real components” leads us to much more fully featured and realistic mocks, compared to the ones which are written for specific tests and then rarely touched after.</p>
+<p>If the difference in behaviour between different adaptors leads to problems which are not caught by the test suite, the problems is not mocking, but an incomplete behaviour specification for the adaptor in question.</p>]]></summary>
+</entry>
+<entry>
     <title>Keyboardio Atreus Review</title>
     <link href="https://blog.sulami.xyz/posts/atreus/index.html" />
     <id>https://blog.sulami.xyz/posts/atreus/index.html</id>
@@ -404,81 +492,6 @@ triple
 <p>The alternative solution is packaging your snippets, and using them as a library. Most of the practical implementation will depend on the programming language you are using, and what kind of projects you are usually working on. Zach Tellman himself has a Clojure library called <a href="https://github.com/ztellman/potemkin">Potemkin</a>, which is a collection of “some ideas which are almost good”, and which he uses as a dependency for most of his other libraries.</p>
 <p>While this incurs some overhead, namely the packaging of the library, it does come with a lot of advantages. Other people can benefit from your library. Depending on the scale of the overhead involved with building a library, splitting snippets by topic into “actual” libraries might make sense. It does require more abstraction, and more documentation, but that is not a bad thing. For a simple library with a handful of data structures or functions, writing a quick readme and some docstrings takes less than an hour.</p>
 <p>There is still room for a default, catch-all library that is just for personal use and contains miscellaneous snippets without any particular topic, and it can be where new snippets end up first. If a section of it grows large enough, it can be extracted into its own library. The bottom line here is, if you write something that solves a problem, keep it somewhere, ideally where you can find it again. Even if it is not generalised or documented, it might come in handy in the future.</p>]]></summary>
-</entry>
-<entry>
-    <title>Genetic Programming in Clojure</title>
-    <link href="https://blog.sulami.xyz/posts/genetic-programming-in-clojure/index.html" />
-    <id>https://blog.sulami.xyz/posts/genetic-programming-in-clojure/index.html</id>
-    <published>2018-11-17T00:00:00Z</published>
-    <updated>2018-11-17T00:00:00Z</updated>
-    <summary type="html"><![CDATA[<h2 id="the-theory">The Theory</h2>
-<p>Like most programmers I have always had a vague interest in AI, and one of its branches that requires less complicated maths than recurrent neural networks which are the most well known one, is genetic programming. The idea of genetic programming is quite simple<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote">If you are into more visual examples, this I believe is a very good practical example: <a href="http://rednuht.org/genetic_cars_2/" class="uri">http://rednuht.org/genetic_cars_2/</a><br />
-<br />
-</span></span>:</p>
-<ol>
-<li>You build something that is parameterised in key places</li>
-<li>You build a scoring function to assess the performance of your something with a set of parameters</li>
-<li>You randomly adjust (mutate) your parameters in some way a couple of times and compare the score of each set</li>
-<li>You take the best one or ones as a base to start a new round of mutations and scoring</li>
-<li>Basically just repeat steps 3 &amp; 4 for a while and your parameters will tend towards a maximum score</li>
-</ol>
-<p>Depending on a variety of meta-parameters that control for example the size of each generation or the nature of the mutations you might just find a local maximum, but often times this can yield pretty good results for a variety of problems.</p>
-<h2 id="the-practice">The Practice</h2>
-<p>I have toyed around with this over the last couple of days and built an very simple abstract implementation in Clojure, which I am going to share here (and eventually will be somewhere on Github as well). Let us explore it from the inside out.</p>
-<p>First of all we need to be able to generate some mutations of our specimen. Because we do not assume anything about the specimen, this ends up being quite simple because a lot of the heavy lifting is done outside of this implementation as it is specific to the problem in question.</p>
-<p>This returns a potentially infinite list containing first the specimen passed in, and then as many mutations of it as we want.</p>
-<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="bu">defn</span><span class="fu"> mutate</span>
-  <span class="st">&quot;Generator that mutates a base, the first element being the base.&quot;</span>
-  [base mutator]
-  (<span class="kw">concat</span> [base]
-          (<span class="kw">repeatedly</span> #(mutator base))))</code></pre></div>
-<p>Next we also need to be able to score it. In this case we would like to attach the scores to the specimens so that we can use them to sort and select specimens without losing the specimens themselves.</p>
-<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="bu">defn</span><span class="fu"> attach-score</span>
-  <span class="st">&quot;Attaches the score to a specimen.&quot;</span>
-  [score-fn specimen]
-  [specimen (score-fn specimen)])</code></pre></div>
-<p>Now let us begin to tie these together. A single generation should take a base specimen, mutate it a couple of times, score each of them, and then select the “fittest” based on the scores<span><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle"/><span class="sidenote">This also only keeps the best specimen in every generation, which makes the code much simpler. For actual real world usage it might be beneficial to keep the best <code>n</code> specimens in every generation to avoid running into local maxima. This would make the mutation slightly more complex though because there would be several base specimens which need to be mutated, so I decided to leave out this feature for the purposes of explanation.<br />
-<br />
-</span></span>. Note that in this implementation a lower score is better. To change this just reverse the sorting.</p>
-<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="bu">defn</span><span class="fu"> generation</span>
-  <span class="st">&quot;Picks out the best one from a generation.&quot;</span>
-  [base mutator score-fn gen-size]
-  (<span class="kw">-&gt;&gt;</span> (mutate base mutator)
-       (<span class="kw">take</span> gen-size)
-       (<span class="kw">map</span> (<span class="kw">partial</span> attach-score score-fn))
-       (<span class="kw">sort-by</span> <span class="kw">second</span>)
-       <span class="kw">first</span>
-       <span class="kw">first</span>))</code></pre></div>
-<p>And to finish off, we just need to run a number of generations, each based on the previous one’s winner.</p>
-<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="bu">defn</span><span class="fu"> evolution</span>
-  <span class="st">&quot;Generator for generations.&quot;</span>
-  [base mutator score-fn gen-size]
-  (<span class="kw">iterate</span> #(generation % mutator score-fn gen-size) base))</code></pre></div>
-<p>The lazy nature of this implementation is allows us to inspect intermediate results easily, as we can see the path evolution has taken in the form of each generation’s winner.</p>
-<h2 id="the-actual-practice">The Actual Practice</h2>
-<p>Now this above is actually not that much code, and it is very abstract in its nature, so let us have a look at what it looks like when we actually use it. A simple example would be approximating a single number that is hard to approximate, like √2.</p>
-<p>Our specimen is just a float, and any will do as the initial seed. It is itself the only parameter.</p>
-<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="bu">def</span><span class="fu"> base </span><span class="fl">0.0</span>)</code></pre></div>
-<p>To mutate it, we just adjust it by a random amount within <code>0.5</code> in either direction.</p>
-<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="bu">defn</span><span class="fu"> mutator </span>[base]
-  (<span class="kw">-&gt;</span> (<span class="kw">rand</span>)
-      (<span class="kw">-</span> <span class="fl">0.5</span>)
-      (<span class="kw">+</span> base)))</code></pre></div>
-<p>Our scoring function is cheating a little, because we already know the target, we can just compare against it and use the distance as the score.</p>
-<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="bu">defn</span><span class="fu"> score-fn </span>[x]
-  (<span class="kw">-&gt;</span> x
-      (<span class="kw">-</span> (Math/sqrt <span class="dv">2</span>))
-      Math/abs))</code></pre></div>
-<p>Now when we run this, we can see how it approximates the target value over time (<code>√2 ≈ 1.4142</code>).</p>
-<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="kw">take</span> <span class="dv">6</span> (evolution base mutator score-fn <span class="dv">25</span>))
-<span class="co">;; =&gt; (0.0</span>
-<span class="co">;;     0.33079046010191426</span>
-<span class="co">;;     0.7509224756253191</span>
-<span class="co">;;     1.2164225056336746</span>
-<span class="co">;;     1.3768753691848903</span>
-<span class="co">;;     1.4125030676422798)</span></code></pre></div>
-<p>Because <code>evolution</code> returns an infinite sequence, we can just use <code>nth</code> on it to get the winner after a certain number of generations.</p>
-<p>While this is a very simple example, I am currently working on a way of using this to build and mutate a Clojure <a href="https://en.wikipedia.org/wiki/S-expression">S-expression</a> and score it by running a series of unit tests against the generated code. If this works out I might write about it here soon.</p>]]></summary>
 </entry>
 
 </feed>
