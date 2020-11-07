@@ -46,7 +46,7 @@
                 <h1>Robin Uses This</h1>
                 <div class="info">
                     
-                        Last updated on November 11, 2017
+                        Last updated on November  7, 2020
                     
                     
                 </div>
@@ -54,21 +54,49 @@
                 <section>
             <p>I really enjoy reading <a href="https://usesthis.com">uses this</a> to get some ideas about what kind of tooling other people use, and of course to borrow ideas, so I thought I’d do my own version of this. This is also a page instead of a post, and I will try to keep it up to date, as my setup keeps changing.</p>
 <h2 id="hardware">Hardware</h2>
-<p>My primary computer nowadays is a specced-out 2018 15&quot; MacBook Pro, which is actually provided by my employer. MacOS is <em>alright</em> and tends to not get into the way too much.<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle" /><span class="sidenote">Except when the Mach kernel leaks ports, crashing user space programs.<br />
-<br />
-</span></span></p>
-<p>I use a stand to bring the computer up to eye level, and <a href="https://shop.keyboard.io/products/keyboardio-atreus">Keyboardio</a> <a href="http://atreus.technomancy.us/">Atreus</a> and Magic Trackpad for human-machine-interfacing. I have been using the <a href="https://colemak.com">Colemak keyboard layout</a> for several years on all physical keyboards due to RSI issues, and also remap caps lock to control.</p>
-<p>I have two sets of headphones, <a href="https://europe.beyerdynamic.com/dt-990-pro.html">beyerdynamic DT 990 Pro</a>, which sound really nice, and <a href="https://www.bose.com/en_us/products/headphones/over_ear_headphones/quietcomfort-35-wireless-ii.html#v=qc35_ii_black">Bose QuietComfort 35 II</a>, which are noise-cancelling and wireless.</p>
+<p>My workstation is optimised for portability, so everything is relatively small and packs well for travel, while maximising ergonomics:</p>
+<dl>
+<dt>2018 15&quot; Apple MacBook Pro</dt>
+<dd>Company-provided, does the job
+</dd>
+<dt><a href="https://www.therooststand.com/">Roost Laptop Stand</a></dt>
+<dd>Saves my neck and posture
+</dd>
+<dt><a href="../../posts/atreus/">Keyboardio Atreus Keyboard</a></dt>
+<dd>Using the <a href="https://colemak.com">Colemak</a> layout
+</dd>
+<dt>Apple Magic Trackpad</dt>
+<dd>Better for RSI (for me)
+</dd>
+<dt><a href="https://europe.beyerdynamic.com/dt-990-pro.html">beyerdynamic DT 990 Pro</a></dt>
+<dd>Open-back, wired
+</dd>
+<dt><a href="https://www.anker.com/products/variant/usb-c-hub,-7in1-usb-c-adapter/A83460A1">Anker 7-in-1 USB-C Hub</a></dt>
+<dd>Works well with the stand, and is the single thing to unplug when taking the computer away
+</dd>
+<dt><a href="https://www.yubico.com/nl/product/yubikey-5c-nano/">Yubikey 5C Nano</a></dt>
+<dd>Used wherever possible
+</dd>
+</dl>
+<p>Phone:</p>
+<dl>
+<dt>Apple iPhone X</dt>
+<dd>Still going strong, always on mute
+</dd>
+<dt><a href="https://www.bose.com/en_us/products/headphones/over_ear_headphones/quietcomfort-35-wireless-ii.html#v=qc35_ii_black">Bose QuietComfort 35 II</a></dt>
+<dd>Noise-cancelling, Bluetooth
+</dd>
+</dl>
 <h2 id="software">Software</h2>
-<p>I use <a href="https://github.com/koekeishiya/yabai">yabai</a> &amp; <a href="https://github.com/koekeishiya/skhd">skhd</a> to drive most of my desktop with the keyboard alone.</p>
-<p>I write basically everything in <a href="https://www.gnu.org/software/emacs/">Emacs</a>, specifically the <a href="https://github.com/railwaycat/homebrew-emacsmacport">Mac Port</a>, which comes with some macOS-specific tweaks. <a href="https://github.com/sulami/dotfiles/tree/master/emacs/.emacs">My config</a> is custom written, and heavily leans on <a href="https://github.com/emacs-evil/evil">evil</a> to emulate a vim layout. I use <a href="http://isync.sourceforge.net/">isync</a>, <a href="https://notmuchmail.org/">notmuch</a>, and <a href="https://marlam.de/msmtp/">msmtp</a> to fetch/tag/send email, of course from inside Emacs. I also make heavy use of <a href="https://orgmode.org/">org-mode</a> for both notes and to do lists. I even write this website in it.</p>
-<p>When it comes to browsing, my browser is currently <a href="https://mozilla.org/en_US/firefox/developer/">Firefox Developer Edition</a>.</p>
-<p>Worth mentioning as well is Dash, which provides offline documentation. I always try to be as independent as possible, so I try to have everything I need to work available offline.<span><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle" /><span class="sidenote">That also includes a local copy of all my emails.<br />
+<p>Really just the current version of macOS, the <a href="https://github.com/NixOS/nixpkgs/blob/nixos-unstable/pkgs/applications/editors/emacs/macport.nix">MacPorts version</a> of <a href="https://www.gnu.org/software/emacs/">Emacs</a>, and <a href="https://mozilla.org/en_US/firefox/developer/">Firefox Developer Edition</a>.</p>
+<p>The specifics of my setup change a lot. I use <a href="https://orgmode.org/">org-mode</a> for most writing, but otherwise I only use my email in Emacs, via <a href="https://notmuchmail.org/">notmuch</a>. I have been down the “do everything inside Emacs” road and decided that there are too many rough edges for my taste, so I confine it to text-processing related tasks.</p>
+<p>All my configuration is <a href="https://github.com/sulami/dotfiles">available online</a>.</p>
+<p>I always use a task-manager of some sort, currently <a href="https://culturedcode.com/things/">Things</a>, in the past also org-mode, <a href="https://www.omnigroup.com/omnifocus">OmniFocus</a>, and <a href="https://www.2doapp.com/">2Do</a>.</p>
+<h2 id="analogue">Analogue</h2>
+<p>I usually have a paper notebook and pen nearby, which I find useful to jot down ideas or sketch out some diagram.<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle" /><span class="sidenote">Not a pen snob, so just a random ballpoint pen. The paper has to be dotted though, no lines or grids.<br />
 <br />
-</span></span></p>
-<h2 id="phone">Phone</h2>
-<p>My phone is an iPhone X, which I am quite happy with. I am not a heavy phone user, and mainly use it to stay in contact with people.</p>
-<p>The main software I use on my phone is <a href="https://beorgapp.com/">beorg</a> to keep track of everything in org-mode.</p>
+</span></span> It is a strictly temporary space and everything is digitised eventually to enable sensible archiving.</p>
+<p>I am also usually wearing a wristwatch, preferably a chronograph. Currently a <a href="https://www.timex.com/expedition-field-chronograph-43mm-leather-strap-watch/Expedition-Field-Chronograph-43mm-Leather-Strap-Watch.html">Timex Expedition Field Chronograph</a>.</p>
                 </section>
         </div>
         <div id="footer">
