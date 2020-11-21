@@ -11,16 +11,14 @@
     <updated>2020-11-08T00:00:00Z</updated>
     <entry>
     <title>Writing for Reasons</title>
-    <link href="https://blog.sulami.xyz/posts/writing-for-reasons/index.html" />
-    <id>https://blog.sulami.xyz/posts/writing-for-reasons/index.html</id>
+    <link href="https://blog.sulami.xyz/posts/writing-for-reasons/" />
+    <id>https://blog.sulami.xyz/posts/writing-for-reasons/</id>
     <published>2020-11-08T00:00:00Z</published>
     <updated>2020-11-08T00:00:00Z</updated>
     <summary type="html"><![CDATA[<p>This year, I have been writing more than even before over. In this article, I would like to discuss some of the reasons for writing and provide some thoughts on each.</p>
 <h2 id="writing-to-remember">Writing to Remember</h2>
 <p>This is probably the most obvious reason to write for a lot of people. Having written down a piece of information, you can come back later and recall it. Historical context can be invaluable for decision making, and often covers information that is not readily available anymore.</p>
-<p>The key here is being able to find notes later on. Paper-based ones can be sorted by topic or chronologically, digital ones can be searched for.<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote">As an aside, I find paper notebooks really clumsy in this regard. They make a decent “staging area” to quickly capture information, but are terrible to find anything in unless you take care to maintain an index. Index cards can at least be reordered instead.<br />
-<br />
-</span></span> Formats can be useful here too, for example by supporting embedded code blocks or graphics.</p>
+<p>The key here is being able to find notes later on. Paper-based ones can be sorted by topic or chronologically, digital ones can be searched for. Formats can be useful here too, for example by supporting embedded code blocks or graphics.</p>
 <h2 id="writing-to-solve-problems">Writing to Solve Problems</h2>
 <p>Early this year, before the pandemic hit Europe, I saw Paulus Esterhazy’s talk <em><a href="https://www.youtube.com/watch?v=T7-2DW-KDV4&amp;t=1429s">Angels Singing: Writing for Programmers</a></em> at <a href="https://clojured.de/">clojureD</a>. It contained this great quote of Milton Friedman:</p>
 <blockquote>
@@ -45,12 +43,8 @@
 <p>There is one more point: the conclusion. This is easy to forget, because once a conclusion is reached, no one wants to spend time writing it down. But if you do not write it down, the document does not tell the whole story if reviewed in the future.</p>
 <h2 id="writing-to-develop-ideas">Writing to Develop Ideas</h2>
 <p>This year I have seen a lot of people writing about Sönke Ahrens’ <a href="https://takesmartnotes.com/"><em>How to Take Smart Notes</em></a>, which is about taking notes as a means to develop long form writing. It popularised the idea of the <em>Zettelkasten</em>, a physical or virtual box of notes which reference each other to build an information network.</p>
-<p>While I found the book quite interesting, I would not recommend it to everyone due to the significant organisation overhead involved.<span><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle"/><span class="sidenote">I think researchers and writers can gain a lot from this method, but others not so much. Of course, if you want to read the book, feel free to do so. It is an interesting read, and I wouldn’t call it overrated by any means.<br />
-<br />
-</span></span></p>
-<p>That being said, I believe that if you have a digital system which can provide automatic back-links to avoid the exponentially growing amount of manual maintenance required, there is little harm in linking notes.<span><label for="sn-3" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-3" class="margin-toggle"/><span class="sidenote"><a href="https://roamresearch.com/">Roam</a>, <a href="https://notion.so">Notion</a>, <a href="https://obsidian.md/">Obsidian</a>, and <a href="https://github.com/Kungsgeten/org-brain">many others</a> can do so.<br />
-<br />
-</span></span> At the very least it will make it easier to find a note, and maybe it can aid the thinking process by exposing previously unseen connections between concepts.</p>
+<p>While I found the book quite interesting, I would not recommend it to everyone due to the significant organisation overhead involved.</p>
+<p>That being said, I believe that if you have a digital system which can provide automatic back-links to avoid the exponentially growing amount of manual maintenance required, there is little harm in linking notes. At the very least it will make it easier to find a note, and maybe it can aid the thinking process by exposing previously unseen connections between concepts.</p>
 <h2 id="writing-to-communicate">Writing to Communicate</h2>
 <p>This very article was written expressively to communicate information, and as such required some extra work for it to be effective.</p>
 <p>The most important factor when writing for communication is the target audience. It dictates the format to use, and which prior knowledge can be assumed. Maximising information density by being as concise as possible is important to avoid wasting the reader’s time.</p>
@@ -59,18 +53,14 @@
 </entry>
 <entry>
     <title>Testing Hexagonal Architecture</title>
-    <link href="https://blog.sulami.xyz/posts/testing-hexagonal-architecture/index.html" />
-    <id>https://blog.sulami.xyz/posts/testing-hexagonal-architecture/index.html</id>
+    <link href="https://blog.sulami.xyz/posts/testing-hexagonal-architecture/" />
+    <id>https://blog.sulami.xyz/posts/testing-hexagonal-architecture/</id>
     <published>2020-10-11T00:00:00Z</published>
     <updated>2020-10-11T00:00:00Z</updated>
     <summary type="html"><![CDATA[<p><a href="https://web.archive.org/web/20180822100852/http://alistair.cockburn.us/Hexagonal+architecture"><em>Hexagonal Architecture</em></a>, also known as <em>Ports and Adapters</em>, was first conceived by Cockburn in 2005, and popularised by Freeman &amp; Pryce’s <a href="http://www.growing-object-oriented-software.com/"><em>Growing Object-Oriented Software, Guided by Tests</em></a> in 2009. For those unfamiliar, it describes an application architecture entirely comprised of ports, which are interfaces, and adaptors, which are implementations for those interfaces. The adaptors can depend on other ports, but not on other adaptors. A system is then constructed by selecting a full set of adaptors, depending on the requirements, and composing them using <a href="https://en.wikipedia.org/wiki/Dependency_injection">dependency injection</a>.</p>
 <p>A port can represent an external resource or service, but also a logical component of the system, like an HTTP server or a queue handler.</p>
 <h2 id="an-example-port-adaptor">An Example Port &amp; Adaptor</h2>
-<p>A simple example for a port could be blob storage. I will be using Clojure in this post, but no prior knowledge is required for understanding.<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote">This also allows me to gloss over types (or specs) which I would normally add in various places. As an aside, Clojure in particular is not great at this, as record methods cannot be defined by specs, requiring function wrappers.<br />
-<br />
-Also, the example ports &amp; adaptors in this post are modelled after Stuart Sierra’s <a href="https://github.com/stuartsierra/component">component</a> library.<br />
-<br />
-</span></span> A port in this case is a protocol, which we implement like so:</p>
+<p>A simple example for a port could be blob storage. I will be using Clojure in this post, but no prior knowledge is required for understanding. A port in this case is a protocol, which we implement like so:</p>
 <div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="bu">defprotocol</span><span class="fu"> BlobStoragePort</span>
   (store-object [this loc obj]
     <span class="st">&quot;Store `obj` at  `loc`.&quot;</span>)
@@ -91,9 +81,7 @@ Also, the example ports &amp; adaptors in this post are modelled after Stuart Si
 (<span class="bu">defn</span><span class="fu"> new-s3-storage-adaptor </span>[bucket-loc]
   (s3/create-bucket bucket-loc)
   (-&gt;S3StorageAdaptor bucket-loc))</code></pre></div>
-<p>During tests, we would like to use a blob storage that is much faster and not dependent on external state, so we can use a simple map in an atom:<span><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle"/><span class="sidenote">For those not familiar with Clojure, an <a href="https://clojure.org/reference/atoms">atom</a> is reference type that allows us to essentially implement a shared, safely mutable value among Clojure’s normally immutable values. Think of it as a pointer with automatic locking.<br />
-<br />
-</span></span></p>
+<p>During tests, we would like to use a blob storage that is much faster and not dependent on external state, so we can use a simple map in an atom:</p>
 <div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="bu">defrecord</span><span class="fu"> MemoryBlobStorageAdaptor </span>[storage-map]
   BlobStoragePort
   (store-object [this loc obj]
@@ -104,9 +92,7 @@ Also, the example ports &amp; adaptors in this post are modelled after Stuart Si
 (<span class="bu">defn</span><span class="fu"> new-memory-blob-storage-adaptor </span>[]
   (-&gt;MemoryBlobStorageAdaptor (<span class="kw">atom</span> {})))</code></pre></div>
 <h2 id="testing-the-port">Testing the Port</h2>
-<p>It has been long known that a direct mapping of tests to internal methods is an anti-pattern to be avoided.<span><label for="sn-3" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-3" class="margin-toggle"/><span class="sidenote">Again, <em>Growing Object-Oriented Software</em> has a sub-chapter devoted to this, <em>Unit-Test Behavior, Not Methods</em>. It highlights the difference in ease of understanding, but another factor is ease of refactoring, which is significantly higher if the internal method hierarchy is not married to the test suite.<br />
-<br />
-</span></span> As such we will prefer testing on a port-level over testing on an adaptor-level. In practice that means we assert a certain set of behaviours about every adaptor for a given port by using only the public port methods in our tests, and using the same tests for all adaptors.</p>
+<p>It has been long known that a direct mapping of tests to internal methods is an anti-pattern to be avoided. As such we will prefer testing on a port-level over testing on an adaptor-level. In practice that means we assert a certain set of behaviours about every adaptor for a given port by using only the public port methods in our tests, and using the same tests for all adaptors.</p>
 <div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure"><span class="co">;; Abstract port test suite</span>
 
 (<span class="bu">defn-</span><span class="fu"> store-and-retrieve-test </span>[adaptor]
@@ -129,9 +115,7 @@ Also, the example ports &amp; adaptors in this post are modelled after Stuart Si
     (<span class="kw">for</span> [adaptor adaptors]
       (store-and-retrieve-test adaptor)
       (not-found-test adaptor))))</code></pre></div>
-<p>This has the advantage of establishing a consistent set of behaviours across all adaptors and keeping them in sync. One might wonder about intended behavioural differences between adaptors for the same port, but I would argue that from the outside, all adaptors for a given port should exhibit the same behaviour.<span><label for="sn-4" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-4" class="margin-toggle"/><span class="sidenote">If you really need different behaviour in some situations, I would recommend adding a flag or switch controlling this behaviour across all adaptors.<br />
-<br />
-</span></span> Because we are only using the public interface for testing, any internal differences are conveniently hidden from us.</p>
+<p>This has the advantage of establishing a consistent set of behaviours across all adaptors and keeping them in sync. One might wonder about intended behavioural differences between adaptors for the same port, but I would argue that from the outside, all adaptors for a given port should exhibit the same behaviour. Because we are only using the public interface for testing, any internal differences are conveniently hidden from us.</p>
 <h2 id="the-rest-of-the-system">The Rest of the System</h2>
 <p>Now that we have established a port, as well as some adaptors, we can build on top of them. Blob storage is a lower level ports in our system, and we are going to add a higher level port that implements some kind of business logic which requires blob storage.</p>
 <div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure"><span class="co">;; Port definition omitted for brevity.</span>
@@ -147,38 +131,28 @@ Also, the example ports &amp; adaptors in this post are modelled after Stuart Si
 </entry>
 <entry>
     <title>Keyboardio Atreus Review</title>
-    <link href="https://blog.sulami.xyz/posts/atreus/index.html" />
-    <id>https://blog.sulami.xyz/posts/atreus/index.html</id>
+    <link href="https://blog.sulami.xyz/posts/atreus/" />
+    <id>https://blog.sulami.xyz/posts/atreus/</id>
     <published>2020-07-10T00:00:00Z</published>
     <updated>2020-07-10T00:00:00Z</updated>
-    <summary type="html"><![CDATA[<p>I recently received my early bird <a href="https://shop.keyboard.io/products/keyboardio-atreus">Keybardio Atreus</a><span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote"><img src="/images/atreus.jpg" /> Promotional photo courtesy of Keyboardio<br />
-<br />
-</span></span> from <a href="https://www.kickstarter.com/projects/keyboardio/atreus/description">the Kickstarter</a> and have now been using it for about three weeks, so I am writing a review for folks considering buying one after release.</p>
+    <summary type="html"><![CDATA[<p>I recently received my early bird <a href="https://shop.keyboard.io/products/keyboardio-atreus">Keybardio Atreus</a> from <a href="https://www.kickstarter.com/projects/keyboardio/atreus/description">the Kickstarter</a> and have now been using it for about three weeks, so I am writing a review for folks considering buying one after release.</p>
 <h2 id="a-bit-of-history">A Bit of History</h2>
 <p>Most of this is also outlined on the Atreus website, but here is the short version: my colleague Phil Hagelberg designed <a href="http://atreus.technomancy.us/">the original Atreus</a> keyboard in 2014, and has been selling kits for self-assembly ever since.</p>
 <p>In 2019 Keyboardio, the company which created the <a href="https://www.kickstarter.com/projects/keyboardio/the-model-01-an-heirloom-grade-keyboard-for-seriou">Model 01</a>, got together with Phil to build a pre-assembled commercial version of the Atreus. Their Kickstarter ran earlier in 2020 and collected almost $400k.</p>
 <p>Phil’s original 42-key version can be built with either a PCB or <a href="https://www.youtube.com/watch?v=zY2k75eWrLQ">completely hand-wired</a>, and uses a wooden, acrylic, or completely custom (e.g. 3D-printed) case.</p>
 <p>Keyboardio split the two larger thumb keys into two regular size keys, bringing the total up to 44, and uses a PCB and Cherry MX-style switches mounted on an Aluminium plate inside a black ABS case.</p>
 <h2 id="hardware">Hardware</h2>
-<p>At a first impression, it is incredibly small<span><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle"/><span class="sidenote">Dimensions taking from the product page: 24.3 × 10 × 2.8cm, 310g.<br />
-<br />
-</span></span>, noticeably smaller still than the small <a href="https://www.apple.com/shop/product/MLA22LL/A/magic-keyboard-us-english">Apple Magic Keyboard</a>. At the same time, it uses a regular key spacing, so once your hands are in place it does not feel cramped at all. On the contrary, every time I use a different keyboard now, I feel that half the keys are too far away to reach comfortably. It is also flat enough that I can use it without a wrist rest.</p>
+<p>At a first impression, it is incredibly small, noticeably smaller still than the small <a href="https://www.apple.com/shop/product/MLA22LL/A/magic-keyboard-us-english">Apple Magic Keyboard</a>. At the same time, it uses a regular key spacing, so once your hands are in place it does not feel cramped at all. On the contrary, every time I use a different keyboard now, I feel that half the keys are too far away to reach comfortably. It is also flat enough that I can use it without a wrist rest.</p>
 <p>Mine has <a href="https://cdn.shopify.com/s/files/1/3099/8088/files/CPG151101D213_Copper.pdf?11838687770053773851">Kailh Speed Copper</a> switches, which require 40g of force to actuate, with very early actuation points. They are somewhat comparable to <a href="https://www.cherrymx.de/_Resources/Persistent/13618248706cd28e75ab9bdf9e55e9f8794611c1/EN_CHERRY_MX_BROWN.pdf">Cherry MX Browns</a> without the dead travel before the tactile bump. As mentioned above, the switches are mounted on an aluminium plate, and can be swapped without disassembly.</p>
 <p>The early actuation point of the switches does require some getting used to, I keep experiencing some key chatter, especially on my weaker fingers, though Jesse from Keyboardio is working hard on alleviating that.</p>
 <p>When it comes to noise, you can hear that it is a mechanical keyboard. Even with relatively quiet switches, the open construction means that the sound of the keys getting released is audible in most environments. I would hesitate to bring it to a public space, like a café or a co-working space. Open-office depends on the general noise level, and how tolerant your coworkers are, I have not had anyone complain about the sound level in video conferences.</p>
-<p>The keycaps used are XDA-profile<span><label for="sn-3" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-3" class="margin-toggle"/><span class="sidenote">Symmetrical and the same height across the keyboard, like lower profile SDA. That means you can rearrange them between rows.<br />
-<br />
-</span></span> laser-engraved PBT of medium thickness. Apparently there have been a lot of issues with the durability of the labels, so the specifics of that might change. I personally have had a single key start to fade a bit over 3 weeks of use, but I do not actually care.</p>
+<p>The keycaps used are XDA-profile laser-engraved PBT of medium thickness. Apparently there have been a lot of issues with the durability of the labels, so the specifics of that might change. I personally have had a single key start to fade a bit over 3 weeks of use, but I do not actually care.</p>
 <p>The keyboard is powered by the <a href="https://www.microchip.com/wwwproducts/en/ATmega32U4">ATmega32U4</a>, which is a pretty standard controller for a keyboard, it is also used in the <a href="https://www.pjrc.com/teensy/">Teensy 2.0</a> for example.</p>
 <p>I would judge the overall build quality as good. While it does not feel like an ultra-premium product, there is nothing specific I can actually complain about, no rough edges or manufacturing artefacts.</p>
 <h2 id="software">Software</h2>
-<p>Out of the box, the keyboard uses the open-source <a href="https://github.com/keyboardio/Kaleidoscope">Kaleidoscope</a> firmware, which can be configured with the (also open-source) <a href="https://github.com/keyboardio/Chrysalis">Chrysalis</a> graphical configurator.<span><label for="sn-4" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-4" class="margin-toggle"/><span class="sidenote"><img src="/images/chrysalis.png" /> Chrysalis with my Layer 0<br />
-<br />
-</span></span> Supposedly it is also possible to use <a href="https://qmk.fm/">QMK</a>, and Phil has recently written <a href="https://git.sr.ht/~technomancy/menelaus">Menelaus</a>, a firmware in <a href="https://ryansuchocki.github.io/microscheme/">Microscheme</a>.</p>
+<p>Out of the box, the keyboard uses the open-source <a href="https://github.com/keyboardio/Kaleidoscope">Kaleidoscope</a> firmware, which can be configured with the (also open-source) <a href="https://github.com/keyboardio/Chrysalis">Chrysalis</a> graphical configurator. Supposedly it is also possible to use <a href="https://qmk.fm/">QMK</a>, and Phil has recently written <a href="https://git.sr.ht/~technomancy/menelaus">Menelaus</a>, a firmware in <a href="https://ryansuchocki.github.io/microscheme/">Microscheme</a>.</p>
 <p>I have stuck with (pre-release versions of) Kaleidoscope so far, which has worked out fairly well. Chrysalis is an Electron app, and doing sweeping changes in it can be a bit cumbersome compared to using text-based, declarative configuration, but it does the job. Flashing a new version onto the keyboard only takes a few seconds. I also have to mention the <a href="https://kaleidoscope.readthedocs.io/en/latest/">extensive documentation</a> available. Kaleidoscope has a rich plugin infrastructure, very little of which I actually use, but it does seem to rival QMK in flexibility.</p>
-<p>I am using the Atreus with <a href="https://colemak.com/">Colemak</a>, the same layout I have been using for almost a decade now, and compared to trying the <a href="https://ergodox-ez.com/">Ergodox</a>,<span><label for="sn-5" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-5" class="margin-toggle"/><span class="sidenote">When I tried using an Ergodox for the first time, the ortholinear layout really threw me off, and I kept hitting right in between keys.<br />
-<br />
-</span></span> the switching was much smoother. I am mostly back to my regular typing speed of 80-90 WPM after three weeks, and I can still use a regular staggered layout keyboard without trouble.</p>
+<p>I am using the Atreus with <a href="https://colemak.com/">Colemak</a>, the same layout I have been using for almost a decade now, and compared to trying the <a href="https://ergodox-ez.com/">Ergodox</a>, the switching was much smoother. I am mostly back to my regular typing speed of 80-90 WPM after three weeks, and I can still use a regular staggered layout keyboard without trouble.</p>
 <p>The modifier keys at the bottom are unusual, but work for me. I use the three innermost keys with my thumbs, and the bottom edges by just pushing down with my palm. It does require some careful arrangement to avoid often having to press two modifiers on the same time at once.</p>
 <p>With only 44 physical keys, the keyboard makes heavy use of layers, which can be temporarily shifted to when holding a key, or switched to permanently. By default the first extra layer has common special characters on the left half, and a numpad on the right, which works better than a regular keyboard for me.</p>
 <p>The only problem I sometimes have is the lack of a status indicator. This means I have to keep track of the keyboard state in my head when switching layers. Not a big problem though.</p>
@@ -188,19 +162,15 @@ Also, the example ports &amp; adaptors in this post are modelled after Stuart Si
 </entry>
 <entry>
     <title>LISP&lt;sub&gt;1&lt;/sub&gt; Has Won</title>
-    <link href="https://blog.sulami.xyz/posts/lisp-1/index.html" />
-    <id>https://blog.sulami.xyz/posts/lisp-1/index.html</id>
+    <link href="https://blog.sulami.xyz/posts/lisp-1/" />
+    <id>https://blog.sulami.xyz/posts/lisp-1/</id>
     <published>2020-06-10T00:00:00Z</published>
     <updated>2020-06-10T00:00:00Z</updated>
     <summary type="html"><![CDATA[<p>I am currently working on a compiler for a new programming language which has been in the making for a few months at this point. There is nothing public to show yet, everything is very early stage, and there are plenty of decisions to make and work to be done before I will publish anything.</p>
 <p>That being said, I will write about both the progress as well as different topics I come across, so <a href="/atom.xml">stay tuned</a> if you are interested in that.</p>
-<p>The language I am writing currently has a Lisp-like syntax, because that is easy to parse an work with,<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote">I just really don’t want to deal with operator precedence, and honestly I like writing Lisp, so I find it unlikely that I’ll actually change to a non-Lisp-like syntax.<br />
-<br />
-</span></span> which is why I am sharing some thoughts on one of the big bike sheds in software history.</p>
+<p>The language I am writing currently has a Lisp-like syntax, because that is easy to parse an work with, which is why I am sharing some thoughts on one of the big bike sheds in software history.</p>
 <h2 id="lispwhat">LISP<sub>what?</sub></h2>
-<p>LISP<sub>1</sub> and LISP<sub>2</sub> are terms to describe the way symbol namespaces work in different LISP-like programming languages.<span><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle"/><span class="sidenote">It can also be applied to other languages with first-class functions, e.g. Python &amp; Ruby.<br />
-<br />
-</span></span> The explanation is actually very simple, LISP<sub>1</sub> has a single shared namespace for functions and variables. This means a symbol can refer to either a function or a variable, but not both. Consider the following Racket code:</p>
+<p>LISP<sub>1</sub> and LISP<sub>2</sub> are terms to describe the way symbol namespaces work in different LISP-like programming languages. The explanation is actually very simple, LISP<sub>1</sub> has a single shared namespace for functions and variables. This means a symbol can refer to either a function or a variable, but not both. Consider the following Racket code:</p>
 <div class="sourceCode"><pre class="sourceCode scheme"><code class="sourceCode scheme">(<span class="kw">define</span><span class="fu"> </span>(double x)
   (* <span class="dv">2</span> x))
 
@@ -215,9 +185,7 @@ triple
 (double triple)
 <span class="co">;; =&gt; 24</span></code></pre></div>
 <p>When you resolve a symbol to a variable, you cannot know if it will resolve to a function or not.</p>
-<p>LISP<sub>2</sub> on the other hand has a separate namespace for functions. This has the advantage that every name can be used twice,<span><label for="sn-3" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-3" class="margin-toggle"/><span class="sidenote">I’m glossing over the fact that Common Lisp actually has more than two namespaces, depending on your definition of the term namespace.<br />
-<br />
-</span></span> once for a function, and once for a variable. The tradeoff is that the user has to specify in which namespace they want to resolve a symbol. Consider the following Emacs Lisp code:</p>
+<p>LISP<sub>2</sub> on the other hand has a separate namespace for functions. This has the advantage that every name can be used twice, once for a function, and once for a variable. The tradeoff is that the user has to specify in which namespace they want to resolve a symbol. Consider the following Emacs Lisp code:</p>
 <div class="sourceCode"><pre class="sourceCode commonlisp"><code class="sourceCode commonlisp">(<span class="kw">defun</span><span class="fu"> double </span>(x)
   (<span class="op">*</span> <span class="dv">2</span> x))
 
@@ -230,24 +198,20 @@ triple
 <p>Note the added punctuation to denote the first <code>double</code> as a symbol resolving to a function.</p>
 <h2 id="lispwhy">LISP<sub>why?</sub></h2>
 <p>LISP is one of the oldest programming languages that is still used commercially today in some form, if you accept Common Lisp in its lineage. It appears that the namespace separation in the original LISP 1.5 was mostly incidental, and <a href="http://www.nhplace.com/kent/Papers/Technical-Issues.html">has been regretted since</a>.</p>
-<p>The set of LISP<sub>2</sub> languages is quite small these days. Besides Common Lisp and Emacs Lisp, both of which are over three decades old at this point, there are also Ruby and Perl.<span><label for="sn-4" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-4" class="margin-toggle"/><span class="sidenote">Honourable mention: <a href="http://lfe.io/">Lisp Flavoured Erlang</a> is a LISP<sub>2</sub>.<br />
-<br />
-</span></span></p>
+<p>The set of LISP<sub>2</sub> languages is quite small these days. Besides Common Lisp and Emacs Lisp, both of which are over three decades old at this point, there are also Ruby and Perl.</p>
 <p>The other ancient LISP-like language, Scheme, is a LISP<sub>1</sub>, and so is its popular modern dialect Racket (as demonstrated above). Almost every other somewhat popular language chooses to share a single namespace between functions and variables. Examples include Clojure, Janet, Python, Java, JavaScript, and even Rust.</p>
 <p>Clearly the benefits of less syntactic clutter and cognitive overhead have won in the popular arena, to the point that the established de facto standard itself becomes a good reason to stick with a single unified namespace. Of course improvement, by its very definition, always requires change, but language designers need to be acutely aware of the cost incurred by diverging from the established norm.</p>]]></summary>
 </entry>
 <entry>
     <title>Literate Calculations in Emacs</title>
-    <link href="https://blog.sulami.xyz/posts/literate-calc-mode/index.html" />
-    <id>https://blog.sulami.xyz/posts/literate-calc-mode/index.html</id>
+    <link href="https://blog.sulami.xyz/posts/literate-calc-mode/" />
+    <id>https://blog.sulami.xyz/posts/literate-calc-mode/</id>
     <published>2020-05-21T00:00:00Z</published>
     <updated>2020-05-21T00:00:00Z</updated>
     <summary type="html"><![CDATA[<p>It is no secret that I am a big fan of <a href="https://en.wikipedia.org/wiki/Literate_programming">literate programming</a> for many use cases. I think it is a great match for investigative or exploratory notes, research, and <a href="https://github.com/sulami/dotfiles/blob/master/emacs/.emacs/README.org">configuration</a>.</p>
 <p>On a Friday evening about two weeks ago, my flatmate came up with an idea for doing calculations in a literate way. Of course, if you really wanted to, you could use a <a href="https://jupyter.org/try">Jupyter Notebook</a>, but we were looking for something more lightweight, and ideally integrated into Emacs.</p>
 <p>A quick search came up empty, so on Saturday morning I got started writing what came to be <a href="https://github.com/sulami/literate-calc-mode.el">Literate Calc Mode</a>. The features I wanted included named references to earlier results, spreadsheet-like recalculations on every change, and the ability to save my calculations to a file. And then of course the ability to interlace calculations with explanatory text.</p>
-<p>It was in part inspired by the iOS app <a href="http://tydligapp.com/">Tydlig</a><span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote"><img src="/images/tydlig.png" title="fig:" alt="Screenshot of Tydlig" /><br />
-<br />
-</span></span>, which also provides calculations with automatically updating references to earlier results, but does not allow saving the workspaces as files, which I find very limiting.</p>
+<p>It was in part inspired by the iOS app <a href="http://tydligapp.com/">Tydlig</a>, which also provides calculations with automatically updating references to earlier results, but does not allow saving the workspaces as files, which I find very limiting.</p>
 <p>But enough talk, this is what the result looks like in action:</p>
 <div class="figure">
 <video controls proload="none" alt="Demo Video">
@@ -257,41 +221,29 @@ triple
 <p>This is <code>literate-calc-minor-mode</code>, running alongside <code>org-mode</code>. As you can see, it automatically picks up calculations and inserts the results as overlays at the end of the line. It allows the user to bind results to variables, which can even have names with spaces. Any change causes all values to be recalculated, similar to a spreadsheet.</p>
 <p>Because it uses Emacs’ built-in <code>calc-eval</code> behind the scenes, it supports almost everything <code>M-x calc</code> does, including formulas, complex units, and unresolved mathematical variables.</p>
 <p>Of course there are also other convenience functions, such as evaluating just a single line, or inserting the results into the file for sharing. I do have some more plans for the future, which are outlined in the <a href="https://github.com/sulami/literate-calc-mode.el#roadmap">documentation</a>.</p>
-<p>In addition to hopefully providing some value to other Emacs users, this was also a great learning experience.<span><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle"/><span class="sidenote">On a meta-level, writing this post has taught me how to use <code>&lt;video&gt;</code> on my blog.<br />
-<br />
-</span></span> I have learned a lot about overlays in Emacs, and I published my first package on <a href="https://melpa.org/">MELPA</a>, which was a thoroughly pleasant experience.</p>]]></summary>
+<p>In addition to hopefully providing some value to other Emacs users, this was also a great learning experience. I have learned a lot about overlays in Emacs, and I published my first package on <a href="https://melpa.org/">MELPA</a>, which was a thoroughly pleasant experience.</p>]]></summary>
 </entry>
 <entry>
     <title>The Grumpy Developer&#39;s Guide to Meetings</title>
-    <link href="https://blog.sulami.xyz/posts/engineers-meeting-guide/index.html" />
-    <id>https://blog.sulami.xyz/posts/engineers-meeting-guide/index.html</id>
+    <link href="https://blog.sulami.xyz/posts/engineers-meeting-guide/" />
+    <id>https://blog.sulami.xyz/posts/engineers-meeting-guide/</id>
     <published>2020-04-21T00:00:00Z</published>
     <updated>2020-04-21T00:00:00Z</updated>
-    <summary type="html"><![CDATA[<p>While everyone is writing about remote meetings these days, I do not believe that successful remote meetings are actually meaningfully different from successful in-person meetings.<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote">I’m glossing over videoconferencing because I don’t believe it is a meaningful hurdle to clear.<br />
-<br />
-</span></span></p>
+    <summary type="html"><![CDATA[<p>While everyone is writing about remote meetings these days, I do not believe that successful remote meetings are actually meaningfully different from successful in-person meetings.</p>
 <p><a href="http://twitchard.github.io/posts/2020-03-28-against-process.html">Like many other developers</a>, I loathe meetings, especially when they seem like a waste of valuable time. My philosophy is “if you have to set up a meeting, at least do it right”. Consequently, here are some rules for successful meetings, both remote and in-person:</p>
 <h2 id="the-best-meeting-is-no-meeting">The Best Meeting Is No Meeting</h2>
 <p>It is important to understand the tradeoffs involved when deciding to schedule a meeting. Meetings are synchronous discussions, which makes them useful for knowledge exchanges and decision making processes, but they are also time-intensive and disruptive for everyone involved.</p>
-<p>The alternative to organising a meeting is an asynchronous conversation, for example on a shared document.<span><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle"/><span class="sidenote">I find that doing all the same work as for a meeting on a shared document, but just leaving out the actual meeting, is a very effective way of using asynchronous process.<br />
-<br />
-</span></span> This can be faster than a meeting overall, as it allows participants to participate in their own time, instead of trying to find a slot that fits everyone. In addition to that, it is much less disruptive compared scheduling a meeting, especially for <a href="https://www.oreilly.com/library/view/changing-software-development/9780470515044/9780470515044_software_developers_are_knowledge_worker.html">knowledge workers</a>.</p>
+<p>The alternative to organising a meeting is an asynchronous conversation, for example on a shared document. This can be faster than a meeting overall, as it allows participants to participate in their own time, instead of trying to find a slot that fits everyone. In addition to that, it is much less disruptive compared scheduling a meeting, especially for <a href="https://www.oreilly.com/library/view/changing-software-development/9780470515044/9780470515044_software_developers_are_knowledge_worker.html">knowledge workers</a>.</p>
 <p>The only good reason for a synchronous meeting is making decisions requiring knowledge exchange and/or consensus. A good example would be planning a complicated feature, or cleaning up a backlog.</p>
 <h2 id="the-most-important-work-happens-before-the-meeting">The Most Important Work Happens Before the Meeting</h2>
 <p>Every meeting needs an organiser. The organiser needs to define the expected outcome of the meeting, as well as gather all required information, and share all of these in the meeting agenda. The outcome should be tangible, like a decision or a set of tasks to be done.</p>
 <p>The agenda is crucial, because the participants will likely have to do some preparation in advance to the meeting. If any specific work needs to be done before the meeting, like research or data retrieval, make sure to clearly assign tasks.</p>
 <p>I recommend writing out the full agenda before scheduling the meeting, and then sharing the agenda with the calendar invitation. This allows everyone to schedule their preparation in their own time.</p>
 <h2 id="the-actual-meeting">The Actual Meeting</h2>
-<p>During the meeting it is important to keep notes, usually in a shared document. You can designate a scribe, or just agree to all contribute some bullet points whenever possible.<span><label for="sn-3" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-3" class="margin-toggle"/><span class="sidenote">Both approaches have pros and cons. A dedicated scribe leads to more detailed and coherent notes, but requires a person who will not be able to take part in the conversation, at least not effectively.<br />
-<br />
-</span></span> You want to write down any conclusions reached, important points made, and further questions and future work to be done. Do not care too much about form, the meeting organiser should rewrite the notes after the meeting anyway.</p>
-<p>The meeting is prime talking time, and you should treat it as such. Do not spend time watching someone carry out a task.<span><label for="sn-4" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-4" class="margin-toggle"/><span class="sidenote">There is really no point in everyone watching a single person manipulate a JIRA board during a meeting.<br />
-<br />
-</span></span> If you find during the meeting that you require more information, write this down as a future task instead of derailing the meeting.</p>
+<p>During the meeting it is important to keep notes, usually in a shared document. You can designate a scribe, or just agree to all contribute some bullet points whenever possible. You want to write down any conclusions reached, important points made, and further questions and future work to be done. Do not care too much about form, the meeting organiser should rewrite the notes after the meeting anyway.</p>
+<p>The meeting is prime talking time, and you should treat it as such. Do not spend time watching someone carry out a task. If you find during the meeting that you require more information, write this down as a future task instead of derailing the meeting.</p>
 <p>The organiser should always work towards the defined outcome, but it often happens that some other discussion emerges as a precondition to reaching the outcome. There is a balance to be struck between discussion necessary to get to a meaningful outcome and veering too far off-topic.</p>
-<p>Keep in mind that the time slot scheduled is more a rough guideline than a rule. If you can finish early, do so. If you need more time, and everyone involved has more time, take it.<span><label for="sn-5" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-5" class="margin-toggle"/><span class="sidenote">Though maybe take a 5 minute break.<br />
-<br />
-</span></span> Do not try to force an outcome if you did not get there in time. If you find at the start of the meeting that some necessary precondition has not been met do not be afraid to reschedule or cancel altogether.</p>
+<p>Keep in mind that the time slot scheduled is more a rough guideline than a rule. If you can finish early, do so. If you need more time, and everyone involved has more time, take it. Do not try to force an outcome if you did not get there in time. If you find at the start of the meeting that some necessary precondition has not been met do not be afraid to reschedule or cancel altogether.</p>
 <h2 id="the-alternative-the-ad-hoc-huddle">The Alternative: The Ad Hoc Huddle</h2>
 <p>The rules above do not mean that you cannot talk to one another without ritual. Especially for small discussions between 2-4 people, ad hoc huddles can be useful.</p>
 <p>As a rule of thumb, these should usually be happening within the next 24 hours, so usually “later today” or “tomorrow morning”.</p>
@@ -299,8 +251,8 @@ triple
 </entry>
 <entry>
     <title>Restarts in Common Lisp</title>
-    <link href="https://blog.sulami.xyz/posts/common-lisp-restarts/index.html" />
-    <id>https://blog.sulami.xyz/posts/common-lisp-restarts/index.html</id>
+    <link href="https://blog.sulami.xyz/posts/common-lisp-restarts/" />
+    <id>https://blog.sulami.xyz/posts/common-lisp-restarts/</id>
     <published>2020-04-01T00:00:00Z</published>
     <updated>2020-04-01T00:00:00Z</updated>
     <summary type="html"><![CDATA[<p><em><strong>Errata:</strong> An earlier version of this post was misrepresenting conditions as exceptions, which has been addressed.</em></p>
@@ -315,14 +267,8 @@ triple
   (<span class="kw">if</span> (valid-line-p line)
       (to-ir line)
     (<span class="kw">error</span> &#39;invalid-line-error :line line)))</code></pre></div>
-<p>We define a condition, which is similar to an exception object with metadata in other languages<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote">A “condition” in Common Lisp, as has been explained to me by <a href="https://phoe.github.io">Michał “phoe” Herda</a>, is a way of signalling arbitrary events up the stack to allow running of additional code, not just signalling errors. They’re comparable to hooks in Emacs, but dynamically scoped to the current call stack.<br />
-<br />
-</span></span>, and a function which attempts to parse a single line.<span><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle"/><span class="sidenote">This is assuming of course that a line always represents a complete parsable entity, but this is only an example after all.<br />
-<br />
-</span></span> If it turns out that the line is invalid, it signals a condition up the stack. We attach the line encountered, in case we want to use it for error reporting.</p>
-<p>Now imagine your parser is used in two situations: there is a compiler, and a REPL. For the compiler, you would like to abort at the first invalid line you encounter, which is what we are currently set up to do. But for the REPL, you would like to ignore the line and just continue with the next line.<span><label for="sn-3" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-3" class="margin-toggle"/><span class="sidenote">I’m not saying that is necessarily a good idea, but it is something some REPLs do, for example some Clojure REPLs.<br />
-<br />
-</span></span></p>
+<p>We define a condition, which is similar to an exception object with metadata in other languages, and a function which attempts to parse a single line. If it turns out that the line is invalid, it signals a condition up the stack. We attach the line encountered, in case we want to use it for error reporting.</p>
+<p>Now imagine your parser is used in two situations: there is a compiler, and a REPL. For the compiler, you would like to abort at the first invalid line you encounter, which is what we are currently set up to do. But for the REPL, you would like to ignore the line and just continue with the next line.</p>
 <p>To ignore a line, we would have to either do it on a low-level, return <code>nil</code> instead of signalling and filter out <code>nil</code> values up the stack. Handling the condition will not help us a lot, because at that point we have lost our position in the file already, or have we?</p>
 <p>The next layer up is parsing a collection of lines:</p>
 <div class="sourceCode"><pre class="sourceCode commonlisp"><code class="sourceCode commonlisp">(<span class="kw">defun</span><span class="fu"> parse-lines </span>(lines)
@@ -331,11 +277,7 @@ triple
                      (parse-line line)
                      (skip-line () <span class="kw">nil</span>))
         <span class="kw">when</span> entry collect it))</code></pre></div>
-<p>This is where the magic begins. The <code>loop</code> construct just loops over the lines, applies <code>parse-line</code> to every element of the list, and returns a list containing all results which are not <code>nil</code>. The feature I am showcasing in this post is <code>restart-case</code>. Think of it this way: it does <strong>not</strong> handle a condition, but when the stack starts unwinding <span><label for="sn-4" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-4" class="margin-toggle"/><span class="sidenote">Technically not unwinding yet, at least not in Common Lisp.<br />
-<br />
-</span></span> because we signalled a condition in <code>parse-line</code>, it registers a possible restart-position. If the condition is handled at some point,<span><label for="sn-5" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-5" class="margin-toggle"/><span class="sidenote">If it isn’t caught, you will get dropped into the debugger, which also gives you the option to restart.<br />
-<br />
-</span></span> the signal handler can choose to restart at any restart-point that has been registered down the stack.</p>
+<p>This is where the magic begins. The <code>loop</code> construct just loops over the lines, applies <code>parse-line</code> to every element of the list, and returns a list containing all results which are not <code>nil</code>. The feature I am showcasing in this post is <code>restart-case</code>. Think of it this way: it does <strong>not</strong> handle a condition, but when the stack starts unwinding  because we signalled a condition in <code>parse-line</code>, it registers a possible restart-position. If the condition is handled at some point, the signal handler can choose to restart at any restart-point that has been registered down the stack.</p>
 <p>Now let us have a look at the callers:</p>
 <div class="sourceCode"><pre class="sourceCode commonlisp"><code class="sourceCode commonlisp">(<span class="kw">defun</span><span class="fu"> parse-compile </span>(lines)
   (<span class="kw">handler-case</span>
@@ -350,27 +292,21 @@ triple
     (parse-lines lines)))</code></pre></div>
 <p>There is a lot to unpack here. The compiler code is using <code>handler-case</code>, which is comparable to <code>catch</code> in other languages. It unwinds the stack to the current point and runs the signal handling code, in this case <code>print-error</code>.</p>
 <p>Because we do not actually want to unwind the stack all the way, but resume execution inside the <code>loop</code> in <code>parse-lines</code>, we use a different construct, <code>handler-bind</code>, which automatically handles <code>invalid-line-error</code> and invokes the <code>skip-line</code> restart. If you scroll up to <code>parse-lines</code> now, you will see that the restart clause says, if we restart here, just return <code>nil</code>, and <code>nil</code> will be filtered on the very next line by <code>when entry</code>.</p>
-<p>The elegance here is the split of signal handling code, and decisions about which signal handling approach to take. You can register a lot of different <code>restart-case</code> statements throughout the stack, and let the caller decide if some signals are okay to ignore, without the caller having to have intricate knowledge of the lower-level code.<span><label for="sn-6" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-6" class="margin-toggle"/><span class="sidenote">It does need to know about the registered <code>restart-case</code> statements though, at least by name.<br />
-<br />
-</span></span></p>
+<p>The elegance here is the split of signal handling code, and decisions about which signal handling approach to take. You can register a lot of different <code>restart-case</code> statements throughout the stack, and let the caller decide if some signals are okay to ignore, without the caller having to have intricate knowledge of the lower-level code.</p>
 <p>If you want to learn more about this, make sure to have a look at the book, it goes into much more detail than I did here.</p>]]></summary>
 </entry>
 <entry>
     <title>How to Read a Book</title>
-    <link href="https://blog.sulami.xyz/posts/how-to-read-a-book/index.html" />
-    <id>https://blog.sulami.xyz/posts/how-to-read-a-book/index.html</id>
+    <link href="https://blog.sulami.xyz/posts/how-to-read-a-book/" />
+    <id>https://blog.sulami.xyz/posts/how-to-read-a-book/</id>
     <published>2020-03-14T00:00:00Z</published>
     <updated>2020-03-14T00:00:00Z</updated>
     <summary type="html"><![CDATA[<p>A while ago I read <em><a href="https://www.goodreads.com/book/show/567610.How_to_Read_a_Book">How to Read a Book</a></em>, the guide to extracting information from non-fiction books first published in 1940. Like many older books, there are parts of it that haven’t aged well, and in a particularly ironic fashion the book is quite verbose. I thought it might be useful to compile a short and simple step-by-step guide to efficiently reading non-fiction.</p>
-<p>Imagine a book as an object with two dimensions: scope and detail. If you read the entire book cover to cover, you will learn about the full scope covered, in the level of detail of the book.<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote">Well, not really. Performing a single, cover to cover reading usually does not suffice to extract everything from a book.<br />
-<br />
-</span></span> But many books are several hundred pages long, and active reading demands attention and energy.</p>
+<p>Imagine a book as an object with two dimensions: scope and detail. If you read the entire book cover to cover, you will learn about the full scope covered, in the level of detail of the book. But many books are several hundred pages long, and active reading demands attention and energy.</p>
 <p>You can compromise on either of those dimensions (or both). If you just read the first half of the book, you are compromising on scope, as there is a whole second half of the subject you did not cover at all. If instead you want to compromise on detail, you should read “outside-in”, starting with strategic skimming and delving in deeper afterwards.</p>
 <p>Start by getting a vague idea of everything covered in the book, going more and more into detail at each step. At any step you can stop and decide if the next level of details is worth the additional time required, but the knowledge you have extracted at that point is likely more useful than if you had compromised on scope.</p>
 <p>The outside-in method is also useful for picking out books to read at a bookstore, as you can just start with the first few steps right there, and buy the book if you want to continue.</p>
-<p>Simply follow these steps below, as long as you feel like gaining deeper understanding is worth the additional time. Ideally you want to have a way of taking notes, both to capture sections or topics to investigate further, but also to aid active reading.<span><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle"/><span class="sidenote">Active reading is one of these barely defined terms, but what I’m trying to express is the notion of thinking about the text as you read it, and actively trying to take in information. I might publish a piece on note-taking in the future.<br />
-<br />
-</span></span></p>
+<p>Simply follow these steps below, as long as you feel like gaining deeper understanding is worth the additional time. Ideally you want to have a way of taking notes, both to capture sections or topics to investigate further, but also to aid active reading.</p>
 <ol>
 <li>Read the back cover, and any other summaries and publisher blurbs.</li>
 <li>Read the table of contents, note the scope and structure. Identify the important and pivotal chapters.</li>
@@ -386,73 +322,45 @@ triple
 <li>Are there any additional topics or works to investigate outside of its scope?</li>
 <li>Which conclusions or opinions does it offer?</li>
 </ul>
-<p>The last question is particularly important if you want to continue, as it sets the context of this book in comparison to others covering the same subject. Authors have different backgrounds and biases, which colour their works.<span><label for="sn-3" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-3" class="margin-toggle"/><span class="sidenote">A good example is David Allen’s <em><a href="https://www.goodreads.com/book/show/1633.Getting_Things_Done">Getting Things Done</a></em>, which does hold some value for everyone, like the notion of the task inbox, but also contains a lot of absurd examples and use-cases which clearly show the kind of life he’s living, and the priorities he has.<br />
-<br />
-</span></span></p>
+<p>The last question is particularly important if you want to continue, as it sets the context of this book in comparison to others covering the same subject. Authors have different backgrounds and biases, which colour their works.</p>
 <p>The more thorough levels of reading take a lot more time, but can be useful if you want to get a deeper understanding of the subject. There are two more steps you can take to gain more insight:</p>
 <ol>
 <li>Continue reading the chapters, actually reading entire chapters now.</li>
-<li>Use other works covering the same subject and cross-reference the important points as you come across them. This allows you to get different viewpoints on the individual points.<span><label for="sn-4" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-4" class="margin-toggle"/><span class="sidenote">This is what Adler calls “syntopical” reading, which is a whole discipline on its own. I won’t cover it here, but you can find plenty of material online, and How to Read a Book also has a more detailed explanation.<br />
-<br />
-</span></span></li>
+<li>Use other works covering the same subject and cross-reference the important points as you come across them. This allows you to get different viewpoints on the individual points.</li>
 </ol>
 <p>If you get this deep into a subject, the first few steps will be very quick to perform, as you are already familiar with the subject, so you only need to find answers to the questions above before delving in deeper.</p>]]></summary>
 </entry>
 <entry>
     <title>Why I like Clojure</title>
-    <link href="https://blog.sulami.xyz/posts/why-i-like-clojure/index.html" />
-    <id>https://blog.sulami.xyz/posts/why-i-like-clojure/index.html</id>
+    <link href="https://blog.sulami.xyz/posts/why-i-like-clojure/" />
+    <id>https://blog.sulami.xyz/posts/why-i-like-clojure/</id>
     <published>2019-08-30T00:00:00Z</published>
     <updated>2019-08-30T00:00:00Z</updated>
     <summary type="html"><![CDATA[<p>This is somewhat of a response to Uncle Bob’s <a href="http://blog.cleancoder.com/uncle-bob/2019/08/22/WhyClojure.html">post of similar nature</a>, which I would say has gotten a mixed to positive reception. I had planned a similar post a week or two before the release of his, but archived the idea upon reading his post. But after having read it over a couple of times I have now decided that I still have something meaningful to write. What follows are the purely subjective reasons for which <em>I</em> enjoy using Clojure. Some have criticised Bob for being very absolute and not giving up any screen estate for more nuanced viewpoints, something I will try to avoid.</p>
 <h2 id="lisp">Lisp</h2>
-<p>There is not much to say about this that has not already been said. The homoiconicity, meaning code can be represented as a data structure inside the same language, extensibility through macros which can modify both the evaluation order as well as the very syntax to the point where <a href="https://docs.racket-lang.org/scribble/getting-started.html">it looks more like LaTeX than Lisp</a>.<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote">Racket is actually a great example of the flexibility of Lisp. A language designed to build other languages in it, call it a meta-language. Even package import can be wrapped up in a “language” trivially, meaning that you can essentially write a tiny DSL for every project. Not saying that is necessarily a good idea, but you can.<br />
-<br />
-</span></span></p>
-<p>This also means that you are not stuck with a paradigm. While OO seems to be out, and FP the new hotness, Lisp can do them all, and historically often did before anyone else. Bob mentions dynamic typing in his signature retorts to (I am guessing) fictional counter-arguments, and he is right to mention <a href="https://clojure.org/guides/spec"><code>clojure.spec</code></a>, a library for gradual typing (omitting <a href="https://github.com/plumatic/schema"><code>schema</code></a>, an alternative). Racket has a <a href="https://docs.racket-lang.org/ts-guide/quick.html">fully typed variant</a>, there is something that is basically <a href="https://shen-language.github.io">Haskell in a Lisp-bun</a>, and let us not forget that there is actually <a href="https://github.com/clojure/core.typed">Typed Clojure</a>, with static type checking and all.<span><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle"/><span class="sidenote">There are some issues with it, namely that the coverage is not all that great, but it exists and works, meaning if you really <em>need</em> static types, you can get them.<br />
-<br />
-</span></span></p>
+<p>There is not much to say about this that has not already been said. The homoiconicity, meaning code can be represented as a data structure inside the same language, extensibility through macros which can modify both the evaluation order as well as the very syntax to the point where <a href="https://docs.racket-lang.org/scribble/getting-started.html">it looks more like LaTeX than Lisp</a>.</p>
+<p>This also means that you are not stuck with a paradigm. While OO seems to be out, and FP the new hotness, Lisp can do them all, and historically often did before anyone else. Bob mentions dynamic typing in his signature retorts to (I am guessing) fictional counter-arguments, and he is right to mention <a href="https://clojure.org/guides/spec"><code>clojure.spec</code></a>, a library for gradual typing (omitting <a href="https://github.com/plumatic/schema"><code>schema</code></a>, an alternative). Racket has a <a href="https://docs.racket-lang.org/ts-guide/quick.html">fully typed variant</a>, there is something that is basically <a href="https://shen-language.github.io">Haskell in a Lisp-bun</a>, and let us not forget that there is actually <a href="https://github.com/clojure/core.typed">Typed Clojure</a>, with static type checking and all.</p>
 <p>Being able to generate code without being stuck on a “dumb” level by generating strings and passing them into <code>eval</code> like for example in Python allows for sane hyper-dynamic programming, where the program adapts itself to the conditions. Being able to read and write code in a safe manner enables extremely powerful tooling in the Lisp world. Linters are very smart, because <a href="https://github.com/xsc/rewrite-clj">reading code into a data structure is trivial</a>, usually a one-liner, and there are many more tools to automatically rewrite and refactor code than for other languages.</p>
-<p>Now I do not want to discount the <a href="http://winestockwebdesign.com/Essays/Lisp_Curse.html">Lisp Curse</a>, it is a real thing, and one of the reasons that while Lisp has stuck around for over half a century, it has not made it into the mainstream. The other main factor probably being the performance problems due to the gap between software and hardware architecture.<span><label for="sn-3" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-3" class="margin-toggle"/><span class="sidenote">There were Lisp machines, which had hardware tailored towards running Lisp, but they never took off either.<br />
-<br />
-</span></span> But with the advent of the internet, ecosystems like GitHub, and hardware that is fast enough that we consider running basically full web browsers for half of our applications<span><label for="sn-4" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-4" class="margin-toggle"/><span class="sidenote">Looking at you, Slack.<br />
-<br />
-</span></span>, I think that these issues have become surmountable.</p>
+<p>Now I do not want to discount the <a href="http://winestockwebdesign.com/Essays/Lisp_Curse.html">Lisp Curse</a>, it is a real thing, and one of the reasons that while Lisp has stuck around for over half a century, it has not made it into the mainstream. The other main factor probably being the performance problems due to the gap between software and hardware architecture. But with the advent of the internet, ecosystems like GitHub, and hardware that is fast enough that we consider running basically full web browsers for half of our applications, I think that these issues have become surmountable.</p>
 <p>I do not think I need to mention how incredibly useful the REPL and hot-loading code into a running system are?</p>
 <h2 id="hosted">Hosted</h2>
-<p>Clojure is explicitly designed as a hosted language, which I think was a very good move. If you are writing a new language today, it might be better than the established ones, but the cost of leaving an existing ecosystem of libraries and Stack Overflow answers just because the new language is 5% nicer is not a trade off many people will want to make. Clojure being hosted and having excellent interoperability with its host platform means it can benefit from existing ecosystem, let alone platform implementations.<span><label for="sn-5" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-5" class="margin-toggle"/><span class="sidenote">Do you really want to implement your runtime for FreeBSD on a smart toaster oven? Raspberry Pis are non x86, BSD is not Linux, and who knows what is up with Windows. This matrix is growing quickly.<br />
-<br />
-</span></span></p>
-<p>While the primary platform is the JVM, superbly uncool but stable and relatively performant, there is a CLR (.NET) version which is “almost even on features” thanks to Davit Miller, as well as a very mature JavaScript version in the shape of ClojureScript. The JVM (and to some extent the CLR) have excellent support by big software vendors, if you buy some kind of software with an API, chances are there is a Java SDK which you can use easily from your Clojure code. The JavaScript ecosystem is the largest in numbers<span><label for="sn-6" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-6" class="margin-toggle"/><span class="sidenote">In part due to left-pad-like five-line-packages, but still.<br />
-<br />
-</span></span>, and includes Electron and React-Native, both of which can be used with some, but not unreasonable, effort from ClojureScript code. One of the newest additions has been GraalVM, which while not 100% feature-complete yet, already allows compilation to native static binaries of many Clojure programs<span><label for="sn-7" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-7" class="margin-toggle"/><span class="sidenote"><a href="https://github.com/kkinnear/zprint">Zprint</a> is one of those CLI tools that takes advantage of the reduced startup time.<br />
-<br />
-</span></span>, running without the JVM at all, and doing away with the dreaded multi-second startup time.<span><label for="sn-8" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-8" class="margin-toggle"/><span class="sidenote">I am planning to write a piece about GraalVM some time later this year.<br />
-<br />
-</span></span></p>
+<p>Clojure is explicitly designed as a hosted language, which I think was a very good move. If you are writing a new language today, it might be better than the established ones, but the cost of leaving an existing ecosystem of libraries and Stack Overflow answers just because the new language is 5% nicer is not a trade off many people will want to make. Clojure being hosted and having excellent interoperability with its host platform means it can benefit from existing ecosystem, let alone platform implementations.</p>
+<p>While the primary platform is the JVM, superbly uncool but stable and relatively performant, there is a CLR (.NET) version which is “almost even on features” thanks to Davit Miller, as well as a very mature JavaScript version in the shape of ClojureScript. The JVM (and to some extent the CLR) have excellent support by big software vendors, if you buy some kind of software with an API, chances are there is a Java SDK which you can use easily from your Clojure code. The JavaScript ecosystem is the largest in numbers, and includes Electron and React-Native, both of which can be used with some, but not unreasonable, effort from ClojureScript code. One of the newest additions has been GraalVM, which while not 100% feature-complete yet, already allows compilation to native static binaries of many Clojure programs, running without the JVM at all, and doing away with the dreaded multi-second startup time.</p>
 <p>The platform split could have been one of the big, curse-like problems for Clojure, but there is Clojure Common, used by many popular libraries, which allows you to write platform-independent code by using conditional branching for all platform-specific code.</p>
 <h2 id="community">Community</h2>
-<p>Despite all the positive points I mentioned, Clojure is still a niche language, and in some way that is good as well. Sure, finding jobs is harder<span><label for="sn-9" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-9" class="margin-toggle"/><span class="sidenote">Large companies like Walmart and CircleCI (my employer) are Clojure shops, so it is far less obscure than one might think.<br />
-<br />
-</span></span>, but not impossible. Clojure developers, like for example Haskell or Rust ones, tend to be more experienced, as it is not a typical first language, and requires a certain interest in the craft. Many Clojure developers have written widely used tools and libraries, not just in Clojure, but also for example for Emacs, which is understandably quite popular with Clojurists.</p>
-<p>Rich Hickey himself, the BDFL of Clojure, is someone with decades of industry experience and a desire to get it right. I think he is doing a pretty good job. While there are some small inconsistencies in places, the bulk of the language, and all the important parts are very well thought out.<span><label for="sn-10" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-10" class="margin-toggle"/><span class="sidenote">We can also see right now how <code>clojure.spec</code> is being adapted after community feedback to the first alpha version, which has been available for about 1½ years.<br />
-<br />
-</span></span> Clojure is a very stable language, which means that smaller problems will stick around for a while, but also means you can trust that your code will not break every time you update your dependencies.</p>
-<p>In the end, it comes down to enjoyment. I enjoy working with Clojure. I feel like there is a lot to learn, and the language is inviting me to explore beyond the current possibilities of software development. I feel good about the elegant and concise solutions<span><label for="sn-11" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-11" class="margin-toggle"/><span class="sidenote">concise ≠ obtuse<br />
-<br />
-</span></span> I can come up with. It has changed the way I think, in a good way.</p>]]></summary>
+<p>Despite all the positive points I mentioned, Clojure is still a niche language, and in some way that is good as well. Sure, finding jobs is harder, but not impossible. Clojure developers, like for example Haskell or Rust ones, tend to be more experienced, as it is not a typical first language, and requires a certain interest in the craft. Many Clojure developers have written widely used tools and libraries, not just in Clojure, but also for example for Emacs, which is understandably quite popular with Clojurists.</p>
+<p>Rich Hickey himself, the BDFL of Clojure, is someone with decades of industry experience and a desire to get it right. I think he is doing a pretty good job. While there are some small inconsistencies in places, the bulk of the language, and all the important parts are very well thought out. Clojure is a very stable language, which means that smaller problems will stick around for a while, but also means you can trust that your code will not break every time you update your dependencies.</p>
+<p>In the end, it comes down to enjoyment. I enjoy working with Clojure. I feel like there is a lot to learn, and the language is inviting me to explore beyond the current possibilities of software development. I feel good about the elegant and concise solutions I can come up with. It has changed the way I think, in a good way.</p>]]></summary>
 </entry>
 <entry>
     <title>My Thoughts on spec</title>
-    <link href="https://blog.sulami.xyz/posts/my-thoughts-on-spec/index.html" />
-    <id>https://blog.sulami.xyz/posts/my-thoughts-on-spec/index.html</id>
+    <link href="https://blog.sulami.xyz/posts/my-thoughts-on-spec/" />
+    <id>https://blog.sulami.xyz/posts/my-thoughts-on-spec/</id>
     <published>2019-07-01T00:00:00Z</published>
     <updated>2019-07-01T00:00:00Z</updated>
     <summary type="html"><![CDATA[<p>In the beginning of this year I started a new job, and I am now fortunate enough to be writing <a href="https://clojure.org">Clojure</a> full-time. I believe that Clojure is a very well crafted language and enables developers like few others, but I have also some grievances to report. I want to prefix this by saying that I love Clojure despite its faults, and this is more of a constructive criticism piece than anything else.</p>
 <h2 id="what-is-spec">What Is spec?</h2>
-<p>What I want to discuss today is <a href="https://clojure.org/guides/spec"><code>clojure.spec</code></a>, the gradual typing solution shipped with Clojure since 1.9.<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote">I am of course aware that spec is officially in alpha, and that there is a second alpha version which might address some of my points here. But as I have not tried alpha 2 yet, and a lot of people are using alpha 1, we will be mostly looking at alpha 1 in this post. Still, feel free to contact me and tell me how alpha 2 will improve things.<br />
-<br />
-</span></span> In case you are not familiar with spec, here is a quick run-down of how it works:</p>
+<p>What I want to discuss today is <a href="https://clojure.org/guides/spec"><code>clojure.spec</code></a>, the gradual typing solution shipped with Clojure since 1.9. In case you are not familiar with spec, here is a quick run-down of how it works:</p>
 <p>Clojure is a dynamically typed language, meaning no (or very few) type annotations in the source code, unlike say Haskell or most curl-brace languages. While this removes a lot of visual clutter, and the language is designed in such a way that most functions can operate on most types for maximum flexibility, this also means that sometimes things break at run time due to type errors. To make dealing with types easier, spec allows you to place type definitions in strategic places, say at entry- and exit points of an app or a module to ensure that your idea of structure and type of your data still lines up with reality.</p>
 <p>The benefit of this approach over static typing is that you can encapsulate parts of your software with type safety without having to deal with the encumbrance in the internals. You define a contract to the outside, but stay flexible in your implementation.</p>
 <p>In practice it looks like this:</p>
