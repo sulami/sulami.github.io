@@ -1,0 +1,14 @@
+
+
+table{
+ text-align:center;
+}
+
+th:nth-child(1){
+ text-align:left;
+}
+
+td:nth-child(1){
+ text-align:left;
+ font-weight:bold;
+}
