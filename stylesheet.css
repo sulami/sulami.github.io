@@ -49,6 +49,7 @@ div.sourceCode,pre:not(.sourceCode){overflow-x:scroll}pre code{color:#657B83}cod
 
 
 table{
+ border-collapse:collapse;
  text-align:center;
  -webkit-border-vertical-spacing:0px;
  -webkit-border-horizontal-spacing:0px;
