@@ -8,8 +8,29 @@
         <name>Robin Schroer</name>
         <email>blog@peerwire.org</email>
     </author>
-    <updated>2021-03-03T00:00:00Z</updated>
+    <updated>2021-05-06T00:00:00Z</updated>
     <entry>
+    <title>Onboarding Across Timezones</title>
+    <link href="https://blog.sulami.xyz/posts/onboarding-across-timezones/" />
+    <id>https://blog.sulami.xyz/posts/onboarding-across-timezones/</id>
+    <published>2021-05-06T00:00:00Z</published>
+    <updated>2021-05-06T00:00:00Z</updated>
+    <summary type="html"><![CDATA[<p>Even in a fully distributed organisation, teams are often clustered in timezones to facilitate collaboration. Another model is the deliberate spreading of teams to enable <em><a href="https://en.wikipedia.org/wiki/Follow-the-sun">Follow the Sun</a></em> workflows, which can also improve pager rotations.</p>
+<p>In a distributed team, onboarding new team members can be especially difficult. New onboardees lack the context and institutional knowledge required to work effectively in an independent manner. Here are some strategies which I have found ease this process, specifically in the field of software engineering.</p>
+<h2 id="onboarding-buddies">Onboarding Buddies</h2>
+<p>It is standard practice to designate an onboarding buddy for a new onboardee, a person in the same team who can take care of them during the first few weeks, answer questions, and pair a lot. It is not always possible to have this onboarding buddy in the same timezone, and in these cases it is a good idea to have an existing employee in the same timezone as a designated point of contact, regardless of team affiliations.</p>
+<h2 id="making-the-most-of-the-overlap">Making the Most of the Overlap</h2>
+<p>When onboarding someone in different timezones, everything has to be planned around the overlap in office hours. Start by clearly identifying this overlap. It is most important for the onboardee to be able to onboard and work effectively outside of this overlap.</p>
+<p>To optimise the value gotten out of the overlap, it is best spent with synchronous conversations. Other tasks such as code reviews or planning work should be moved outside the overlap unless there is value in doing it synchronously, for example by sharing additional context.</p>
+<p>If the overlap is very small, short screencasts can be medium-cost, high-bandwidth method to transfer context asynchronously. These can be recorded and watched outside the overlap, but convey much of the same context as pairing could, albeit without the ability to actually interject questions.</p>
+<h2 id="enabling-self-directed-learning">Enabling Self-Directed Learning</h2>
+<p>To enable the onboardee to learn on the job, there needs to be a pool of work items for them to pick up tasks from. These items need be narrowly scoped and include much more detail and context than they ordinarily would, to reduce the risk of the onboardee getting stuck.</p>
+<p>Tasks should be sized “just right,” that is not larger than two or three days, but also not shorter than a single day. Very small tasks encourage the onboardee to start working on several tasks in parallel while waiting for code reviews, increasing cognitive load.</p>
+<p>A library of self-directed training material is a must-have for every organisation, distributed or not, but can also serve as a fallback if the onboardee gets stuck on their current task and has to wait for the next overlap.</p>
+<h2 id="just-because-you-can-does-not-mean-you-should">Just Because You Can Does Not Mean You Should</h2>
+<p>While asking colleagues for ideas &amp; feedback, a sentiment I have heard more than once was “if you can, avoid scattering your team.” Just because you can spread a team literally around the globe does not mean you should do this. At my current day job we have employees around the globe, but generally try to keep teams within two timezone regions, for example within the North American east coast and Europe, or the west coast and APAC, so that we have an overlap of at least two to three hours.</p>]]></summary>
+</entry>
+<entry>
     <title>The Shape of Tests</title>
     <link href="https://blog.sulami.xyz/posts/test-shapes/" />
     <id>https://blog.sulami.xyz/posts/test-shapes/</id>
@@ -560,52 +581,6 @@ triple
 <p>The rules above do not mean that you cannot talk to one another without ritual. Especially for small discussions between 2-4 people, ad hoc huddles can be useful.</p>
 <p>As a rule of thumb, these should usually be happening within the next 24 hours, so usually “later today” or “tomorrow morning”.</p>
 <p>You still need to define a goal, and you will want to write down any outcomes in some form, even if less formal than meeting notes. Even a Slack message with some findings in a relevant channel counts.</p>]]></summary>
-</entry>
-<entry>
-    <title>Restarts in Common Lisp</title>
-    <link href="https://blog.sulami.xyz/posts/common-lisp-restarts/" />
-    <id>https://blog.sulami.xyz/posts/common-lisp-restarts/</id>
-    <published>2020-04-01T00:00:00Z</published>
-    <updated>2020-04-01T00:00:00Z</updated>
-    <summary type="html"><![CDATA[<p><em><strong>Errata:</strong> An earlier version of this post was misrepresenting conditions as exceptions, which has been addressed.</em></p>
-<hr />
-<p>I have been reading <em><a href="http://www.gigamonkeys.com/book/">Practical Common Lisp</a></em> by Peter Seibel over the weekend, which is an excellent introduction to Common Lisp, showcasing its power by writing real programs. If you are interested in Lisp or programming languages at all, I recommend at least skimming it, it is free to read online.</p>
-<p>Writing a Lisp-descended language professionally, and also living inside Emacs, I had dabbled in Common Lisp before, but I still found something I was not aware of, restarts. I do not think that this is a particularly well known feature outside the Lisp world, so I would like to spread awareness, as I think it is a particularly interesting take on error handling.</p>
-<p>The book explains restarts using a mocked parser, which I will slightly modify for my example. Imagine you are writing an interpreter/compiler for a language. On the lowest level you are parsing lines to some internal representation:</p>
-<div class="sourceCode"><pre class="sourceCode commonlisp"><code class="sourceCode commonlisp">(<span class="kw">define-condition</span><span class="fu"> invalid-line-error </span>(<span class="kw">error</span>)
-  ((line :initarg :line :reader line)))
-
-(<span class="kw">defun</span><span class="fu"> parse-line </span>(line)
-  (<span class="kw">if</span> (valid-line-p line)
-      (to-ir line)
-    (<span class="kw">error</span> &#39;invalid-line-error :line line)))</code></pre></div>
-<p>We define a condition, which is similar to an exception object with metadata in other languages, and a function which attempts to parse a single line. If it turns out that the line is invalid, it signals a condition up the stack. We attach the line encountered, in case we want to use it for error reporting.</p>
-<p>Now imagine your parser is used in two situations: there is a compiler, and a REPL. For the compiler, you would like to abort at the first invalid line you encounter, which is what we are currently set up to do. But for the REPL, you would like to ignore the line and just continue with the next line.</p>
-<p>To ignore a line, we would have to either do it on a low-level, return <code>nil</code> instead of signalling and filter out <code>nil</code> values up the stack. Handling the condition will not help us a lot, because at that point we have lost our position in the file already, or have we?</p>
-<p>The next layer up is parsing a collection of lines:</p>
-<div class="sourceCode"><pre class="sourceCode commonlisp"><code class="sourceCode commonlisp">(<span class="kw">defun</span><span class="fu"> parse-lines </span>(lines)
-  (<span class="kw">loop</span> for line in lines
-        for entry <span class="op">=</span> (<span class="kw">restart-case</span>
-                     (parse-line line)
-                     (skip-line () <span class="kw">nil</span>))
-        <span class="kw">when</span> entry collect it))</code></pre></div>
-<p>This is where the magic begins. The <code>loop</code> construct just loops over the lines, applies <code>parse-line</code> to every element of the list, and returns a list containing all results which are not <code>nil</code>. The feature I am showcasing in this post is <code>restart-case</code>. Think of it this way: it does <strong>not</strong> handle a condition, but when the stack starts unwinding  because we signalled a condition in <code>parse-line</code>, it registers a possible restart-position. If the condition is handled at some point, the signal handler can choose to restart at any restart-point that has been registered down the stack.</p>
-<p>Now let us have a look at the callers:</p>
-<div class="sourceCode"><pre class="sourceCode commonlisp"><code class="sourceCode commonlisp">(<span class="kw">defun</span><span class="fu"> parse-compile </span>(lines)
-  (<span class="kw">handler-case</span>
-      (parse-lines lines)
-    (invalid-line-error (e)
-                        (print-error e))))
-
-(<span class="kw">defun</span><span class="fu"> parse-repl </span>(lines)
-  (<span class="kw">handler-bind</span> ((invalid-line-error
-                  #&#39;(<span class="kw">lambda</span> (e)
-                      (<span class="kw">invoke-restart</span> &#39;skip-line))))
-    (parse-lines lines)))</code></pre></div>
-<p>There is a lot to unpack here. The compiler code is using <code>handler-case</code>, which is comparable to <code>catch</code> in other languages. It unwinds the stack to the current point and runs the signal handling code, in this case <code>print-error</code>.</p>
-<p>Because we do not actually want to unwind the stack all the way, but resume execution inside the <code>loop</code> in <code>parse-lines</code>, we use a different construct, <code>handler-bind</code>, which automatically handles <code>invalid-line-error</code> and invokes the <code>skip-line</code> restart. If you scroll up to <code>parse-lines</code> now, you will see that the restart clause says, if we restart here, just return <code>nil</code>, and <code>nil</code> will be filtered on the very next line by <code>when entry</code>.</p>
-<p>The elegance here is the split of signal handling code, and decisions about which signal handling approach to take. You can register a lot of different <code>restart-case</code> statements throughout the stack, and let the caller decide if some signals are okay to ignore, without the caller having to have intricate knowledge of the lower-level code.</p>
-<p>If you want to learn more about this, make sure to have a look at the book, it goes into much more detail than I did here.</p>]]></summary>
 </entry>
 
 </feed>

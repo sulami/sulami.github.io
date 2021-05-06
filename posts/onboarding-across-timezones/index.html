@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Onboarding Across Timezones - sulami's blog</title>
+        <link rel="stylesheet" type="text/css" href="../../stylesheet.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="apple-touch-icon" sizes="180x180" href="../../images/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="../../images/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="../../images/favicon-16x16.png">
+        <link rel="manifest" href="../../images/site.webmanifest">
+        <link rel="mask-icon" href="../../images/safari-pinned-tab.svg" color="#5bbad5">
+        <link rel="shortcut icon" href="../../images/favicon.ico">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="msapplication-config" content="/images/browserconfig.xml">
+        <meta name="theme-color" content="#5bbad5">
+        <link href="../../atom.xml" type="application/atom+xml" rel="alternate" title="sulami's blog feed" />
+    </head>
+    <body>
+        <input type="checkbox" id="lightswitch" />
+        <div id="body">
+        <div id="container">
+        <div id="header">
+            <div id="navigation">
+                <label for="lightswitch" id="lightswitch-label">☀</label>
+                ·
+                <a href="../../">Home</a>
+                ·
+                <a href="../../posts/">Archive</a>
+                ·
+                <a href="../../atom.xml">Feed</a>
+                ·
+                <a href="../../pages/about/">About</a>
+                ·
+                <a href="../../pages/cv/">CV</a> <a href="../../pages/robin-schroer-cv.pdf">(PDF)</a>
+                ·
+                <a href="../../pages/uses-this/">Uses This</a>
+                ·
+                <a href="../../pages/frankenwm/">FrankenWM</a>
+            </div>
+        </div>
+
+        <div id="content">
+            <article>
+                <h1>Onboarding Across Timezones</h1>
+                <div class="info">
+                    
+                        Posted on May  6, 2021
+                    
+                    
+                </div>
+
+                <section>
+            <p>Even in a fully distributed organisation, teams are often clustered in timezones to facilitate collaboration. Another model is the deliberate spreading of teams to enable <em><a href="https://en.wikipedia.org/wiki/Follow-the-sun">Follow the Sun</a></em> workflows, which can also improve pager rotations.</p>
+<p>In a distributed team, onboarding new team members can be especially difficult. New onboardees lack the context and institutional knowledge required to work effectively in an independent manner. Here are some strategies which I have found ease this process, specifically in the field of software engineering.<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle" /><span class="sidenote">Though many of the concepts should translate reasonably well to other fields.<br />
+<br />
+</span></span></p>
+<h2 id="onboarding-buddies">Onboarding Buddies</h2>
+<p>It is standard practice to designate an onboarding buddy for a new onboardee, a person in the same team who can take care of them during the first few weeks, answer questions, and pair a lot. It is not always possible to have this onboarding buddy in the same timezone, and in these cases it is a good idea to have an existing employee in the same timezone as a designated point of contact, regardless of team affiliations.</p>
+<h2 id="making-the-most-of-the-overlap">Making the Most of the Overlap</h2>
+<p>When onboarding someone in different timezones, everything has to be planned around the overlap in office hours. Start by clearly identifying this overlap. It is most important for the onboardee to be able to onboard and work effectively outside of this overlap.</p>
+<p>To optimise the value gotten out of the overlap, it is best spent with synchronous conversations. Other tasks such as code reviews or planning work should be moved outside the overlap unless there is value in doing it synchronously, for example by sharing additional context.</p>
+<p>If the overlap is very small, short screencasts can be medium-cost, high-bandwidth method to transfer context asynchronously.<span><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle" /><span class="sidenote">I’m normally not a big fan of video as a medium because it is inherently difficult to index/search and impossible to edit to keep up to date with future changes. As such, I still wouldn’t recommend storing these in an archive, but treating them as information snapshots in time, just like the synchronous conversation they’re meant to replace.<br />
+<br />
+</span></span> These can be recorded and watched outside the overlap, but convey much of the same context as pairing could, albeit without the ability to actually interject questions.</p>
+<h2 id="enabling-self-directed-learning">Enabling Self-Directed Learning</h2>
+<p>To enable the onboardee to learn on the job, there needs to be a pool of work items for them to pick up tasks from. These items need be narrowly scoped and include much more detail and context than they ordinarily would, to reduce the risk of the onboardee getting stuck.</p>
+<p>Tasks should be sized “just right,” that is not larger than two or three days, but also not shorter than a single day. Very small tasks encourage the onboardee to start working on several tasks in parallel while waiting for code reviews, increasing cognitive load.</p>
+<p>A library of self-directed training material is a must-have for every organisation,<span><label for="sn-3" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-3" class="margin-toggle" /><span class="sidenote">I can’t stress this point enough. When I joined CircleCI onboarding was done almost exclusively through onboarding buddies’ hand-holding and bite-sized tasks. For obvious reasons this doesn’t scale very well, and introduces additional strain on the existing team every time a new person joins. We’ve since introduced such a library which has reduced onboarding overhead significantly.<br />
+<br />
+</span></span> distributed or not, but can also serve as a fallback if the onboardee gets stuck on their current task and has to wait for the next overlap.</p>
+<h2 id="just-because-you-can-does-not-mean-you-should">Just Because You Can Does Not Mean You Should</h2>
+<p>While asking colleagues for ideas &amp; feedback, a sentiment I have heard more than once was “if you can, avoid scattering your team.” Just because you can spread a team literally around the globe does not mean you should do this. At my current day job we have employees around the globe, but generally try to keep teams within two timezone regions, for example within the North American east coast and Europe, or the west coast and APAC, so that we have an overlap of at least two to three hours.</p>
+                </section>
+        </div>
+        <div id="footer">
+            Site proudly generated by
+            <a href="http://jaspervdj.be/hakyll">Hakyll</a>
+        </div>
+        </div>
+        </div>
+        <!-- Below is some JS, the only on this page. Things should be -->
+        <!-- generally fine if you block it, but I'm adding notes so you -->
+        <!-- can decide how you feel about each element. -->
+
+        <!-- Privacy-aware analytics by https://www.goatcounter.com/ -->
+        <!-- Stats are publicly available at https://sulami-blog.goatcounter.com/ -->
+        <script data-goatcounter="https://sulami-blog.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+
+        <!-- Colour theme switcher -->
+        <script>
+          const themeSwitch = document.querySelector('#lightswitch');
+          themeSwitch.checked = localStorage.getItem('switchedTheme') === 'true';
+
+          themeSwitch.addEventListener('change', function (e) {
+              if(e.currentTarget.checked === true) {
+                  // Add item to localstorage
+                  localStorage.setItem('switchedTheme', 'true');
+              } else {
+                  // Remove item if theme is switched back to normal
+                  localStorage.removeItem('switchedTheme');
+              }
+          });
+        </script>
+    </body>
+</html>
